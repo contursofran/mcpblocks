@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "carousel",
+  "type": "registry:component",
+  "title": "Carousel",
+  "description": "3–8 comparable items with scroll-snap and safe-area scroll padding.",
+  "registryDependencies": [
+    "https://inlinekit.dev/r/host-button.json",
+    "https://inlinekit.dev/r/host.json"
+  ],
+  "files": [
+    {
+      "path": "registry/inlinekit/components/carousel.tsx",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { guideline } from \"@/registry/inlinekit/lib/host\"\nimport { HostButton } from \"@/registry/inlinekit/ui/host-button\"\n\nexport type CarouselItem = {\n  id: string\n  title: string\n  image?: string\n  imageAlt?: string\n  /** Up to 3 short lines of metadata. */\n  meta?: string[]\n  cta?: { label: string; onClick?: () => void }\n}\n\nexport type CarouselProps = React.ComponentProps<\"div\"> & {\n  /** Claude guidelines: 3–8 items. */\n  items: CarouselItem[]\n  /** Card width in px. Keep it consistent across a carousel. */\n  cardWidth?: number\n  /** Accessible label for the scroll region. */\n  label?: string\n}\n\n/**\n * Horizontal row of comparable items. Use it borderless\n * (`_meta.ui.prefersBorder: false`) so it can bleed to the edges:\n * scroll-padding keeps resting cards inside the safe area.\n */\nexport function Carousel({\n  items,\n  cardWidth = 210,\n  label = \"Options\",\n  className,\n  ...props\n}: CarouselProps) {\n  guideline(items.length < 3 || items.length > 8, \"Carousel: Claude recommends 3–8 items.\")\n\n  return (\n    <div\n      role=\"region\"\n      aria-label={label}\n      data-slot=\"carousel\"\n      className={cn(\n        \"flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 font-[family-name:var(--font-sans)] text-host-fg [scrollbar-width:none]\",\n        \"scroll-px-[max(var(--ik-safe-left),0px)] px-[var(--ik-safe-left)]\",\n        className\n      )}\n      {...props}\n    >\n      {items.map((item) => (\n        <article\n          key={item.id}\n          className=\"flex shrink-0 snap-start flex-col overflow-hidden rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-border-secondary bg-host-bg\"\n          style={{ width: cardWidth }}\n        >\n          <div className=\"aspect-[16/10] w-full bg-host-bg-secondary\">\n            {item.image ? (\n              // eslint-disable-next-line @next/next/no-img-element\n              <img\n                src={item.image}\n                alt={item.imageAlt ?? \"\"}\n                className=\"size-full object-cover\"\n              />\n            ) : null}\n          </div>\n          <div className=\"flex flex-1 flex-col gap-0.5 p-3\">\n            <h3 className=\"truncate text-sm font-semibold\">{item.title}</h3>\n            {item.meta?.slice(0, 3).map((line, i) => (\n              <p key={i} className=\"truncate text-xs text-host-fg-tertiary\">\n                {line}\n              </p>\n            ))}\n            {item.cta ? (\n              <HostButton\n                variant=\"secondary\"\n                className=\"mt-3\"\n                onClick={item.cta.onClick}\n              >\n                {item.cta.label}\n              </HostButton>\n            ) : null}\n          </div>\n        </article>\n      ))}\n      <div aria-hidden=\"true\" className=\"w-[var(--ik-safe-right)] shrink-0\" />\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------
+   Docs site theme (shadcn variables, restyled warm-neutral)
+------------------------------------------------------------------- */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-site-sans);
+  --font-serif: var(--font-site-serif);
+  --font-mono: var(--font-site-mono);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --font-site-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-site-serif: "Instrument Serif", Georgia, serif;
+  --font-site-mono: "JetBrains Mono", ui-monospace, monospace;
+  --radius: 0.625rem;
+  --background: #faf9f5;
+  --foreground: #141413;
+  --card: #ffffff;
+  --card-foreground: #141413;
+  --popover: #ffffff;
+  --popover-foreground: #141413;
+  --primary: #141413;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f4ed;
+  --secondary-foreground: #141413;
+  --muted: #f5f4ed;
+  --muted-foreground: #73726c;
+  --accent: #f0eee6;
+  --accent-foreground: #141413;
+  --destructive: #a73d39;
+  --border: rgba(31, 30, 29, 0.15);
+  --input: rgba(31, 30, 29, 0.3);
+  --ring: rgba(20, 20, 19, 0.5);
+}
+
+/* ------------------------------------------------------------------
+   inlinekit host tokens
+   Fallback values for the CSS variables an MCP Apps host (Claude)
+   injects at runtime. Inside the host, the host's values win because
+   they are set inline on the document element.
+   This block is the same thing `npx shadcn add @inlinekit/host-tokens`
+   installs into your project.
+------------------------------------------------------------------- */
+@theme inline {
+  --color-host-bg: var(--color-background-primary);
+  --color-host-bg-secondary: var(--color-background-secondary);
+  --color-host-bg-tertiary: var(--color-background-tertiary);
+  --color-host-bg-inverse: var(--color-background-inverse);
+  --color-host-fg: var(--color-text-primary);
+  --color-host-fg-secondary: var(--color-text-secondary);
+  --color-host-fg-tertiary: var(--color-text-tertiary);
+  --color-host-fg-inverse: var(--color-text-inverse);
+  --color-host-border: var(--color-border-primary);
+  --color-host-border-secondary: var(--color-border-secondary);
+  --color-host-border-tertiary: var(--color-border-tertiary);
+  --color-host-ring: var(--color-ring-primary);
+  --color-host-info-bg: var(--color-background-info);
+  --color-host-info-fg: var(--color-text-info);
+  --color-host-info-border: var(--color-border-info);
+  --color-host-success-bg: var(--color-background-success);
+  --color-host-success-fg: var(--color-text-success);
+  --color-host-success-border: var(--color-border-success);
+  --color-host-warning-bg: var(--color-background-warning);
+  --color-host-warning-fg: var(--color-text-warning);
+  --color-host-warning-border: var(--color-border-warning);
+  --color-host-danger-bg: var(--color-background-danger);
+  --color-host-danger-fg: var(--color-text-danger);
+  --color-host-danger-border: var(--color-border-danger);
+  --radius-host-xs: var(--border-radius-xs);
+  --radius-host-sm: var(--border-radius-sm);
+  --radius-host-md: var(--border-radius-md);
+  --radius-host-lg: var(--border-radius-lg);
+  --radius-host-xl: var(--border-radius-xl);
+}
+
+:root {
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f5f4ed;
+  --color-background-tertiary: #faf9f5;
+  --color-background-inverse: #141413;
+  --color-background-info: #d6e4f6;
+  --color-background-danger: #f7ecec;
+  --color-background-success: #e9f1dc;
+  --color-background-warning: #f6eedf;
+  --color-text-primary: #141413;
+  --color-text-secondary: #3d3d3a;
+  --color-text-tertiary: #73726c;
+  --color-text-inverse: #ffffff;
+  --color-text-info: #3266ad;
+  --color-text-danger: #7f2c28;
+  --color-text-success: #265b19;
+  --color-text-warning: #5a4815;
+  --color-border-primary: rgba(31, 30, 29, 0.4);
+  --color-border-secondary: rgba(31, 30, 29, 0.3);
+  --color-border-tertiary: rgba(31, 30, 29, 0.15);
+  --color-border-info: #4682d5;
+  --color-border-danger: #a73d39;
+  --color-border-success: #437426;
+  --color-border-warning: #805c1f;
+  --color-ring-primary: rgba(20, 20, 19, 0.7);
+  --border-radius-xs: 4px;
+  --border-radius-sm: 6px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 10px;
+  --border-radius-xl: 12px;
+  --border-width-regular: 0.5px;
+  --ik-safe-top: 0px;
+  --ik-safe-right: 0px;
+  --ik-safe-bottom: 0px;
+  --ik-safe-left: 0px;
+}
+
+/* Dark fallbacks: used outside a host, and by the docs preview frame. */
+.dark,
+[data-host-theme="dark"] {
+  --color-background-primary: #30302e;
+  --color-background-secondary: #262624;
+  --color-background-tertiary: #141413;
+  --color-background-inverse: #faf9f5;
+  --color-background-info: #253e5f;
+  --color-background-danger: #602a28;
+  --color-background-success: #1b4614;
+  --color-background-warning: #483a0f;
+  --color-text-primary: #faf9f5;
+  --color-text-secondary: #c2c0b6;
+  --color-text-tertiary: #9c9a92;
+  --color-text-inverse: #141413;
+  --color-text-info: #80aadd;
+  --color-text-danger: #ee8884;
+  --color-text-success: #7ab948;
+  --color-text-warning: #d1a041;
+  --color-border-primary: rgba(222, 220, 209, 0.4);
+  --color-border-secondary: rgba(222, 220, 209, 0.3);
+  --color-border-tertiary: rgba(222, 220, 209, 0.15);
+  --color-border-info: #4682d5;
+  --color-border-danger: #cd5c58;
+  --color-border-success: #599130;
+  --color-border-warning: #a87829;
+  --color-ring-primary: rgba(250, 249, 245, 0.7);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}

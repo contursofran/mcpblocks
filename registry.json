@@ -1,0 +1,220 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "inlinekit",
+  "homepage": "https://inlinekit.dev",
+  "items": [
+    {
+      "name": "host-tokens",
+      "type": "registry:style",
+      "title": "Host tokens",
+      "description": "Fallback values for the CSS variables MCP Apps hosts like Claude inject, mapped to Tailwind utilities (bg-host-bg, text-host-fg, rounded-host-md…).",
+      "cssVars": {
+        "theme": {
+          "color-host-bg": "var(--color-background-primary)",
+          "color-host-bg-secondary": "var(--color-background-secondary)",
+          "color-host-bg-tertiary": "var(--color-background-tertiary)",
+          "color-host-bg-inverse": "var(--color-background-inverse)",
+          "color-host-fg": "var(--color-text-primary)",
+          "color-host-fg-secondary": "var(--color-text-secondary)",
+          "color-host-fg-tertiary": "var(--color-text-tertiary)",
+          "color-host-fg-inverse": "var(--color-text-inverse)",
+          "color-host-border": "var(--color-border-primary)",
+          "color-host-border-secondary": "var(--color-border-secondary)",
+          "color-host-border-tertiary": "var(--color-border-tertiary)",
+          "color-host-ring": "var(--color-ring-primary)",
+          "color-host-info-bg": "var(--color-background-info)",
+          "color-host-info-fg": "var(--color-text-info)",
+          "color-host-info-border": "var(--color-border-info)",
+          "color-host-success-bg": "var(--color-background-success)",
+          "color-host-success-fg": "var(--color-text-success)",
+          "color-host-success-border": "var(--color-border-success)",
+          "color-host-warning-bg": "var(--color-background-warning)",
+          "color-host-warning-fg": "var(--color-text-warning)",
+          "color-host-warning-border": "var(--color-border-warning)",
+          "color-host-danger-bg": "var(--color-background-danger)",
+          "color-host-danger-fg": "var(--color-text-danger)",
+          "color-host-danger-border": "var(--color-border-danger)",
+          "radius-host-xs": "var(--border-radius-xs)",
+          "radius-host-sm": "var(--border-radius-sm)",
+          "radius-host-md": "var(--border-radius-md)",
+          "radius-host-lg": "var(--border-radius-lg)",
+          "radius-host-xl": "var(--border-radius-xl)"
+        },
+        "light": {
+          "color-background-primary": "#ffffff",
+          "color-background-secondary": "#f5f4ed",
+          "color-background-tertiary": "#faf9f5",
+          "color-background-inverse": "#141413",
+          "color-background-info": "#d6e4f6",
+          "color-background-danger": "#f7ecec",
+          "color-background-success": "#e9f1dc",
+          "color-background-warning": "#f6eedf",
+          "color-text-primary": "#141413",
+          "color-text-secondary": "#3d3d3a",
+          "color-text-tertiary": "#73726c",
+          "color-text-inverse": "#ffffff",
+          "color-text-info": "#3266ad",
+          "color-text-danger": "#7f2c28",
+          "color-text-success": "#265b19",
+          "color-text-warning": "#5a4815",
+          "color-border-primary": "rgba(31, 30, 29, 0.4)",
+          "color-border-secondary": "rgba(31, 30, 29, 0.3)",
+          "color-border-tertiary": "rgba(31, 30, 29, 0.15)",
+          "color-border-info": "#4682d5",
+          "color-border-danger": "#a73d39",
+          "color-border-success": "#437426",
+          "color-border-warning": "#805c1f",
+          "color-ring-primary": "rgba(20, 20, 19, 0.7)",
+          "border-radius-xs": "4px",
+          "border-radius-sm": "6px",
+          "border-radius-md": "8px",
+          "border-radius-lg": "10px",
+          "border-radius-xl": "12px",
+          "border-width-regular": "0.5px",
+          "ik-safe-top": "0px",
+          "ik-safe-right": "0px",
+          "ik-safe-bottom": "0px",
+          "ik-safe-left": "0px"
+        },
+        "dark": {
+          "color-background-primary": "#30302e",
+          "color-background-secondary": "#262624",
+          "color-background-tertiary": "#141413",
+          "color-background-inverse": "#faf9f5",
+          "color-background-info": "#253e5f",
+          "color-background-danger": "#602a28",
+          "color-background-success": "#1b4614",
+          "color-background-warning": "#483a0f",
+          "color-text-primary": "#faf9f5",
+          "color-text-secondary": "#c2c0b6",
+          "color-text-tertiary": "#9c9a92",
+          "color-text-inverse": "#141413",
+          "color-text-info": "#80aadd",
+          "color-text-danger": "#ee8884",
+          "color-text-success": "#7ab948",
+          "color-text-warning": "#d1a041",
+          "color-border-primary": "rgba(222, 220, 209, 0.4)",
+          "color-border-secondary": "rgba(222, 220, 209, 0.3)",
+          "color-border-tertiary": "rgba(222, 220, 209, 0.15)",
+          "color-border-info": "#4682d5",
+          "color-border-danger": "#cd5c58",
+          "color-border-success": "#599130",
+          "color-border-warning": "#a87829",
+          "color-ring-primary": "rgba(250, 249, 245, 0.7)"
+        }
+      },
+      "files": []
+    },
+    {
+      "name": "host",
+      "type": "registry:lib",
+      "title": "Host helpers",
+      "description": "Apply hostContext (theme, display mode, safe-area insets) and dev-only guideline warnings.",
+      "files": [
+        {
+          "path": "registry/inlinekit/lib/host.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "host-button",
+      "type": "registry:ui",
+      "title": "Host button",
+      "description": "Button styled with host tokens, 44px tap target.",
+      "dependencies": [
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "https://inlinekit.dev/r/host-tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/inlinekit/ui/host-button.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "inline-card",
+      "type": "registry:component",
+      "title": "Inline card",
+      "description": "Compact card with up to 5 data points and 2 actions. Auto-fits its height.",
+      "registryDependencies": [
+        "https://inlinekit.dev/r/host-button.json",
+        "https://inlinekit.dev/r/host.json"
+      ],
+      "files": [
+        {
+          "path": "registry/inlinekit/components/inline-card.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "status-update",
+      "type": "registry:component",
+      "title": "Status update",
+      "description": "Success, info, warning and error confirmations using semantic host tokens.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://inlinekit.dev/r/host-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/inlinekit/components/status-update.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "confirm-action",
+      "type": "registry:component",
+      "title": "Confirm action",
+      "description": "Approve / edit-in-chat pattern for a change Claude prepared, with working, done and error states.",
+      "registryDependencies": [
+        "https://inlinekit.dev/r/inline-card.json",
+        "https://inlinekit.dev/r/status-update.json"
+      ],
+      "files": [
+        {
+          "path": "registry/inlinekit/components/confirm-action.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "carousel",
+      "type": "registry:component",
+      "title": "Carousel",
+      "description": "3–8 comparable items with scroll-snap and safe-area scroll padding.",
+      "registryDependencies": [
+        "https://inlinekit.dev/r/host-button.json",
+        "https://inlinekit.dev/r/host.json"
+      ],
+      "files": [
+        {
+          "path": "registry/inlinekit/components/carousel.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:component",
+      "title": "Skeleton",
+      "description": "Loading placeholders that match InlineCard and Carousel layouts.",
+      "registryDependencies": [
+        "https://inlinekit.dev/r/host-tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/inlinekit/components/skeleton.tsx",
+          "type": "registry:component"
+        }
+      ]
+    }
+  ]
+}
