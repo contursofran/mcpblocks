@@ -1,8 +1,8 @@
 import * as React from "react"
-import { AlertTriangle, CheckCircle2, Info, XCircle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { HostButton } from "@/registry/mcpblocks/ui/host-button"
+import { CheckCircleIcon, InfoIcon, ProhibitIcon, WarningIcon } from "@/registry/mcpblocks/ui/icons"
 
 export type StatusTone = "success" | "info" | "warning" | "danger"
 
@@ -18,10 +18,10 @@ const tones: Record<
   StatusTone,
   { icon: React.ElementType; chip: string; label: string }
 > = {
-  success: { icon: CheckCircle2, chip: "bg-host-success-bg text-host-success-fg", label: "Success" },
-  info: { icon: Info, chip: "bg-host-info-bg text-host-info-fg", label: "Info" },
-  warning: { icon: AlertTriangle, chip: "bg-host-warning-bg text-host-warning-fg", label: "Warning" },
-  danger: { icon: XCircle, chip: "bg-host-danger-bg text-host-danger-fg", label: "Error" },
+  success: { icon: CheckCircleIcon, chip: "bg-host-success-bg text-host-success-fg", label: "Success" },
+  info: { icon: InfoIcon, chip: "bg-host-info-bg text-host-info-fg", label: "Info" },
+  warning: { icon: WarningIcon, chip: "bg-host-warning-bg text-host-warning-fg", label: "Warning" },
+  danger: { icon: ProhibitIcon, chip: "bg-host-danger-bg text-host-danger-fg", label: "Error" },
 }
 
 /** Confirms the result of an action, using the host's semantic colors. */

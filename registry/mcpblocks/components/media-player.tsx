@@ -1,9 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { Download, Pause, Play, RotateCw } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { DownloadIcon, PauseIcon, PlayIcon, ReloadIcon } from "@/registry/mcpblocks/ui/icons"
 
 export type MediaPlayerProps = {
   title: string
@@ -95,7 +95,7 @@ export function MediaPlayer({
               aria-label="Regenerate"
               className="inline-flex size-10 items-center justify-center rounded-host-md border-[length:var(--border-width-regular,0.5px)] border-host-border text-host-fg hover:bg-host-bg-secondary"
             >
-              <RotateCw className="size-5" aria-hidden="true" />
+              <ReloadIcon className="size-5" />
             </button>
           ) : null}
           {onDownload ? (
@@ -105,7 +105,7 @@ export function MediaPlayer({
               aria-label="Download"
               className="inline-flex size-10 items-center justify-center rounded-host-md bg-host-bg-inverse text-host-fg-inverse hover:opacity-90"
             >
-              <Download className="size-5" aria-hidden="true" />
+              <DownloadIcon className="size-5" />
             </button>
           ) : null}
         </div>
@@ -119,7 +119,7 @@ export function MediaPlayer({
           aria-label={playing ? "Pause" : "Play"}
           className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-host-bg-inverse text-host-fg-inverse disabled:cursor-default"
         >
-          {playing ? <Pause className="size-5" fill="currentColor" /> : <Play className="size-5 translate-x-px" fill="currentColor" />}
+          {playing ? <PauseIcon className="size-5" /> : <PlayIcon className="size-5 translate-x-px" />}
         </button>
 
         <div

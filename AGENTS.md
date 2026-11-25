@@ -55,7 +55,7 @@ Current state: `pnpm build`, `pnpm lint` and `pnpm registry:build` all pass. Pag
 ## Figma source
 
 Working copy of the kit: https://www.figma.com/design/Bbp7doY8pEPK2gwNU4fzc9 (pages: Inline card, Inline carousel, Full screen, Desktop/Mobile components). Inline blocks were built from `get_design_context` on: List views 467:24656, Confirmation 467:24714, Media card 467:24775, Borderless chart 467:24925, Inline editing 467:25074, Loading 467:24645, Carousel 467:31431. The "App container" header is host chrome, so it lives in the preview, not in the components.
-- Icons: lucide-react equivalents, not the kit's icon assets (themeable via currentColor; avoids redistributing Anthropic's icon set).
+- Icons: `registry/mcpblocks/ui/icons.tsx` = 38 icons exported from the kit's Icons page (467:21815, 20px desktop set; Pause from 24px) as currentColor components, CC BY attribution in the file header. To add more, export via `use_figma` (`node.exportAsync({format:'SVG_STRING'})`) and append to the file. The kit has no bookmark icon, so carousel keeps lucide's `Bookmark`.
 - Demo carousel images in `public/demo/` are procedurally generated, not the kit's photos.
 - Not built yet: Full screen page (Document editing, Data visualization cohort heatmap, Task management table) and mobile variants. These are the roadmap items.
 

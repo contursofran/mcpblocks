@@ -1,10 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { Bookmark, ChevronLeft, ChevronRight, Star } from "lucide-react"
+// The kit has no bookmark icon, so this one comes from lucide.
+import { Bookmark } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { guideline } from "@/registry/mcpblocks/lib/host"
+import { CaretLeftIcon, CaretRightIcon, StarFilledIcon } from "@/registry/mcpblocks/ui/icons"
 
 export type CarouselItem = {
   id: string
@@ -125,7 +127,7 @@ export function Carousel({
                   <p className="flex items-center gap-1 text-xs leading-[1.4] text-host-fg-tertiary opacity-75">
                     {item.rating !== undefined ? (
                       <span className="flex items-center gap-0.5">
-                        <Star className="size-4" fill="currentColor" strokeWidth={0} aria-label="Rating" />
+                        <StarFilledIcon className="size-4" aria-label="Rating" />
                         {item.rating}
                       </span>
                     ) : null}
@@ -154,7 +156,7 @@ export function Carousel({
           className="absolute top-[calc(16px+var(--img-h)/2)] left-2 inline-flex size-9 -translate-y-1/2 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg text-host-fg shadow-[0_0_16px_rgba(0,0,0,0.12)]"
           style={{ ["--img-h" as string]: `${imageHeight}px` }}
         >
-          <ChevronLeft className="size-5" aria-hidden="true" />
+          <CaretLeftIcon className="size-5" />
         </button>
       ) : null}
       {!edges.end ? (
@@ -165,7 +167,7 @@ export function Carousel({
           className="absolute top-[calc(16px+var(--img-h)/2)] right-2 inline-flex size-9 -translate-y-1/2 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg text-host-fg shadow-[0_0_16px_rgba(0,0,0,0.12)]"
           style={{ ["--img-h" as string]: `${imageHeight}px` }}
         >
-          <ChevronRight className="size-5" aria-hidden="true" />
+          <CaretRightIcon className="size-5" />
         </button>
       ) : null}
     </div>

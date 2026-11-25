@@ -1,9 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { AlertTriangle, CheckCircle2, Code, Maximize2, Monitor, Moon, Smartphone, Sun, X } from "lucide-react"
+import { AlertTriangle, CheckCircle2, Maximize2, Monitor, Moon, Smartphone, Sun } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { CodeIcon, XIcon } from "@/registry/mcpblocks/ui/icons"
 
 type Theme = "light" | "dark"
 type Mode = "inline" | "fullscreen"
@@ -151,7 +152,7 @@ export function HostPreview({
               <div className="flex h-12 shrink-0 items-center justify-between border-b border-host-border-tertiary bg-host-bg px-4 text-sm">
                 <span className="font-medium">Your app</span>
                 <span className="inline-flex size-8 items-center justify-center rounded-md text-host-fg-tertiary" aria-hidden="true">
-                  <X className="size-4" />
+                  <XIcon className="size-4" />
                 </span>
               </div>
               <div className="relative flex-1 overflow-y-auto bg-host-bg">
@@ -261,7 +262,7 @@ function AppFrame({
           {name}
         </span>
         <span aria-hidden="true" className="flex size-8 items-center justify-center rounded-host-md text-host-fg">
-          <Code className="size-5" />
+          <CodeIcon className="size-5" />
         </span>
       </div>
       <div>{children}</div>

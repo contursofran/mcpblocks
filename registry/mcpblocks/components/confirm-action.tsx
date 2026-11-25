@@ -1,11 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { Check } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { StatusUpdate } from "@/registry/mcpblocks/components/status-update"
 import { HostButton } from "@/registry/mcpblocks/ui/host-button"
+import { CheckIcon } from "@/registry/mcpblocks/ui/icons"
 
 export type ConfirmActionStatus = "pending" | "working" | "done" | "error"
 
@@ -132,7 +132,7 @@ export function ConfirmAction({
           <ul className="flex flex-col gap-3">
             {details.items.map((item) => (
               <li key={item} className="flex items-start gap-2 text-sm leading-[19.6px] text-host-fg-tertiary">
-                <Check className="size-5 shrink-0" aria-hidden="true" />
+                <CheckIcon className="size-5 shrink-0" />
                 {item}
               </li>
             ))}

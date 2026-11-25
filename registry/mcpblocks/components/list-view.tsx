@@ -1,8 +1,8 @@
 import * as React from "react"
-import { ArrowRight } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { guideline } from "@/registry/mcpblocks/lib/host"
+import { ArrowRightIcon } from "@/registry/mcpblocks/ui/icons"
 
 export type ListViewItem = {
   id: string
@@ -97,7 +97,7 @@ export function ListView({ items, summary, viewAll, className, ...props }: ListV
               className="inline-flex items-center gap-1 text-xs leading-[16.8px] text-host-info-fg hover:underline"
             >
               {viewAll.label}
-              <ArrowRight className="size-4" aria-hidden="true" />
+              <ArrowRightIcon className="size-4" />
             </a>
           ) : null}
         </div>

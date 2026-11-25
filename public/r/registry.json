@@ -136,16 +136,26 @@
       ]
     },
     {
+      "name": "icons",
+      "type": "registry:ui",
+      "title": "Icons",
+      "description": "38 icons from the MCP Apps for Claude kit (Anthropic, CC BY 4.0) as currentColor React components.",
+      "files": [
+        {
+          "path": "registry/mcpblocks/ui/icons.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "list-view",
       "type": "registry:component",
       "title": "List view",
       "description": "Rich rows with avatar, title, meta, timestamp and body, plus a footer link. Based on the MCP Apps for Claude kit.",
-      "dependencies": [
-        "lucide-react"
-      ],
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-tokens.json",
-        "https://mcpblocks.dev/r/host.json"
+        "https://mcpblocks.dev/r/host.json",
+        "https://mcpblocks.dev/r/icons.json"
       ],
       "files": [
         {
@@ -159,12 +169,10 @@
       "type": "registry:component",
       "title": "Confirm action",
       "description": "Confirmation for a change Claude prepared: subject row with one confirm button and a checklist of what the change includes. Based on the MCP Apps for Claude kit.",
-      "dependencies": [
-        "lucide-react"
-      ],
       "registryDependencies": [
         "https://mcpblocks.dev/r/status-update.json",
-        "https://mcpblocks.dev/r/host-button.json"
+        "https://mcpblocks.dev/r/host-button.json",
+        "https://mcpblocks.dev/r/icons.json"
       ],
       "files": [
         {
@@ -178,11 +186,9 @@
       "type": "registry:component",
       "title": "Media player",
       "description": "Inline audio card with play/pause, seekable waveform and regenerate/download actions. Based on the MCP Apps for Claude kit.",
-      "dependencies": [
-        "lucide-react"
-      ],
       "registryDependencies": [
-        "https://mcpblocks.dev/r/host-tokens.json"
+        "https://mcpblocks.dev/r/host-tokens.json",
+        "https://mcpblocks.dev/r/icons.json"
       ],
       "files": [
         {
@@ -231,7 +237,8 @@
       ],
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-tokens.json",
-        "https://mcpblocks.dev/r/host.json"
+        "https://mcpblocks.dev/r/host.json",
+        "https://mcpblocks.dev/r/icons.json"
       ],
       "files": [
         {
@@ -276,11 +283,9 @@
       "type": "registry:component",
       "title": "Status update",
       "description": "Success, info, warning and error confirmations using semantic host tokens.",
-      "dependencies": [
-        "lucide-react"
-      ],
       "registryDependencies": [
-        "https://mcpblocks.dev/r/host-button.json"
+        "https://mcpblocks.dev/r/host-button.json",
+        "https://mcpblocks.dev/r/icons.json"
       ],
       "files": [
         {
