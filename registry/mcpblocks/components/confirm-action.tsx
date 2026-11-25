@@ -1,29 +1,33 @@
 "use client"
 
 import * as React from "react"
+import { Check } from "lucide-react"
 
-import { InlineCard, type InlineCardField } from "@/registry/mcpblocks/components/inline-card"
+import { cn } from "@/lib/utils"
 import { StatusUpdate } from "@/registry/mcpblocks/components/status-update"
+import { HostButton } from "@/registry/mcpblocks/ui/host-button"
 
 export type ConfirmActionStatus = "pending" | "working" | "done" | "error"
 
 export type ConfirmActionProps = {
+  /** What will happen, e.g. "Set lead assignment permission". */
   title: React.ReactNode
-  description?: React.ReactNode
-  fields?: InlineCardField[]
-  /** Called when the user approves. Return a promise to show a working state. */
-  onApprove?: () => unknown
-  /**
-   * Edits go through the chat, not a form in the widget.
-   * Typically sends a message back to the host (e.g. `ui/message`).
-   */
-  onEditInChat?: () => void
-  /** Optional undo after success. */
-  onUndo?: () => void
-  approveLabel?: string
-  editLabel?: string
+  /** The person or record the action applies to. */
+  subject: {
+    name: string
+    detail?: string
+    initials?: string
+    avatarColor?: string
+  }
+  /** Button label, e.g. "Confirm assignment". */
+  confirmLabel?: string
+  /** Called on confirm. Return a promise to show the working state. */
+  onConfirm?: () => unknown
+  /** Optional list of what the change includes. */
+  details?: { heading: string; items: string[] }
   doneTitle?: React.ReactNode
   doneDescription?: React.ReactNode
+  onUndo?: () => void
   errorTitle?: React.ReactNode
   /** Control the status from outside (e.g. after a tool result arrives). */
   status?: ConfirmActionStatus
@@ -31,20 +35,20 @@ export type ConfirmActionProps = {
 }
 
 /**
- * Approve / edit-in-chat pattern for a change Claude has prepared.
- * Pending → working → done (or error), all within one inline card.
+ * Confirmation for a change Claude has prepared: what happens, who it applies
+ * to, one confirm button, and what the change includes.
+ * Matches the "Confirmation actions" pattern in the MCP Apps for Claude kit.
+ * Edits stay in the conversation; the widget only confirms.
  */
 export function ConfirmAction({
   title,
-  description,
-  fields,
-  onApprove,
-  onEditInChat,
-  onUndo,
-  approveLabel = "Approve",
-  editLabel = "Edit in chat",
+  subject,
+  confirmLabel = "Confirm",
+  onConfirm,
+  details,
   doneTitle = "Done",
   doneDescription,
+  onUndo,
   errorTitle = "That didn't work",
   status: controlled,
   className,
@@ -52,10 +56,10 @@ export function ConfirmAction({
   const [internal, setInternal] = React.useState<ConfirmActionStatus>("pending")
   const status = controlled ?? internal
 
-  async function approve() {
+  async function confirm() {
     try {
       setInternal("working")
-      await onApprove?.()
+      await onConfirm?.()
       setInternal("done")
     } catch {
       setInternal("error")
@@ -69,21 +73,10 @@ export function ConfirmAction({
         tone="success"
         title={doneTitle}
         description={doneDescription}
-        action={
-          onUndo
-            ? {
-                label: "Undo",
-                onClick: () => {
-                  onUndo()
-                  setInternal("pending")
-                },
-              }
-            : undefined
-        }
+        action={onUndo ? { label: "Undo", onClick: () => { onUndo(); setInternal("pending") } } : undefined}
       />
     )
   }
-
   if (status === "error") {
     return (
       <StatusUpdate
@@ -91,27 +84,61 @@ export function ConfirmAction({
         tone="danger"
         title={errorTitle}
         description="Nothing was changed."
-        action={{ label: "Try again", onClick: approve }}
+        action={{ label: "Try again", onClick: confirm }}
       />
     )
   }
 
+  const initials =
+    subject.initials ??
+    subject.name
+      .split(/\s+/)
+      .map((p) => p[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase()
+
   return (
-    <InlineCard
-      className={className}
-      title={title}
-      description={description}
-      badge={{ label: "Needs approval", tone: "warning" }}
-      fields={fields}
-      columns={fields && fields.length > 2 ? 4 : 2}
-      actions={[
-        {
-          label: status === "working" ? "Working…" : approveLabel,
-          onClick: approve,
-          disabled: status === "working",
-        },
-        { label: editLabel, onClick: onEditInChat, variant: "secondary" },
-      ]}
-    />
+    <div
+      data-slot="confirm-action"
+      className={cn("flex w-full flex-col gap-6 p-6 text-host-fg font-[family-name:var(--font-sans)]", className)}
+    >
+      <h3 className="text-xl leading-[25px] font-semibold">{title}</h3>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-border-secondary p-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <span
+            aria-hidden="true"
+            className="flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
+            style={{ backgroundColor: subject.avatarColor ?? "var(--color-text-info)" }}
+          >
+            {initials}
+          </span>
+          <span className="flex min-w-0 flex-col">
+            <span className="truncate text-sm leading-[19.6px] font-semibold">{subject.name}</span>
+            {subject.detail ? (
+              <span className="truncate text-sm leading-[19.6px] text-host-fg-tertiary opacity-75">{subject.detail}</span>
+            ) : null}
+          </span>
+        </div>
+        <HostButton onClick={confirm} disabled={status === "working"} className="min-h-9 h-9">
+          {status === "working" ? "Working…" : confirmLabel}
+        </HostButton>
+      </div>
+
+      {details ? (
+        <div className="flex flex-col gap-4">
+          <h4 className="text-sm leading-[19.6px] font-semibold">{details.heading}</h4>
+          <ul className="flex flex-col gap-3">
+            {details.items.map((item) => (
+              <li key={item} className="flex items-start gap-2 text-sm leading-[19.6px] text-host-fg-tertiary">
+                <Check className="size-5 shrink-0" aria-hidden="true" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
   )
 }

@@ -46,7 +46,9 @@ export default function Home() {
         </div>
 
         <div className="min-w-0">
-          <ConfirmActionDemo />
+          <div className="overflow-hidden rounded-xl border border-[rgba(31,30,29,0.3)] bg-card shadow-[0_12px_32px_-16px_rgba(20,20,19,0.18)]">
+            <ConfirmActionDemo />
+          </div>
         </div>
       </section>
 

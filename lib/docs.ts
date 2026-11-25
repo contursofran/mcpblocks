@@ -3,18 +3,213 @@ export type ComponentDoc = {
   title: string
   description: string
   displayModes: string
+  /** How the host preview frames it: "card" (host border) or "borderless". */
+  variant: "card" | "borderless"
+  /** Where the design comes from. */
+  source: string
   checks: string[]
   usage: string
   props: { name: string; type: string; description: string }[]
 }
 
+const KIT = "MCP Apps for Claude kit"
+
 export const components: ComponentDoc[] = [
+  {
+    slug: "list-view",
+    title: "List view",
+    description:
+      "A short list of rich rows (messages, tickets, search results) with avatars, metadata and a footer link to the rest.",
+    displayModes: "inline",
+    variant: "card",
+    source: `${KIT} · Inline card / List views`,
+    checks: ["4–5 rows inline, link to the rest", "Rows clamp to two lines", "Footer link opens your app or fullscreen"],
+    usage: `import { ListView } from "@/components/list-view"
+
+<ListView
+  items={messages.map((m) => ({
+    id: m.id,
+    initials: m.author.initials,
+    title: m.author.name,
+    meta: m.channel,
+    timestamp: m.date,
+    body: m.text,
+  }))}
+  summary={\`Showing 4 of \${total} results\`}
+  viewAll={{ label: "View in App", onClick: () => app.requestDisplayMode({ mode: "fullscreen" }) }}
+/>`,
+    props: [
+      { name: "items", type: "ListViewItem[]", description: "id, initials, avatarColor?, title, meta?, timestamp?, body?, onClick?" },
+      { name: "summary", type: "string", description: "Footer text, e.g. \"Showing 4 of 12 results\"." },
+      { name: "viewAll", type: "{ label, href?, onClick? }", description: "Footer link to the full list." },
+    ],
+  },
+  {
+    slug: "confirm-action",
+    title: "Confirm action",
+    description:
+      "Confirmation for a change Claude has prepared: what will happen, who it applies to, one confirm button, and what the change includes.",
+    displayModes: "inline",
+    variant: "card",
+    source: `${KIT} · Inline card / Confirmation actions`,
+    checks: ["One confirm action; edits stay in the chat", "Working, done and error states in place", "Undo offered after success"],
+    usage: `import { ConfirmAction } from "@/components/confirm-action"
+
+<ConfirmAction
+  title="Set lead assignment permission"
+  subject={{ name: "Sarah Johnson", detail: "sarah.johnson@company.com" }}
+  confirmLabel="Confirm assignment"
+  onConfirm={() => app.callServerTool({ name: "assign_permission", arguments: { userId } })}
+  details={{ heading: "Lead assignment permissions", items: permissions }}
+  doneTitle="Permission assigned"
+/>`,
+    props: [
+      { name: "title", type: "ReactNode", description: "What will happen." },
+      { name: "subject", type: "{ name, detail?, initials?, avatarColor? }", description: "The person or record it applies to." },
+      { name: "onConfirm", type: "() => unknown", description: "Return a promise to show the working state; a rejection shows the error state." },
+      { name: "details", type: "{ heading, items[] }", description: "What the change includes, as a checklist." },
+      { name: "status", type: "pending | working | done | error", description: "Control the state from outside." },
+    ],
+  },
+  {
+    slug: "media-player",
+    title: "Media player",
+    description:
+      "An inline audio card with play/pause, a waveform you can click to seek, the duration and optional regenerate/download actions.",
+    displayModes: "inline",
+    variant: "card",
+    source: `${KIT} · Inline card / Media card`,
+    checks: ["Playback stays inline, no new window", "Waveform is keyboard-seekable (←/→)", "Two actions at most"],
+    usage: `import { MediaPlayer } from "@/components/media-player"
+
+<MediaPlayer
+  title="Podcast Intro"
+  subtitle="Rachel · Warm"
+  src={result.audioUrl}
+  peaks={result.peaks}
+  onRegenerate={() => app.sendMessage({ role: "user", content: [{ type: "text", text: "Try a different voice" }] })}
+  onDownload={() => app.openLink({ url: result.audioUrl })}
+/>`,
+    props: [
+      { name: "src", type: "string", description: "Audio URL. Without it the card is a static preview." },
+      { name: "peaks", type: "number[]", description: "Waveform values 0–1. A stable placeholder is generated if omitted." },
+      { name: "duration", type: "number", description: "Seconds, shown before metadata loads." },
+      { name: "onRegenerate / onDownload", type: "() => void", description: "Show the matching icon buttons." },
+    ],
+  },
+  {
+    slug: "line-chart",
+    title: "Line chart",
+    description:
+      "A borderless line chart with soft area fills, a hover tooltip, range tabs and a legend. Dependency-free SVG.",
+    displayModes: "inline, borderless",
+    variant: "borderless",
+    source: `${KIT} · Inline card / Borderless card`,
+    checks: ["Borderless: set _meta.ui.prefersBorder = false", "Tooltip on hover, no popovers", "Fits inline without scrolling"],
+    usage: `import { LineChart } from "@/components/line-chart"
+
+<LineChart
+  title="Chats and messages"
+  labels={days}
+  series={[
+    { name: "Messages", values: messages },
+    { name: "Chats", values: chats },
+  ]}
+  ranges={["1D", "1W", "1M", "1Y"]}
+  onRangeChange={(r) => app.callServerTool({ name: "get_usage", arguments: { range: r } })}
+/>`,
+    props: [
+      { name: "labels", type: "string[]", description: "One label per point; also shown in the tooltip." },
+      { name: "series", type: "{ name, values[], color? }[]", description: "Up to ~4 series." },
+      { name: "ranges / range / onRangeChange", type: "string[] / string / fn", description: "Optional range tabs." },
+      { name: "formatValue", type: "(v) => string", description: "Axis and tooltip formatting." },
+    ],
+  },
+  {
+    slug: "document-card",
+    title: "Document card",
+    description:
+      "A page or document preview with properties, lists and tasks that the user can edit in place, then hand back to Claude.",
+    displayModes: "inline",
+    variant: "card",
+    source: `${KIT} · Inline card / Inline editing`,
+    checks: ["Small edits in place, big changes in chat", "Checkboxes are real inputs", "onChange returns the full updated content"],
+    usage: `import { DocumentCard } from "@/components/document-card"
+
+<DocumentCard
+  icon="📋"
+  title={page.title}
+  properties={[{ label: "Type", value: "Meeting notes", tag: true }]}
+  sections={[
+    { kind: "list", heading: "Agenda", items: page.agenda },
+    { kind: "tasks", heading: "Action items", items: page.tasks, placeholder: "To be filled during meeting" },
+  ]}
+  onChange={(sections) => app.callServerTool({ name: "update_page", arguments: { id: page.id, sections } })}
+/>`,
+    props: [
+      { name: "properties", type: "{ label, value, tag? }[]", description: "Key/value rows at the top." },
+      { name: "sections", type: "DocumentSection[]", description: "\"list\" (editable text) or \"tasks\" (checkboxes)." },
+      { name: "editable", type: "boolean", description: "Default true." },
+      { name: "onChange", type: "(sections) => void", description: "Fires after each edit." },
+    ],
+  },
+  {
+    slug: "carousel",
+    title: "Carousel",
+    description:
+      "A horizontal row of comparable items with tall images, a save toggle, a rating and a meta row, with a fading edge and next button.",
+    displayModes: "inline, borderless",
+    variant: "borderless",
+    source: `${KIT} · Inline carousel`,
+    checks: ["3–8 items (dev warning outside that range)", "Next card peeks behind a fade", "One action per card (save)"],
+    usage: `import { Carousel } from "@/components/carousel"
+
+<Carousel
+  label="Nearby hikes"
+  items={trails.map((t) => ({
+    id: t.id,
+    title: t.name,
+    subtitle: t.park,
+    image: t.photo,
+    rating: t.rating,
+    meta: [t.difficulty, t.distance],
+    saved: t.saved,
+    onSave: (saved) => app.callServerTool({ name: "save_trail", arguments: { id: t.id, saved } }),
+  }))}
+/>`,
+    props: [
+      { name: "items", type: "CarouselItem[]", description: "id, title, subtitle?, image?, rating?, meta?, saved?, onSave?, onClick?" },
+      { name: "cardWidth / imageHeight", type: "number", description: "Default 220 × 280, as in the kit." },
+      { name: "label", type: "string", description: "Accessible name for the scroll region." },
+    ],
+  },
+  {
+    slug: "skeleton",
+    title: "Skeleton",
+    description:
+      "Loading placeholders. RowsSkeleton is the kit's loading state for lists and tables; InlineCardSkeleton and CarouselSkeleton match those components.",
+    displayModes: "inline, fullscreen",
+    variant: "card",
+    source: `${KIT} · Inline card / Loading`,
+    checks: ["Matches the final layout", "No spinners", "Announced as loading to screen readers"],
+    usage: `import { RowsSkeleton } from "@/components/skeleton"
+
+{data ? <ListView items={data.items} /> : <RowsSkeleton rows={4} columns={3} />}`,
+    props: [
+      { name: "RowsSkeleton", type: "{ rows?, columns?, avatar? }", description: "Avatar + columns, as in the kit." },
+      { name: "InlineCardSkeleton", type: "{ fields?, actions? }", description: "Matches InlineCard." },
+      { name: "CarouselSkeleton", type: "{ count?, cardWidth? }", description: "Matches Carousel." },
+      { name: "HostSkeleton", type: "component", description: "A single pulsing block." },
+    ],
+  },
   {
     slug: "inline-card",
     title: "Inline card",
     description:
       "A compact card for the conversation: a title, up to five data points and up to two actions. Its height always fits its content.",
     displayModes: "inline",
+    variant: "borderless",
+    source: "MCP Blocks UI",
     checks: [
       "At most 5 data points (dev warning above that)",
       "At most 2 actions, placed at the bottom",
@@ -48,73 +243,13 @@ export function DealSummary({ deal }) {
     ],
   },
   {
-    slug: "confirm-action",
-    title: "Confirm action",
-    description:
-      "For changes Claude has prepared. The user approves in the widget; edits go back through the chat, as Claude's guidelines recommend.",
-    displayModes: "inline",
-    checks: [
-      "Approve in the widget, free-text edits in the chat",
-      "Working, done and error states in place, no layout jump",
-      "Undo offered after success",
-    ],
-    usage: `import { ConfirmAction } from "@/components/confirm-action"
-
-<ConfirmAction
-  title="Update deal stage"
-  fields={[
-    { label: "From", value: "Proposal" },
-    { label: "To", value: "Negotiation" },
-  ]}
-  onApprove={() => app.callServerTool({ name: "update_deal", arguments: { id, stage } })}
-  onEditInChat={() => app.sendMessage({ role: "user", content: [{ type: "text", text: "Change the stage" }] })}
-  doneTitle="Deal moved to Negotiation"
-/>`,
-    props: [
-      { name: "onApprove", type: "() => unknown", description: "Return a promise to show the working state; a rejection shows the error state." },
-      { name: "onEditInChat", type: "() => void", description: "Hand the edit back to the conversation." },
-      { name: "onUndo", type: "() => void", description: "Shows an Undo button after success." },
-      { name: "status", type: "pending | working | done | error", description: "Control the state from outside, e.g. from a tool result." },
-    ],
-  },
-  {
-    slug: "carousel",
-    title: "Carousel",
-    description:
-      "A horizontal row of comparable items, each with an image, a title, up to three lines of metadata and one optional action.",
-    displayModes: "inline, borderless",
-    checks: [
-      "3–8 items (dev warning outside that range)",
-      "Consistent card size, next card peeks into view",
-      "Scroll padding respects safe-area insets",
-      "One CTA per card",
-    ],
-    usage: `import { Carousel } from "@/components/carousel"
-
-// Register the resource with _meta.ui.prefersBorder = false
-// so the row can bleed to the edges.
-<Carousel
-  label="Places to stay"
-  items={stays.map((s) => ({
-    id: s.id,
-    title: s.name,
-    image: s.photo,
-    meta: [s.guests, s.area],
-    cta: { label: "Select", onClick: () => select(s.id) },
-  }))}
-/>`,
-    props: [
-      { name: "items", type: "CarouselItem[]", description: "id, title, image?, meta? (max 3), cta?." },
-      { name: "cardWidth", type: "number", description: "Card width in px. Default 210." },
-      { name: "label", type: "string", description: "Accessible name for the scroll region." },
-    ],
-  },
-  {
     slug: "status-update",
     title: "Status update",
     description:
       "Confirms what happened after an action, with the host's semantic colors and one optional follow-up.",
     displayModes: "inline",
+    variant: "borderless",
+    source: "MCP Blocks UI",
     checks: ["Semantic host tokens only", "Icon has a text label", "One follow-up action at most"],
     usage: `import { StatusUpdate } from "@/components/status-update"
 
@@ -130,28 +265,12 @@ export function DealSummary({ deal }) {
       { name: "action", type: "{ label, onClick? }", description: "Optional follow-up, like Undo or View." },
     ],
   },
-  {
-    slug: "skeleton",
-    title: "Skeleton",
-    description:
-      "Loading placeholders shaped like InlineCard and Carousel, so content swaps in without a jump. Claude's guidelines prefer these to spinners.",
-    displayModes: "inline, fullscreen",
-    checks: ["Matches the final layout", "No spinners", "Announced as loading to screen readers"],
-    usage: `import { InlineCardSkeleton } from "@/components/skeleton"
-
-{data ? <InlineCard {...data} /> : <InlineCardSkeleton fields={4} actions={2} />}`,
-    props: [
-      { name: "HostSkeleton", type: "component", description: "A single pulsing block." },
-      { name: "InlineCardSkeleton", type: "{ fields?, actions? }", description: "Matches InlineCard." },
-      { name: "CarouselSkeleton", type: "{ count?, cardWidth? }", description: "Matches Carousel." },
-    ],
-  },
-]
+];
 
 export const roadmap = [
-  { title: "Data table", description: "Sort and filter in place, expands to fullscreen for more rows." },
-  { title: "Form", description: "Short structured input. Free text stays in the chat composer." },
-  { title: "Fullscreen shell", description: "Collapsible sidebar, tabs and a composer-safe bottom area." },
+  { title: "Document editor", description: "Fullscreen editing with a toolbar and Claude's inline suggestions (kit: Full screen / Document editing)." },
+  { title: "Cohort heatmap", description: "Fullscreen data view with range sliders and a heatmap table (kit: Full screen / Data visualization)." },
+  { title: "Task table", description: "Fullscreen project table with status, priority and timeline tags (kit: Full screen / Task management)." },
 ]
 
 export function getComponent(slug: string) {

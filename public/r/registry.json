@@ -136,6 +136,126 @@
       ]
     },
     {
+      "name": "list-view",
+      "type": "registry:component",
+      "title": "List view",
+      "description": "Rich rows with avatar, title, meta, timestamp and body, plus a footer link. Based on the MCP Apps for Claude kit.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host-tokens.json",
+        "https://mcpblocks.dev/r/host.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/components/list-view.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "confirm-action",
+      "type": "registry:component",
+      "title": "Confirm action",
+      "description": "Confirmation for a change Claude prepared: subject row with one confirm button and a checklist of what the change includes. Based on the MCP Apps for Claude kit.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/status-update.json",
+        "https://mcpblocks.dev/r/host-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/components/confirm-action.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "media-player",
+      "type": "registry:component",
+      "title": "Media player",
+      "description": "Inline audio card with play/pause, seekable waveform and regenerate/download actions. Based on the MCP Apps for Claude kit.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host-tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/components/media-player.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "line-chart",
+      "type": "registry:component",
+      "title": "Line chart",
+      "description": "Borderless SVG line chart with area fills, hover tooltip, range tabs and legend. Based on the MCP Apps for Claude kit.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host-tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/components/line-chart.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "document-card",
+      "type": "registry:component",
+      "title": "Document card",
+      "description": "Document preview with properties, editable lists and tasks. Based on the MCP Apps for Claude kit.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host-tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/components/document-card.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "carousel",
+      "type": "registry:component",
+      "title": "Carousel",
+      "description": "3–8 comparable items with tall images, save toggle, rating and meta row, edge fade and next button. Based on the MCP Apps for Claude kit.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host-tokens.json",
+        "https://mcpblocks.dev/r/host.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/components/carousel.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:component",
+      "title": "Skeleton",
+      "description": "Loading placeholders: RowsSkeleton (kit loading state), InlineCardSkeleton, CarouselSkeleton.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host-tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/components/skeleton.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
       "name": "inline-card",
       "type": "registry:component",
       "title": "Inline card",
@@ -165,53 +285,6 @@
       "files": [
         {
           "path": "registry/mcpblocks/components/status-update.tsx",
-          "type": "registry:component"
-        }
-      ]
-    },
-    {
-      "name": "confirm-action",
-      "type": "registry:component",
-      "title": "Confirm action",
-      "description": "Approve / edit-in-chat pattern for a change Claude prepared, with working, done and error states.",
-      "registryDependencies": [
-        "https://mcpblocks.dev/r/inline-card.json",
-        "https://mcpblocks.dev/r/status-update.json"
-      ],
-      "files": [
-        {
-          "path": "registry/mcpblocks/components/confirm-action.tsx",
-          "type": "registry:component"
-        }
-      ]
-    },
-    {
-      "name": "carousel",
-      "type": "registry:component",
-      "title": "Carousel",
-      "description": "3–8 comparable items with scroll-snap and safe-area scroll padding.",
-      "registryDependencies": [
-        "https://mcpblocks.dev/r/host-button.json",
-        "https://mcpblocks.dev/r/host.json"
-      ],
-      "files": [
-        {
-          "path": "registry/mcpblocks/components/carousel.tsx",
-          "type": "registry:component"
-        }
-      ]
-    },
-    {
-      "name": "skeleton",
-      "type": "registry:component",
-      "title": "Skeleton",
-      "description": "Loading placeholders that match InlineCard and Carousel layouts.",
-      "registryDependencies": [
-        "https://mcpblocks.dev/r/host-tokens.json"
-      ],
-      "files": [
-        {
-          "path": "registry/mcpblocks/components/skeleton.tsx",
           "type": "registry:component"
         }
       ]

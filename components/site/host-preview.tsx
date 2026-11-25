@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { AlertTriangle, CheckCircle2, Maximize2, Monitor, Moon, Smartphone, Sun, X } from "lucide-react"
+import { AlertTriangle, CheckCircle2, Code, Maximize2, Monitor, Moon, Smartphone, Sun, X } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -70,9 +70,14 @@ function Segmented<T extends string>({
 export function HostPreview({
   children,
   checks = [],
+  variant = "card",
+  appName = "App",
 }: {
   children: React.ReactNode
   checks?: string[]
+  /** "card": host draws a bordered app container. "borderless": `_meta.ui.prefersBorder: false`. */
+  variant?: "card" | "borderless"
+  appName?: string
 }) {
   const [theme, setTheme] = React.useState<Theme>("light")
   const [mode, setMode] = React.useState<Mode>("inline")
@@ -166,8 +171,10 @@ export function HostPreview({
                 Can you take care of this?
               </div>
               <p className="text-sm">Here&apos;s what I found:</p>
-              <div ref={widgetRef} className={cn("w-full", device === "mobile" && "-mx-1")}>
-                {children}
+              <div ref={widgetRef} className="w-full">
+                <AppFrame name={appName} borderless={variant === "borderless"}>
+                  {children}
+                </AppFrame>
               </div>
               <div className="mt-auto pt-2">
                 <Composer />
@@ -213,6 +220,51 @@ function Composer({ floating }: { floating?: boolean }) {
       <div className="rounded-2xl border border-host-border-secondary bg-host-bg px-4 py-3 text-sm text-host-fg-tertiary shadow-sm">
         Reply…
       </div>
+    </div>
+  )
+}
+
+/**
+ * The host's chrome around an inline app: app name and a view-source button.
+ * Mirrors the "App container" in the MCP Apps for Claude kit. Your widget
+ * renders inside it; you don't build this part yourself.
+ */
+function AppFrame({
+  name,
+  borderless,
+  children,
+}: {
+  name: string
+  borderless?: boolean
+  children: React.ReactNode
+}) {
+  return (
+    <div
+      className={cn(
+        "flex w-full flex-col overflow-hidden",
+        !borderless && "rounded-host-lg border-[length:var(--border-width-regular,0.5px)] border-host-border-secondary bg-host-bg"
+      )}
+    >
+      <div
+        className={cn(
+          "flex h-[52px] shrink-0 items-center justify-between",
+          borderless ? "px-0" : "border-b-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary px-3"
+        )}
+      >
+        <span className="flex items-center gap-2 text-sm leading-[19.6px]">
+          <span
+            aria-hidden="true"
+            className="flex size-5 items-center justify-center rounded-host-xs border-[length:var(--border-width-regular,0.5px)] border-host-border bg-host-bg text-[11px] font-semibold"
+          >
+            {name.charAt(0).toUpperCase()}
+          </span>
+          {name}
+        </span>
+        <span aria-hidden="true" className="flex size-8 items-center justify-center rounded-host-md text-host-fg">
+          <Code className="size-5" />
+        </span>
+      </div>
+      <div>{children}</div>
     </div>
   )
 }

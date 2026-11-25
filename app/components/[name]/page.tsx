@@ -57,12 +57,12 @@ export default async function ComponentPage({
         <header className="flex flex-col gap-2">
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{doc.title}</h1>
           <p className="max-w-2xl text-lg text-[#3d3d3a]">{doc.description}</p>
-          <p className="font-mono text-xs text-muted-foreground">Display modes: {doc.displayModes}</p>
+          <p className="font-mono text-xs text-muted-foreground">Display modes: {doc.displayModes} · Design: {doc.source}</p>
         </header>
 
         <section className="flex flex-col gap-3">
           <h2 className="text-lg font-semibold">Preview</h2>
-          <ComponentPreview slug={doc.slug} checks={doc.checks} />
+          <ComponentPreview slug={doc.slug} checks={doc.checks} variant={doc.variant} />
         </section>
 
         <section className="flex flex-col gap-3">

@@ -31,12 +31,12 @@ Current state: `pnpm build`, `pnpm lint` and `pnpm registry:build` all pass. Pag
 | `registry.json` | Registry manifest (source of truth for distributable items) |
 | `registry/mcpblocks/ui/host-button.tsx` | Shared button, host tokens, 44px min height |
 | `registry/mcpblocks/lib/host.ts` | `applyHostContext`, `applySafeAreaInsets`, `guideline()` dev warnings |
-| `registry/mcpblocks/components/*.tsx` | `inline-card`, `confirm-action`, `carousel`, `status-update`, `skeleton` |
+| `registry/mcpblocks/components/*.tsx` | From the Figma kit: `list-view`, `confirm-action`, `media-player`, `line-chart`, `document-card`, `carousel`, `skeleton` (`RowsSkeleton`). Our own: `inline-card`, `status-update` |
 | `public/r/*.json` | Built registry output (generated, commit it) |
 | `app/globals.css` | Site theme + the host-token layer (mirror of the `host-tokens` item) |
 | `app/page.tsx` | Landing page |
 | `app/components/[name]/page.tsx` | Per-component docs page (SSG) |
-| `components/site/host-preview.tsx` | Simulated host frame + guideline checks |
+| `components/site/host-preview.tsx` | Simulated host frame + guideline checks. `AppFrame` = the host's app chrome (name + view-source) from the kit's "App container"; `variant` card/borderless |
 | `components/site/demos.tsx` | Demo usages rendered in previews |
 | `components/site/chrome.tsx` | Header, footer (attribution), `GITHUB_URL` |
 | `lib/docs.ts` | Docs content: descriptions, usage snippets, props, checks, roadmap |
@@ -51,6 +51,13 @@ Current state: `pnpm build`, `pnpm lint` and `pnpm registry:build` all pass. Pag
 4. **Registry imports** use `@/registry/mcpblocks/...` paths; the shadcn CLI rewrites them on install. Internal `registryDependencies` use full URLs `https://mcpblocks.dev/r/<name>.json`.
 5. **Font**: components use `font-[family-name:var(--font-sans)]` so Claude's injected font applies. Do NOT bundle Anthropic Sans/Serif (not covered by the CC BY license). Site uses Inter / Instrument Serif / JetBrains Mono via a Google Fonts `<link>` (not `next/font`, so builds don't need network).
 6. **ext-apps API** (`@modelcontextprotocol/ext-apps`, class `App`): `app.callServerTool({ name, arguments })`, `app.sendMessage({ role: "user", content: [{ type: "text", text }] })`, `app.requestDisplayMode({ mode: "fullscreen" })`, `app.onhostcontextchanged = (ctx) => ...`. Verify against the package's `dist/src/app.d.ts` before adding new calls.
+
+## Figma source
+
+Working copy of the kit: https://www.figma.com/design/Bbp7doY8pEPK2gwNU4fzc9 (pages: Inline card, Inline carousel, Full screen, Desktop/Mobile components). Inline blocks were built from `get_design_context` on: List views 467:24656, Confirmation 467:24714, Media card 467:24775, Borderless chart 467:24925, Inline editing 467:25074, Loading 467:24645, Carousel 467:31431. The "App container" header is host chrome, so it lives in the preview, not in the components.
+- Icons: lucide-react equivalents, not the kit's icon assets (themeable via currentColor; avoids redistributing Anthropic's icon set).
+- Demo carousel images in `public/demo/` are procedurally generated, not the kit's photos.
+- Not built yet: Full screen page (Document editing, Data visualization cohort heatmap, Task management table) and mobile variants. These are the roadmap items.
 
 ## Legal / attribution (must keep)
 
@@ -92,10 +99,10 @@ Cloudflare Pages, static export (domain is already in the same Cloudflare accoun
 
 ## Next steps (suggested order)
 
-1. Deploy to Vercel, replace placeholders, run the install test above in a scratch app.
+1. Deploy to Cloudflare Pages (see Deploy), replace placeholders, run the install test above in a scratch app.
 2. Add a minimal example MCP server (`examples/deal-app/`) using `@modelcontextprotocol/ext-apps` + these components, and test it as a custom connector in Claude.
 3. **Real host preview:** upgrade `HostPreview` from CSS simulation to a sandboxed iframe host using ext-apps' `AppBridge`, sending `ui/initialize` with hostContext (theme, displayMode, safeAreaInsets, platform) and the token style variables; support pasting a mock tool result as JSON. Keep the guideline checks panel and add DOM-based lint (nested scroll containers, >2 buttons inline, `<select>`/popovers, tap targets <44px, hardcoded colors).
-4. Roadmap components (shown as "Soon" in `lib/docs.ts` → `roadmap`): data table (inline → fullscreen), form (short structured input), fullscreen shell (sidebar, tabs, composer-safe bottom).
+4. Roadmap (from the kit's Full screen page, listed in `lib/docs.ts` → `roadmap`): document editor, cohort heatmap, task table. Build them from the Figma nodes under 467:39707.
 5. Later, only if demand: paid templates (approval inbox, record viewer, booking flow, full-app shell) and/or the local CLI preview.
 
 ## Conventions

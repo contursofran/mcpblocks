@@ -74,3 +74,30 @@ export function CarouselSkeleton({ count = 3, cardWidth = 210 }: { count?: numbe
     </div>
   )
 }
+
+/**
+ * Rows of avatar + three columns, the "Loading" state from the
+ * MCP Apps for Claude kit. Use it while a list or table loads.
+ */
+export function RowsSkeleton({
+  rows = 4,
+  columns = 3,
+  avatar = true,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & { rows?: number; columns?: number; avatar?: boolean }) {
+  return (
+    <div role="status" aria-label="Loading" className={cn("flex w-full flex-col gap-6 p-6", className)} {...props}>
+      {Array.from({ length: rows }).map((_, r) => (
+        <div key={r} className="flex h-8 items-center gap-5">
+          {avatar ? <HostSkeleton className="size-8 shrink-0" style={{ borderRadius: 9999 }} /> : null}
+          <div className="grid h-full flex-1 gap-5" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
+            {Array.from({ length: columns }).map((_, c) => (
+              <HostSkeleton key={c} className="h-full" style={{ borderRadius: "var(--border-radius-md)" }} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
