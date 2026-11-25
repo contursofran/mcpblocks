@@ -2,7 +2,13 @@ import { createMcpExpressApp } from "@modelcontextprotocol/express"
 import { NodeStreamableHTTPServerTransport } from "@modelcontextprotocol/node"
 import { StdioServerTransport } from "@modelcontextprotocol/server/stdio"
 import cors from "cors"
-import { createServer } from "./server.js"
+import fs from "node:fs/promises"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+import { createServer as createDealServer } from "./server.js"
+
+const viewPath = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../dist/view.html")
+const createServer = () => createDealServer(() => fs.readFile(viewPath, "utf-8"))
 
 if (process.argv.includes("--stdio")) {
   await createServer().connect(new StdioServerTransport())

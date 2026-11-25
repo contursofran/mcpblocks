@@ -1,12 +1,7 @@
-import fs from "node:fs/promises"
-import path from "node:path"
-import { fileURLToPath } from "node:url"
 import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server"
 import { McpServer, type CallToolResult } from "@modelcontextprotocol/server"
-import { z } from "zod"
+import * as z from "zod/v4"
 import { deals, nextStage, STAGES, trend } from "./data.js"
-
-const DIST = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../dist")
 
 // One View serves every tool: it reads `structuredContent.view` and renders the
 // matching block. Tools can also point at separate resources if you prefer.
@@ -16,7 +11,11 @@ const ui = { resourceUri: VIEW_URI }
 const fail = (text: string): CallToolResult => ({ isError: true, content: [{ type: "text", text }] })
 const money = (n: number) => `$${n.toLocaleString("en-US")}`
 
-export function createServer(): McpServer {
+/**
+ * `loadView` returns the bundled View (dist/view.html). It is injected so the same server
+ * runs on Node (reads the file) and on Cloudflare Workers (the file is bundled into the Worker).
+ */
+export function createServer(loadView: () => Promise<string>): McpServer {
   const server = new McpServer({ name: "mcpblocks deal app", version: "0.1.0" })
 
   registerAppTool(
@@ -116,7 +115,7 @@ export function createServer(): McpServer {
       {
         uri: VIEW_URI,
         mimeType: RESOURCE_MIME_TYPE,
-        text: await fs.readFile(path.join(DIST, "view.html"), "utf-8"),
+        text: await loadView(),
         // Blocks draw their own borders, so ask the host not to add another.
         _meta: { ui: { prefersBorder: false } },
       },
