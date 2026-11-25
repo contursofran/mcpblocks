@@ -8,6 +8,10 @@ import { deals, nextStage, STAGES, trend } from "./data.js"
 const VIEW_URI = "ui://deal-app/view.html"
 const ui = { resourceUri: VIEW_URI }
 
+// The View already shows the data, so tell the model not to repeat it as text or a table.
+const SHOWN =
+  "The user can already see this in an interactive view above. Do not repeat or tabulate it; reply with at most one short sentence, or answer their question."
+
 const fail = (text: string): CallToolResult => ({ isError: true, content: [{ type: "text", text }] })
 const money = (n: number) => `$${n.toLocaleString("en-US")}`
 
@@ -31,7 +35,7 @@ export function createServer(loadView: () => Promise<string>): McpServer {
       const rows = deals.filter((d) => !stage || d.stage === stage)
       return {
         // `content` is what the model reads; `structuredContent` is for the View.
-        content: [{ type: "text", text: rows.map((d) => `${d.id}: ${d.company} (${d.stage}, ${money(d.amount)})`).join("\n") || "No deals." }],
+        content: [{ type: "text", text: rows.length ? `Showing ${rows.length} deal(s), ids ${rows.map((d) => d.id).join(", ")}. ${SHOWN}` : "No deals match." }],
         structuredContent: { view: "deals", deals: rows, total: deals.length },
       }
     },
@@ -50,7 +54,7 @@ export function createServer(loadView: () => Promise<string>): McpServer {
       const deal = deals.find((d) => d.id === id)
       if (!deal) return fail(`No deal with id ${id}`)
       return {
-        content: [{ type: "text", text: `${deal.company}: ${deal.stage}, ${money(deal.amount)}, closes ${deal.closeDate}. ${deal.note}` }],
+        content: [{ type: "text", text: `Showing the ${deal.company} deal card (${deal.stage}, ${money(deal.amount)}, closes ${deal.closeDate}). ${SHOWN}` }],
         structuredContent: { view: "deal", deal },
       }
     },
@@ -71,7 +75,7 @@ export function createServer(loadView: () => Promise<string>): McpServer {
       const next = nextStage(deal.stage)
       if (!next) return fail(`${deal.company} is already in the last stage.`)
       return {
-        content: [{ type: "text", text: `Waiting for the user to confirm moving ${deal.company} from ${deal.stage} to ${next}.` }],
+        content: [{ type: "text", text: `Showing a confirmation to move ${deal.company} from ${deal.stage} to ${next}; nothing changes until the user presses the button. ${SHOWN}` }],
         structuredContent: { view: "confirm", deal, next },
       }
     },
@@ -105,7 +109,7 @@ export function createServer(loadView: () => Promise<string>): McpServer {
       _meta: { ui },
     },
     async (): Promise<CallToolResult> => ({
-      content: [{ type: "text", text: `Pipeline grew from $${trend.series[0].values[0]}k to $${trend.series[0].values.at(-1)}k over six months.` }],
+      content: [{ type: "text", text: `Showing a pipeline chart: pipeline grew from $${trend.series[0].values[0]}k to $${trend.series[0].values.at(-1)}k over six months. ${SHOWN}` }],
       structuredContent: { view: "trend", ...trend },
     }),
   )
