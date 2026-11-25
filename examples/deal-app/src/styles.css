@@ -1,0 +1,13 @@
+@import "tailwindcss";
+@source "./registry"; /* gitignored (copied by sync-blocks), so list it explicitly */
+@import "./host-tokens.css";
+
+@custom-variant dark (&:is(.dark *));
+
+html,
+body {
+  margin: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
+}

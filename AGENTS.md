@@ -102,7 +102,7 @@ Cloudflare Pages, static export (domain is already in the same Cloudflare accoun
 ## Next steps (suggested order)
 
 1. Deploy to Cloudflare Pages (see Deploy), replace placeholders, run the install test above in a scratch app.
-2. Add a minimal example MCP server (`examples/deal-app/`) using `@modelcontextprotocol/ext-apps` + these components, and test it as a custom connector in Claude.
+2. ~~Add a minimal example MCP server~~ Done: `examples/deal-app/` (ext-apps 2.x, React + Vite single-file view, Streamable HTTP/stdio). Still to do: test it as a custom connector in real Claude through a tunnel (see its README).
 3. **Real host preview:** upgrade `HostPreview` from CSS simulation to a sandboxed iframe host using ext-apps' `AppBridge`, sending `ui/initialize` with hostContext (theme, displayMode, safeAreaInsets, platform) and the token style variables; support pasting a mock tool result as JSON. Keep the guideline checks panel and add DOM-based lint (nested scroll containers, >2 buttons inline, `<select>`/popovers, tap targets <44px, hardcoded colors).
 4. Roadmap (from the kit's Full screen page, listed in `lib/docs.ts` → `roadmap`): document editor, cohort heatmap, task table. Build them from the Figma nodes under 467:39707.
 5. Later, only if demand: paid templates (approval inbox, record viewer, booking flow, full-app shell) and/or the local CLI preview.
