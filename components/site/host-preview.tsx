@@ -230,7 +230,7 @@ function Composer({ floating }: { floating?: boolean }) {
  * Mirrors the "App container" in the MCP Apps for Claude kit. Your widget
  * renders inside it; you don't build this part yourself.
  */
-function AppFrame({
+export function AppFrame({
   name,
   borderless,
   children,

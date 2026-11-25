@@ -1,7 +1,7 @@
 import Link from "next/link"
 
 import { CodeBlock } from "@/components/site/code-block"
-import { ConfirmActionDemo } from "@/components/site/demos"
+import { HeroChat } from "@/components/site/hero-chat"
 import { components, roadmap } from "@/lib/docs"
 
 const features = [
@@ -46,9 +46,7 @@ export default function Home() {
         </div>
 
         <div className="min-w-0">
-          <div className="overflow-hidden rounded-xl border border-[rgba(31,30,29,0.3)] bg-card shadow-[0_12px_32px_-16px_rgba(20,20,19,0.18)]">
-            <ConfirmActionDemo />
-          </div>
+          <HeroChat />
         </div>
       </section>
 
@@ -92,33 +90,7 @@ export default function Home() {
         </ul>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-16">
-        <div className="flex flex-wrap items-center justify-between gap-6 border-t pt-8">
-          <div className="min-w-0 flex-[1_1_360px]">
-            <h2 className="mb-2 text-3xl font-semibold tracking-tight">Free and open source</h2>
-            <p className="max-w-lg text-sm leading-relaxed text-foreground/80">
-              Every component is MIT. Leave your email to hear when templates ship, or if you need an MCP App built for your company.
-            </p>
-          </div>
-          {/* Wire this form to your email provider (e.g. a server action or form endpoint). */}
-          <form className="flex min-w-0 flex-[1_1_320px] flex-wrap gap-2" action="#">
-            <label htmlFor="wl-email" className="sr-only">
-              Email
-            </label>
-            <input
-              id="wl-email"
-              name="email"
-              type="email"
-              required
-              placeholder="you@company.com"
-              className="min-h-11 min-w-0 flex-[1_1_200px] rounded-lg border border-input bg-card px-3.5 text-sm placeholder:text-muted-foreground"
-            />
-            <button type="submit" className="min-h-11 rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground hover:opacity-90">
-              Join the list
-            </button>
-          </form>
-        </div>
-      </section>
+      <div className="pb-16" />
     </main>
   )
 }
