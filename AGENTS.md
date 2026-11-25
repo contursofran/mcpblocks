@@ -76,6 +76,7 @@ Working copy of the kit: https://www.figma.com/design/Bbp7doY8pEPK2gwNU4fzc9 (pa
 
 ## Not yet verified
 
+- Verified locally (shadcn@3 CLI, fresh Next 16 + Tailwind 4.3, registry served from localhost with URLs rewritten): cssVars/theme merge into globals.css, deps install, files resolve, app builds, `host-*` utilities compile. Not verified: the CLI's final file-write step (sandbox blocked ui.shadcn.com) and the deployed URL.
 - End-to-end `npx shadcn add <url>` into a fresh Next.js + Tailwind v4 project (needs the registry deployed to a real URL). Check: cssVars land correctly, import paths rewrite, `host-tokens` utilities resolve.
 - Rendering inside real Claude (deploy a sample MCP App using the components).
 
@@ -87,7 +88,7 @@ Target searches like "claude mcp components", "mcp apps components", "claude wid
 
 Cloudflare Pages, static export (domain is already in the same Cloudflare account):
 - `next.config.ts`: `output: "export"`, `images: { unoptimized: true }`. Build writes `out/` incl. `out/r/*.json`.
-- Pages project: build `pnpm build`, output `out`, env `NODE_VERSION=20`. Custom domain `mcpblocks.dev` (+ `www` redirect).
+- Pages project: build `pnpm build`, output `out`, env `NODE_VERSION=20`. Repo ships `wrangler.jsonc` (`pages_build_output_dir: ./out`), `public/_headers` (CORS + cache for `/r/*`) and `.nvmrc`. Manual deploy: `pnpm build && npx wrangler pages deploy`. Custom domain `mcpblocks.dev` (+ `www` redirect).
 - If server features are needed later (waitlist API, OG images), move to Vercel with Cloudflare DNS set to "DNS only".
 - After first deploy, verify `npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json` in a fresh Next.js + Tailwind v4 app.
 
