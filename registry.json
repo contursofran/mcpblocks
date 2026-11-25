@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "mcpblocks",
-  "homepage": "https://inlinekit.dev",
+  "homepage": "https://mcpblocks.dev",
   "items": [
     {
       "name": "host-tokens",
@@ -71,10 +71,10 @@
           "border-radius-lg": "10px",
           "border-radius-xl": "12px",
           "border-width-regular": "0.5px",
-          "ik-safe-top": "0px",
-          "ik-safe-right": "0px",
-          "ik-safe-bottom": "0px",
-          "ik-safe-left": "0px"
+          "mb-safe-top": "0px",
+          "mb-safe-right": "0px",
+          "mb-safe-bottom": "0px",
+          "mb-safe-left": "0px"
         },
         "dark": {
           "color-background-primary": "#30302e",
@@ -112,7 +112,7 @@
       "description": "Apply hostContext (theme, display mode, safe-area insets) and dev-only guideline warnings.",
       "files": [
         {
-          "path": "registry/inlinekit/lib/host.ts",
+          "path": "registry/mcpblocks/lib/host.ts",
           "type": "registry:lib"
         }
       ]
@@ -126,11 +126,11 @@
         "class-variance-authority"
       ],
       "registryDependencies": [
-        "https://inlinekit.dev/r/host-tokens.json"
+        "https://mcpblocks.dev/r/host-tokens.json"
       ],
       "files": [
         {
-          "path": "registry/inlinekit/ui/host-button.tsx",
+          "path": "registry/mcpblocks/ui/host-button.tsx",
           "type": "registry:ui"
         }
       ]
@@ -141,12 +141,12 @@
       "title": "Inline card",
       "description": "Compact card with up to 5 data points and 2 actions. Auto-fits its height.",
       "registryDependencies": [
-        "https://inlinekit.dev/r/host-button.json",
-        "https://inlinekit.dev/r/host.json"
+        "https://mcpblocks.dev/r/host-button.json",
+        "https://mcpblocks.dev/r/host.json"
       ],
       "files": [
         {
-          "path": "registry/inlinekit/components/inline-card.tsx",
+          "path": "registry/mcpblocks/components/inline-card.tsx",
           "type": "registry:component"
         }
       ]
@@ -160,11 +160,11 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "https://inlinekit.dev/r/host-button.json"
+        "https://mcpblocks.dev/r/host-button.json"
       ],
       "files": [
         {
-          "path": "registry/inlinekit/components/status-update.tsx",
+          "path": "registry/mcpblocks/components/status-update.tsx",
           "type": "registry:component"
         }
       ]
@@ -175,12 +175,12 @@
       "title": "Confirm action",
       "description": "Approve / edit-in-chat pattern for a change Claude prepared, with working, done and error states.",
       "registryDependencies": [
-        "https://inlinekit.dev/r/inline-card.json",
-        "https://inlinekit.dev/r/status-update.json"
+        "https://mcpblocks.dev/r/inline-card.json",
+        "https://mcpblocks.dev/r/status-update.json"
       ],
       "files": [
         {
-          "path": "registry/inlinekit/components/confirm-action.tsx",
+          "path": "registry/mcpblocks/components/confirm-action.tsx",
           "type": "registry:component"
         }
       ]
@@ -191,12 +191,12 @@
       "title": "Carousel",
       "description": "3–8 comparable items with scroll-snap and safe-area scroll padding.",
       "registryDependencies": [
-        "https://inlinekit.dev/r/host-button.json",
-        "https://inlinekit.dev/r/host.json"
+        "https://mcpblocks.dev/r/host-button.json",
+        "https://mcpblocks.dev/r/host.json"
       ],
       "files": [
         {
-          "path": "registry/inlinekit/components/carousel.tsx",
+          "path": "registry/mcpblocks/components/carousel.tsx",
           "type": "registry:component"
         }
       ]
@@ -207,11 +207,11 @@
       "title": "Skeleton",
       "description": "Loading placeholders that match InlineCard and Carousel layouts.",
       "registryDependencies": [
-        "https://inlinekit.dev/r/host-tokens.json"
+        "https://mcpblocks.dev/r/host-tokens.json"
       ],
       "files": [
         {
-          "path": "registry/inlinekit/components/skeleton.tsx",
+          "path": "registry/mcpblocks/components/skeleton.tsx",
           "type": "registry:component"
         }
       ]

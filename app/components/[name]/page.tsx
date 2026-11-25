@@ -67,7 +67,7 @@ export default async function ComponentPage({
 
         <section className="flex flex-col gap-3">
           <h2 className="text-lg font-semibold">Install</h2>
-          <CodeBlock prompt code={`npx shadcn@latest add https://inlinekit.dev/r/${doc.slug}.json`} />
+          <CodeBlock prompt code={`npx shadcn@latest add https://mcpblocks.dev/r/${doc.slug}.json`} />
           <p className="text-sm text-muted-foreground">
             Pulls in <code className="font-mono">host-tokens</code> too, which adds the host CSS variables and
             Tailwind utilities like <code className="font-mono">bg-host-bg</code> to your stylesheet.

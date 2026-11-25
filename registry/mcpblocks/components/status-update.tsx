@@ -2,7 +2,7 @@ import * as React from "react"
 import { AlertTriangle, CheckCircle2, Info, XCircle } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { HostButton } from "@/registry/inlinekit/ui/host-button"
+import { HostButton } from "@/registry/mcpblocks/ui/host-button"
 
 export type StatusTone = "success" | "info" | "warning" | "danger"
 

@@ -2,13 +2,13 @@
 
 Copy-paste React components for **MCP Apps** that feel native inside Claude, and still work in ChatGPT and other MCP hosts. Distributed as a [shadcn registry](https://ui.shadcn.com/docs/registry).
 
-> Replace the placeholder registry domain `inlinekit.dev` before publishing.
+> Replace the placeholder registry domain `mcpblocks.dev` before publishing.
 
 ## What's here
 
 | Path | What it is |
 | --- | --- |
-| `registry/inlinekit/` | The components you distribute (source of truth) |
+| `registry/mcpblocks/` | The components you distribute (source of truth) |
 | `registry.json` | Registry manifest; `pnpm registry:build` writes `public/r/*.json` |
 | `app/` | Docs site: landing page and one page per component |
 | `components/site/` | Site-only pieces: host preview frame, demos, code blocks |
@@ -36,7 +36,7 @@ pnpm build           # production build
 ## Install a component (consumers)
 
 ```bash
-npx shadcn@latest add https://inlinekit.dev/r/inline-card.json
+npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 ```
 
 Inside an MCP App, apply the host context once after `ui/initialize`:

@@ -3,7 +3,7 @@
  *
  * The host sends a `hostContext` during `ui/initialize` and on change.
  * Pass it here to expose safe-area insets as CSS variables that
- * the components read (`--ik-safe-top` … `--ik-safe-left`).
+ * the components read (`--mb-safe-top` … `--mb-safe-left`).
  */
 
 export type SafeAreaInsets = {
@@ -25,10 +25,10 @@ export function applySafeAreaInsets(
   el: HTMLElement = document.documentElement
 ) {
   const { top = 0, right = 0, bottom = 0, left = 0 } = insets ?? {}
-  el.style.setProperty("--ik-safe-top", `${top}px`)
-  el.style.setProperty("--ik-safe-right", `${right}px`)
-  el.style.setProperty("--ik-safe-bottom", `${bottom}px`)
-  el.style.setProperty("--ik-safe-left", `${left}px`)
+  el.style.setProperty("--mb-safe-top", `${top}px`)
+  el.style.setProperty("--mb-safe-right", `${right}px`)
+  el.style.setProperty("--mb-safe-bottom", `${bottom}px`)
+  el.style.setProperty("--mb-safe-left", `${left}px`)
 }
 
 /**

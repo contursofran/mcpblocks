@@ -7,12 +7,12 @@ export const GITHUB_URL = "https://github.com/contursofran/mcpblocks"
 export function Logo() {
   return (
     <Link href="/" className="inline-flex items-center gap-2.5 text-[17px] font-semibold">
-      <span className="inline-flex size-7 items-center justify-center rounded-lg bg-foreground">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#faf9f5" strokeWidth="2.4" aria-hidden="true">
-          <rect x="3" y="6" width="18" height="12" rx="3" />
-        </svg>
-      </span>
-      mcpblocks
+      <svg width="28" height="28" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="9" y="4" width="19" height="7" rx="2.2" fill="#D97757" />
+        <rect x="4" y="12.5" width="24" height="7" rx="2.2" fill="currentColor" />
+        <rect x="4" y="21" width="16" height="7" rx="2.2" fill="currentColor" />
+      </svg>
+      MCP Blocks UI
     </Link>
   )
 }
@@ -56,7 +56,7 @@ export function SiteFooter() {
           </a>
           . Changes: rebuilt as React components, adapted for other MCP hosts. Site built on the shadcn registry template (MIT).
         </p>
-        <p>mcpblocks is an independent project, not affiliated with or endorsed by Anthropic or OpenAI.</p>
+        <p>MCP Blocks UI is an independent project, not affiliated with or endorsed by Anthropic or OpenAI.</p>
       </div>
     </footer>
   )

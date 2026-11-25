@@ -90,10 +90,10 @@ export function HostPreview({
 
   const insets = insetsFor(device, mode)
   const hostVars = {
-    "--ik-safe-top": `${insets.top}px`,
-    "--ik-safe-right": `${insets.right}px`,
-    "--ik-safe-bottom": `${insets.bottom}px`,
-    "--ik-safe-left": `${insets.left}px`,
+    "--mb-safe-top": `${insets.top}px`,
+    "--mb-safe-right": `${insets.right}px`,
+    "--mb-safe-bottom": `${insets.bottom}px`,
+    "--mb-safe-left": `${insets.left}px`,
   } as React.CSSProperties
 
   const tooTall = mode === "inline" && height > INLINE_HEIGHT_CAP
@@ -153,7 +153,7 @@ export function HostPreview({
                 <div
                   ref={widgetRef}
                   className="p-5"
-                  style={{ paddingBottom: `calc(20px + var(--ik-safe-bottom))` }}
+                  style={{ paddingBottom: `calc(20px + var(--mb-safe-bottom))` }}
                 >
                   {children}
                 </div>

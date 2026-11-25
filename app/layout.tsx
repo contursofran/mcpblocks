@@ -5,11 +5,11 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: {
-    default: "mcpblocks | React components for MCP Apps",
-    template: "%s · mcpblocks",
+    default: "MCP Blocks UI | UI components for Claude MCP Apps",
+    template: "%s · MCP Blocks UI",
   },
   description:
-    "Copy-paste React components for MCP Apps, built on Claude's host tokens and display-mode rules. Free and open source.",
+    "React components for Claude MCP Apps and interactive connectors, built on Claude's host tokens, display modes and mobile safe areas. Works in ChatGPT too.",
 }
 
 export default function RootLayout({

@@ -2,8 +2,8 @@
 
 import * as React from "react"
 
-import { InlineCard, type InlineCardField } from "@/registry/inlinekit/components/inline-card"
-import { StatusUpdate } from "@/registry/inlinekit/components/status-update"
+import { InlineCard, type InlineCardField } from "@/registry/mcpblocks/components/inline-card"
+import { StatusUpdate } from "@/registry/mcpblocks/components/status-update"
 
 export type ConfirmActionStatus = "pending" | "working" | "done" | "error"
 

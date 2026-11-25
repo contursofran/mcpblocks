@@ -4,7 +4,7 @@ Read this first. It is the full context for continuing this project.
 
 ## What this is
 
-The project is named **mcpblocks** (2026-11-24). It is a free, open-source shadcn-style component registry for **MCP Apps**, the interactive UI widgets that MCP servers render inside AI hosts. It is designed Claude-first (Claude's host CSS tokens, display-mode rules, mobile safe areas) and should degrade gracefully in ChatGPT, VS Code and other MCP Apps hosts.
+**mcpblocks** (display name **MCP Blocks UI**; domain **mcpblocks.dev**, registered on Cloudflare) is a free, open-source shadcn-style component registry for **MCP Apps**: interactive UI widgets that MCP servers render inside AI hosts. It is designed Claude-first (Claude's host CSS tokens, display-mode rules, mobile safe areas) and should degrade gracefully in ChatGPT, VS Code and other MCP Apps hosts.
 
 **Strategy (decided):** ship free first, measure traffic, waitlist signups and template votes. Only add paid templates/blocks if there is demand. A likely paid candidate later is a local CLI host preview (`npx mcpblocks preview`) that works with any MCP App. A "we build your MCP App" service is also a possible revenue path.
 
@@ -29,9 +29,9 @@ Current state: `pnpm build`, `pnpm lint` and `pnpm registry:build` all pass. Pag
 | Path | Purpose |
 | --- | --- |
 | `registry.json` | Registry manifest (source of truth for distributable items) |
-| `registry/inlinekit/ui/host-button.tsx` | Shared button, host tokens, 44px min height |
-| `registry/inlinekit/lib/host.ts` | `applyHostContext`, `applySafeAreaInsets`, `guideline()` dev warnings |
-| `registry/inlinekit/components/*.tsx` | `inline-card`, `confirm-action`, `carousel`, `status-update`, `skeleton` |
+| `registry/mcpblocks/ui/host-button.tsx` | Shared button, host tokens, 44px min height |
+| `registry/mcpblocks/lib/host.ts` | `applyHostContext`, `applySafeAreaInsets`, `guideline()` dev warnings |
+| `registry/mcpblocks/components/*.tsx` | `inline-card`, `confirm-action`, `carousel`, `status-update`, `skeleton` |
 | `public/r/*.json` | Built registry output (generated, commit it) |
 | `app/globals.css` | Site theme + the host-token layer (mirror of the `host-tokens` item) |
 | `app/page.tsx` | Landing page |
@@ -46,10 +46,10 @@ Current state: `pnpm build`, `pnpm lint` and `pnpm registry:build` all pass. Pag
 1. **Host tokens via Tailwind utilities.** Claude injects CSS variables like `--color-background-primary`, `--color-text-primary`, `--color-border-secondary`, `--border-radius-md`, `--font-sans` on the document. We define light/dark *fallbacks* in `:root` / `.dark` / `[data-host-theme="dark"]`, and map them in `@theme inline` to utilities: `bg-host-bg`, `bg-host-bg-secondary`, `text-host-fg`, `text-host-fg-tertiary`, `border-host-border-secondary`, `bg-host-success-bg`, `text-host-danger-fg`, `rounded-host-md`, etc. Inside the host, the host's inline values win. **Components must only use `host-*` utilities, never hardcoded colors.**
    - Do not define `--color-background-primary` etc. inside `@theme` (Tailwind v4 namespace collision / circular var). Keep fallbacks in `:root`, mapping in `@theme inline`.
    - The `host-tokens` registry item ships the same mapping via `cssVars` (theme/light/dark) in `registry.json`. If you change tokens, update **both** `app/globals.css` and `registry.json`.
-2. **Safe areas** are CSS vars `--ik-safe-top|right|bottom|left` set by `applySafeAreaInsets()` from `hostContext.safeAreaInsets`.
+2. **Safe areas** are CSS vars `--mb-safe-top|right|bottom|left` set by `applySafeAreaInsets()` from `hostContext.safeAreaInsets`.
 3. **Claude guideline limits are enforced softly**: `guideline()` logs dev-only warnings (InlineCard >5 fields or >2 actions; Carousel outside 3–8 items). Inline widgets: no nested scrolling, no dropdowns/popovers, height fits content, max 2 actions, 44px tap targets, skeletons not spinners. Edits go back through chat (`ui/message`), not forms in the widget.
-4. **Registry imports** use `@/registry/inlinekit/...` paths; the shadcn CLI rewrites them on install. Internal `registryDependencies` use full URLs `https://inlinekit.dev/r/<name>.json`.
-5. **Font**: components use `font-[family-name:var(--font-sans)]` so Claude's injected font applies. Do NOT bundle Anthropic Sans/Serif (not covered by the CC BY license). Use upright Inter for site text and headings and JetBrains Mono for code via a Google Fonts `<link>` so builds run without network access (2026-11-24).
+4. **Registry imports** use `@/registry/mcpblocks/...` paths; the shadcn CLI rewrites them on install. Internal `registryDependencies` use full URLs `https://mcpblocks.dev/r/<name>.json`.
+5. **Font**: components use `font-[family-name:var(--font-sans)]` so Claude's injected font applies. Do NOT bundle Anthropic Sans/Serif (not covered by the CC BY license). Site uses Inter / Instrument Serif / JetBrains Mono via a Google Fonts `<link>` (not `next/font`, so builds don't need network).
 6. **ext-apps API** (`@modelcontextprotocol/ext-apps`, class `App`): `app.callServerTool({ name, arguments })`, `app.sendMessage({ role: "user", content: [{ type: "text", text }] })`, `app.requestDisplayMode({ mode: "fullscreen" })`, `app.onhostcontextchanged = (ctx) => ...`. Verify against the package's `dist/src/app.d.ts` before adding new calls.
 
 ## Legal / attribution (must keep)
@@ -61,13 +61,34 @@ Current state: `pnpm build`, `pnpm lint` and `pnpm registry:build` all pass. Pag
 
 ## Placeholders to replace before launch
 
-- Domain `inlinekit.dev` (in `registry.json` homepage + every `registryDependencies` URL, `lib`/pages install commands, README). Then `pnpm registry:build`.
+- Domain mcpblocks.dev is registered (Cloudflare). Still to claim: the `mcpblocks` npm name / `@mcpblocks` npm org, and the GitHub org. The code already uses `https://mcpblocks.dev`.
+- `GITHUB_URL` in `components/site/chrome.tsx` (`your-org/mcpblocks`).
 - Waitlist form in `app/page.tsx` has `action="#"`; wire to an email provider (server action + e.g. Resend/Loops/Buttondown) and add basic analytics (Vercel Analytics or Plausible) to measure the free-first experiment.
 
 ## Not yet verified
 
 - End-to-end `npx shadcn add <url>` into a fresh Next.js + Tailwind v4 project (needs the registry deployed to a real URL). Check: cssVars land correctly, import paths rewrite, `host-tokens` utilities resolve.
 - Rendering inside real Claude (deploy a sample MCP App using the components).
+
+## SEO (decided)
+
+Target searches like "claude mcp components", "mcp apps components", "claude widgets". Don't use "Claude" in the product name (trademark); use it in titles/taglines ("for Claude MCP Apps"). Site title: "mcpblocks — UI components for Claude MCP Apps". Add per-page `generateMetadata` titles like "Carousel component for Claude MCP Apps | mcpblocks", an OG image, sitemap.ts and robots.ts. Distribution: shadcn registry directory PR, ext-apps community list, awesome-mcp lists, r/ClaudeAI, r/mcp, Show HN, one tutorial post.
+
+## Deploy (decided)
+
+Cloudflare Pages, static export (domain is already in the same Cloudflare account):
+- `next.config.ts`: `output: "export"`, `images: { unoptimized: true }`. Build writes `out/` incl. `out/r/*.json`.
+- Pages project: build `pnpm build`, output `out`, env `NODE_VERSION=20`. Custom domain `mcpblocks.dev` (+ `www` redirect).
+- If server features are needed later (waitlist API, OG images), move to Vercel with Cloudflare DNS set to "DNS only".
+- After first deploy, verify `npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json` in a fresh Next.js + Tailwind v4 app.
+
+## Brand (decided)
+
+- Display name **MCP Blocks UI**; logo = "stacked blocks" mark (clay `#D97757` top bar, warm black `#141413` bars). Files: logo zip from the chat (`icon.svg`, `favicon.ico`, `apple-icon.png` go in `app/`).
+- Palette: Claude neutrals + clay accent used sparingly (`#D97757` shapes/icons, `#B5543A` for accent text, contrast-safe on ivory). Buttons stay warm black.
+- Fonts: Inter + JetBrains Mono. Never ship Anthropic Sans/Serif (proprietary). No Claude logo.
+- No waitlist / "free and open source" section for now (opening later).
+- Design reference canvas: https://claude.ai/artifact/GHvBjVQ1wSn3jG1Ps2x3dg (landing with chat-window hero, component page, logo concepts).
 
 ## Next steps (suggested order)
 
@@ -79,6 +100,6 @@ Current state: `pnpm build`, `pnpm lint` and `pnpm registry:build` all pass. Pag
 
 ## Conventions
 
-- Add a component: create `registry/inlinekit/components/<name>.tsx`, add an item to `registry.json`, add a demo to `components/site/demos.tsx` (+ `demos` map), add docs to `lib/docs.ts`, run `pnpm registry:build && pnpm build`.
+- Add a component: create `registry/mcpblocks/components/<name>.tsx`, add an item to `registry.json`, add a demo to `components/site/demos.tsx` (+ `demos` map), add docs to `lib/docs.ts`, run `pnpm registry:build && pnpm build`.
 - Accessibility: real `<button>`/`<a>`, `aria-label` on icon-only buttons, text contrast ≥ 4.5:1, status icons with labels.
 - Keep components presentational (props + callbacks); host wiring stays in the consumer's app.

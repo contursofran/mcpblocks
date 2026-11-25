@@ -42,7 +42,7 @@ export default function Home() {
           >
             Browse components
           </Link>
-          <CodeBlock prompt code="npx shadcn@latest add https://inlinekit.dev/r/inline-card.json" className="max-w-xl" />
+          <CodeBlock prompt code="npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json" className="max-w-xl" />
         </div>
 
         <div className="min-w-0">

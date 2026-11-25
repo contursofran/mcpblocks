@@ -68,10 +68,10 @@
       "border-radius-lg": "10px",
       "border-radius-xl": "12px",
       "border-width-regular": "0.5px",
-      "ik-safe-top": "0px",
-      "ik-safe-right": "0px",
-      "ik-safe-bottom": "0px",
-      "ik-safe-left": "0px"
+      "mb-safe-top": "0px",
+      "mb-safe-right": "0px",
+      "mb-safe-bottom": "0px",
+      "mb-safe-left": "0px"
     },
     "dark": {
       "color-background-primary": "#30302e",

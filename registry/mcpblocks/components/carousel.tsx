@@ -1,8 +1,8 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { guideline } from "@/registry/inlinekit/lib/host"
-import { HostButton } from "@/registry/inlinekit/ui/host-button"
+import { guideline } from "@/registry/mcpblocks/lib/host"
+import { HostButton } from "@/registry/mcpblocks/ui/host-button"
 
 export type CarouselItem = {
   id: string
@@ -44,7 +44,7 @@ export function Carousel({
       data-slot="carousel"
       className={cn(
         "flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 font-[family-name:var(--font-sans)] text-host-fg [scrollbar-width:none]",
-        "scroll-px-[max(var(--ik-safe-left),0px)] px-[var(--ik-safe-left)]",
+        "scroll-px-[max(var(--mb-safe-left),0px)] px-[var(--mb-safe-left)]",
         className
       )}
       {...props}
@@ -84,7 +84,7 @@ export function Carousel({
           </div>
         </article>
       ))}
-      <div aria-hidden="true" className="w-[var(--ik-safe-right)] shrink-0" />
+      <div aria-hidden="true" className="w-[var(--mb-safe-right)] shrink-0" />
     </div>
   )
 }

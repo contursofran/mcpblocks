@@ -1,11 +1,11 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import { guideline } from "@/registry/inlinekit/lib/host"
+import { guideline } from "@/registry/mcpblocks/lib/host"
 import {
   HostButton,
   type HostButtonProps,
-} from "@/registry/inlinekit/ui/host-button"
+} from "@/registry/mcpblocks/ui/host-button"
 
 export type InlineCardField = {
   label: string

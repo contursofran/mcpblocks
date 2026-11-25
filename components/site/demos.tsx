@@ -2,14 +2,14 @@
 
 import * as React from "react"
 
-import { Carousel } from "@/registry/inlinekit/components/carousel"
-import { ConfirmAction } from "@/registry/inlinekit/components/confirm-action"
-import { InlineCard } from "@/registry/inlinekit/components/inline-card"
+import { Carousel } from "@/registry/mcpblocks/components/carousel"
+import { ConfirmAction } from "@/registry/mcpblocks/components/confirm-action"
+import { InlineCard } from "@/registry/mcpblocks/components/inline-card"
 import {
   CarouselSkeleton,
   InlineCardSkeleton,
-} from "@/registry/inlinekit/components/skeleton"
-import { StatusUpdate } from "@/registry/inlinekit/components/status-update"
+} from "@/registry/mcpblocks/components/skeleton"
+import { StatusUpdate } from "@/registry/mcpblocks/components/status-update"
 
 const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
 
