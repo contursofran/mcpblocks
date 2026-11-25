@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import * as React from "react";
+import * as React from "react"
 
-import { AppFrame } from "@/components/site/host-preview";
-import { HeroSlackList } from "@/components/site/demos";
+import { AppFrame } from "@/components/site/host-preview"
+import { HeroSlackList } from "@/components/site/demos"
 
 /**
  * Landing-page hero: a desktop chat window with an MCP App rendered inline,
@@ -12,16 +12,16 @@ import { HeroSlackList } from "@/components/site/demos";
  * serif assistant text) without copying its branding.
  */
 type HeroChatProps = {
-  title?: string;
-  prompt?: string;
-  reply?: string;
-  app?: string;
-  icon?: React.ReactNode;
-  children?: React.ReactNode;
-  before?: React.ReactNode;
-};
+  title?: string
+  prompt?: string
+  reply?: string
+  app?: string
+  icon?: React.ReactNode
+  children?: React.ReactNode
+  before?: React.ReactNode
+}
 
-type Mode = "before" | "after";
+type Mode = "before" | "after"
 
 export function HeroChat({
   title = "Onboarding feedback",
@@ -32,7 +32,17 @@ export function HeroChat({
   children = <HeroSlackList />,
   before = <SlackPlainText />,
 }: HeroChatProps) {
-  const [mode, setMode] = React.useState<Mode>("after");
+  const [mode, setMode] = React.useState<Mode>("after")
+  const [auto, setAuto] = React.useState(true)
+
+  // Flip between the two states on its own until the visitor picks one.
+  // "With" stays up longer, since it's the point of the page.
+  React.useEffect(() => {
+    if (!auto) return
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return
+    const t = setTimeout(() => setMode((m) => (m === "after" ? "before" : "after")), mode === "after" ? 6000 : 4000)
+    return () => clearTimeout(t)
+  }, [auto, mode])
   return (
     <div className="flex flex-col gap-3">
       <div
@@ -50,7 +60,10 @@ export function HeroChat({
             key={value}
             role="tab"
             aria-selected={mode === value}
-            onClick={() => setMode(value)}
+            onClick={() => {
+              setAuto(false)
+              setMode(value)
+            }}
             className={
               "min-h-8 rounded-full px-3.5 transition-colors " +
               (mode === value
@@ -70,9 +83,7 @@ export function HeroChat({
             <span className="size-3 rounded-full border border-black/10 bg-[#febc2e]" />
             <span className="size-3 rounded-full border border-black/10 bg-[#28c840]" />
           </div>
-          <span className="absolute inset-x-0 text-center text-xs text-[#73726c] dark:text-[#a6a39a]">
-            {title}
-          </span>
+          <span className="absolute inset-x-0 text-center text-xs text-[#73726c] dark:text-[#a6a39a]">{title}</span>
         </div>
 
         <div className="flex flex-col gap-4 px-4 pt-4 pb-3 sm:px-5">
@@ -83,14 +94,16 @@ export function HeroChat({
           </div>
 
           {mode === "after" ? (
-            <div className="flex flex-col gap-2.5">
+            <div key="after" className="flex animate-in flex-col gap-2.5 duration-300 fade-in">
               <p className="font-serif text-[15px] leading-relaxed">{reply}</p>
               <AppFrame name={app} icon={icon}>
                 {children}
               </AppFrame>
             </div>
           ) : (
-            before
+            <div key="before" className="animate-in duration-300 fade-in">
+              {before}
+            </div>
           )}
         </div>
 
@@ -104,7 +117,7 @@ export function HeroChat({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 /** The same answer as a host without MCP Apps would give it: a wall of text. */
@@ -112,16 +125,15 @@ function SlackPlainText() {
   return (
     <div className="flex flex-col gap-3 font-serif text-[15px] leading-relaxed">
       <p className="flex items-center gap-1.5 font-[family-name:var(--font-sans)] text-xs text-[#73726c] dark:text-[#a6a39a]">
-        <span aria-hidden="true">⌕</span> Searched Slack for
-        &quot;onboarding&quot; · 12 results
+        <span aria-hidden="true">⌕</span> Searched Slack for &quot;onboarding&quot; · 12 results
       </p>
       <p>Here&apos;s what I found in Slack:</p>
       <p>
-        1. Marcus Johnson in #design (Nov 12): &quot;Mocked up a version that
-        delays the notification prompt until after the first task.&quot;
+        1. Marcus Johnson in #design (Nov 12): &quot;Mocked up a version that delays the notification prompt until after
+        the first task.&quot;
         <br />
-        2. Sarah Chen in #design-critiques (Nov 15): &quot;Tested the revised
-        onboarding with 5 users. Completion went from 34% to 67%.&quot;
+        2. Sarah Chen in #design-critiques (Nov 15): &quot;Tested the revised onboarding with 5 users. Completion went
+        from 34% to 67%.&quot;
       </p>
       <p className="break-all">
         There are 10 more results. You can see them here:
@@ -129,7 +141,7 @@ function SlackPlainText() {
       </p>
       <p>Want me to summarize the rest?</p>
     </div>
-  );
+  )
 }
 
 function SlackLogo() {
@@ -152,5 +164,5 @@ function SlackLogo() {
         d="M77.6 97c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9-12.9-5.8-12.9-12.9V97h12.9zm0-6.5c-7.1 0-12.9-5.8-12.9-12.9s5.8-12.9 12.9-12.9h32.3c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H77.6z"
       />
     </svg>
-  );
+  )
 }
