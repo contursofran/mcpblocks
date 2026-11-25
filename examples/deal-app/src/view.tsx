@@ -4,12 +4,12 @@ import { StrictMode, useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 
 import "./styles.css"
-import { ConfirmAction } from "@/registry/mcpblocks/components/confirm-action"
-import { InlineCard } from "@/registry/mcpblocks/components/inline-card"
-import { LineChart } from "@/registry/mcpblocks/components/line-chart"
-import { ListView } from "@/registry/mcpblocks/components/list-view"
-import { RowsSkeleton } from "@/registry/mcpblocks/components/skeleton"
-import { applyHostContext } from "@/registry/mcpblocks/lib/host"
+import { ConfirmAction } from "@/components/confirm-action"
+import { InlineCard } from "@/components/inline-card"
+import { LineChart } from "@/components/line-chart"
+import { ListView } from "@/components/list-view"
+import { RowsSkeleton } from "@/components/skeleton"
+import { applyHostContext } from "@/lib/host"
 
 type Deal = { id: string; company: string; contact: string; email: string; stage: string; amount: number; closeDate: string; note: string }
 type Payload =

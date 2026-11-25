@@ -15,10 +15,11 @@ While a tool result is on its way the view shows `RowsSkeleton` (skeleton, not a
 
 ```
 server/server.ts   registers tools + the ui:// resource (@modelcontextprotocol/ext-apps/server)
-server/main.ts     Streamable HTTP at /mcp (or --stdio)
+server/main.ts     Node: Streamable HTTP at /mcp (or --stdio)
 src/view.tsx       the View: useApp() + useHostStyles(), switches on structuredContent.view
 view.html          Vite entry, bundled to ONE file (dist/view.html) by vite-plugin-singlefile
-scripts/sync-blocks.mjs   copies the blocks into src/, like `npx shadcn add` would
+worker/index.ts    Cloudflare Worker entry: the same server at https://mcpblocks.dev/mcp
+src/components, src/lib/host.ts, src/styles.css   installed by `npx shadcn add` (see below)
 ```
 
 - One resource (`ui://deal-app/view.html`) serves every tool. Each tool returns `content` (what the model reads) and `structuredContent` (what the view renders).
@@ -32,13 +33,19 @@ Requires Node 20+.
 ```bash
 cd examples/deal-app
 npm install
-npm run build        # copies blocks from ../../registry, type-checks, bundles dist/view.html
+npm run build        # type-checks and bundles dist/view.html
 npm start            # http://localhost:3001/mcp
 ```
 
 `npm run dev` does build + start. Re-run `npm run build` after editing `src/` (the server reads `dist/view.html` on each request, so no server restart is needed).
 
-> The blocks are copied from this repo's `registry/` so the example always matches the source. In your own project, install them from the registry instead: `npx shadcn@latest add https://mcpblocks.dev/r/list-view.json`.
+> The blocks in `src/components` are exactly what `npx shadcn@latest add https://mcpblocks.dev/r/list-view.json` (and `inline-card`, `confirm-action`, `line-chart`, `skeleton`) writes into a project with the `components.json` in this folder, so this app doubles as an end-to-end test of the registry and the docs. To refresh them, re-run that command with `-o` to overwrite.
+
+## Live demo (Cloudflare Worker)
+
+The site at mcpblocks.dev is a Worker with static assets. `/mcp` goes to `worker/index.ts`, everything else is served from `out/`. Add `https://mcpblocks.dev/mcp` as a custom connector to try it without running anything. The Worker bundles `dist/view.html`, so **commit `dist/view.html` after changing `src/`** (`npm run build`). State (deal stages) lives in memory per Worker instance, so it can reset at any time.
+
+Local Worker: from the repo root, `pnpm worker:dev` serves it at `http://localhost:8787/mcp`.
 
 ## Add it to Claude as a custom connector
 
@@ -77,4 +84,5 @@ The server has **no authentication**, which is fine for a throwaway tunnel but n
 ## Verified vs. not yet verified
 
 - Verified: builds; server answers `initialize`, `tools/list`, `tools/call`, `resources/read`; the bundled view renders all four blocks in light and dark against a scripted host and completes the confirm round trip (`tools/call` then `ui/update-model-context`).
-- Not yet verified: running inside real Claude through a tunnel. Menu names above are from memory of the current Claude UI, so adjust if they've moved.
+- Verified against an `AppBridge` host in a browser (light and dark): `list_deals` row click sends the follow-up message, Confirm calls `update_deal_stage`, charts and cards render with the shadcn-installed blocks. The Worker answers `initialize`, `tools/list`, `tools/call` and `resources/read` under `wrangler dev`.
+- Not yet verified: running inside real Claude. Menu names above are from memory of the current Claude UI, so adjust if they've moved.

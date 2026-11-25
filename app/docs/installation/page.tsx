@@ -29,7 +29,8 @@ export default function InstallationPage() {
             Tailwind CSS v4. The tokens are mapped with <Code>@theme inline</Code>, which v3 does not support.
           </li>
           <li>
-            A <Code>components.json</Code> file. If you do not have one, run <Code>npx shadcn@latest init</Code> first.
+            A <Code>components.json</Code> file, the <Code>@/*</Code> path alias and a <Code>cn</Code> helper in{" "}
+            <Code>lib/utils.ts</Code>. If you do not have them, run <Code>npx shadcn@latest init</Code> first.
           </li>
           <li>
             The <Code>@modelcontextprotocol/ext-apps</Code> package, if you want to talk to the host (see{" "}

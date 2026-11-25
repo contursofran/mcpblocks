@@ -25,14 +25,15 @@ export default function McpServerPage() {
       <Step n={1} title="Install the SDKs">
         <CodeBlock
           prompt
-          code="npm install @modelcontextprotocol/ext-apps @modelcontextprotocol/server @modelcontextprotocol/node zod"
+          code="npm install @modelcontextprotocol/ext-apps @modelcontextprotocol/server @modelcontextprotocol/node zod react react-dom"
         />
         <p className="text-sm text-muted-foreground">
           Package names and APIs follow ext-apps 2.x and may change. Check the{" "}
           <a className="underline underline-offset-2" href="https://apps.extensions.modelcontextprotocol.io/api/">
             ext-apps docs
           </a>{" "}
-          before copying, and add the other peer packages it lists if your setup needs them.
+          before copying. ext-apps also needs <Code>@modelcontextprotocol/client</Code> and <Code>zod</Code> 4.2 or newer as
+          peers; npm installs them for you, pnpm and yarn may ask you to add them.
         </p>
       </Step>
 
@@ -67,7 +68,7 @@ registerAppTool(
   }
 )
 
-registerAppResource(server, "Deal summary", viewUri, {}, async () => ({
+registerAppResource(server, "Deal summary", viewUri, { mimeType: RESOURCE_MIME_TYPE }, async () => ({
   contents: [
     {
       uri: viewUri,
@@ -78,9 +79,31 @@ registerAppResource(server, "Deal summary", viewUri, {}, async () => ({
 }))`}
         />
         <p className="text-foreground/80">
-          Serve it over Streamable HTTP with <Code>NodeStreamableHTTPServerTransport</Code> from{" "}
-          <Code>@modelcontextprotocol/node</Code>, or over stdio for local use, then add the URL as a custom connector
-          in Claude.
+          Serve it over Streamable HTTP, then add the URL as a custom connector in Claude. On any runtime with web
+          standard <Code>Request</Code> and <Code>Response</Code> (Cloudflare Workers, Deno, Bun) that is one line with{" "}
+          <Code>createMcpHandler</Code>. On Node use <Code>NodeStreamableHTTPServerTransport</Code> from{" "}
+          <Code>@modelcontextprotocol/node</Code>, or stdio for local use.
+        </p>
+        <CodeBlock
+          code={`import { createMcpHandler } from "@modelcontextprotocol/server"
+
+// Wrap your server setup above in a function so each request gets a fresh server.
+const handler = createMcpHandler(() => createServer())
+
+export default {
+  fetch: (request: Request) => handler.fetch(request),
+}`}
+        />
+        <p className="text-sm text-muted-foreground">
+          This site runs exactly that: the demo server at <Code>https://mcpblocks.dev/mcp</Code> is a Cloudflare Worker
+          next to the static docs. Its source is in{" "}
+          <a
+            className="underline underline-offset-2"
+            href="https://github.com/contursofran/mcpblocks/tree/master/examples/deal-app"
+          >
+            examples/deal-app
+          </a>
+          .
         </p>
       </Step>
 
@@ -98,12 +121,13 @@ registerAppResource(server, "Deal summary", viewUri, {}, async () => ({
 
       <Step n={4} title="Connect the view to the host">
         <p className="text-foreground/80">
-          <Code>useApp</Code> performs the handshake. Pass every host context update to{" "}
-          <Code>applyHostContext</Code> so theme, display mode and safe-area insets reach the components.
+          <Code>useApp</Code> performs the handshake. <Code>useHostStyles</Code> applies the CSS variables Claude sends
+          (colors, fonts, radii), and <Code>applyHostContext</Code> passes theme, display mode and safe-area insets on to
+          the components. Without <Code>useHostStyles</Code> the components fall back to the built-in token values.
         </p>
         <CodeBlock
-          code={`import { useApp } from "@modelcontextprotocol/ext-apps/react"
-import { useState } from "react"
+          code={`import { useApp, useHostStyles } from "@modelcontextprotocol/ext-apps/react"
+import { useEffect, useState } from "react"
 
 import { InlineCard } from "@/components/inline-card"
 import { applyHostContext } from "@/lib/host"
@@ -121,6 +145,13 @@ export function DealView() {
       app.onhostcontextchanged = (ctx) => applyHostContext(ctx)
     },
   })
+
+  // Applies the colors, fonts and theme the host sends, which the host-* utilities read.
+  useHostStyles(app, app?.getHostContext())
+  // First paint: apply the initial context once connected.
+  useEffect(() => {
+    if (app) applyHostContext(app.getHostContext())
+  }, [app])
 
   if (!deal) return null
 
@@ -144,8 +175,8 @@ export function DealView() {
 }`}
         />
         <p className="text-sm text-muted-foreground">
-          The initial host context is available from <Code>app.getHostContext()</Code> once connected. Call{" "}
-          <Code>applyHostContext</Code> with it too so the first paint matches the host.
+          The initial host context is available from <Code>app.getHostContext()</Code> once connected, which is why the
+          effect above applies it too.
         </p>
       </Step>
 
@@ -166,7 +197,9 @@ export function DealView() {
       <Step n={6} title="Test it">
         <ul className="list-disc space-y-1 pl-5 text-foreground/80">
           <li>
-            Run the server and add it as a custom connector in Claude, or use the basic host from the ext-apps repo.
+            Run the server and add it as a custom connector in Claude (Settings, Connectors, Add custom connector, then paste
+            the <Code>/mcp</Code> URL), or use the basic host from the ext-apps repo. To try ours first, add{" "}
+            <Code>https://mcpblocks.dev/mcp</Code> and ask Claude to show your open deals.
           </li>
           <li>Check light and dark, inline and fullscreen, and a phone-sized window.</li>
           <li>
