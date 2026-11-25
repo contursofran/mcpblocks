@@ -2,7 +2,7 @@
 
 Copy-paste React components for **MCP Apps** that feel native inside Claude, and still work in ChatGPT and other MCP hosts. Distributed as a [shadcn registry](https://ui.shadcn.com/docs/registry).
 
-> Replace the placeholder registry domain `mcpblocks.dev` before publishing.
+Docs and live previews: <https://mcpblocks.dev>
 
 ## What's here
 
@@ -10,16 +10,31 @@ Copy-paste React components for **MCP Apps** that feel native inside Claude, and
 | --- | --- |
 | `registry/mcpblocks/` | The components you distribute (source of truth) |
 | `registry.json` | Registry manifest; `pnpm registry:build` writes `public/r/*.json` |
-| `app/` | Docs site: landing page and one page per component |
+| `app/` | Docs site: landing page, component pages, tokens, installation and MCP server guides |
 | `components/site/` | Site-only pieces: host preview frame, demos, code blocks |
 | `lib/docs.ts` | Component docs content (descriptions, usage, props, checks) |
 | `examples/deal-app/` | Example MCP server rendering the blocks as MCP App views; add it to Claude as a custom connector |
 
 ### Components (free)
 
-- `host-tokens`: fallback values for the CSS variables the host injects, mapped to Tailwind utilities (`bg-host-bg`, `text-host-fg`, `border-host-border`, `rounded-host-md`, …). Inside Claude, the host's values win.
+| Item | What it is |
+| --- | --- |
+| `list-view` | Short list of rich rows (avatar, title, meta, body) with a footer link |
+| `confirm-action` | Confirmation for a change Claude prepared, with one confirm button and a checklist |
+| `media-player` | Inline audio card with play/pause and a seekable waveform |
+| `line-chart` | Borderless SVG line chart with tooltip, range tabs and legend |
+| `document-card` | Document preview with properties, editable lists and tasks |
+| `carousel` | 3–8 comparable items with tall images, save toggle and rating |
+| `inline-card` | Compact card with up to 5 data points and 2 actions |
+| `status-update` | Success, info, warning and error confirmations |
+| `skeleton` | Loading placeholders (`RowsSkeleton`, `InlineCardSkeleton`, `CarouselSkeleton`) |
+
+### Building blocks
+
+- `host-tokens`: every color, type size and radius from the MCP Apps for Claude kit (light and dark) as fallbacks for the CSS variables the host injects, mapped to Tailwind utilities (`bg-host-bg`, `text-host-fg`, `text-host-heading-lg`, `rounded-host-md`, …). Inside Claude, the host's values win.
 - `host` (lib): `applyHostContext()` for theme, display mode and safe-area insets, plus dev-only guideline warnings.
-- `host-button`, `inline-card`, `confirm-action`, `carousel`, `status-update`, `skeleton`.
+- `host-button`: button with host tokens and a 44px tap target.
+- `icons`: 38 icons from the kit as `currentColor` components.
 
 ### Host preview
 
@@ -36,17 +51,23 @@ pnpm build           # production build
 
 ## Install a component (consumers)
 
+Requires a React project with Tailwind CSS v4 and a `components.json` (run `npx shadcn@latest init` if you don't have one).
+
 ```bash
 npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 ```
 
-Inside an MCP App, apply the host context once after `ui/initialize`:
+The CLI also installs the dependencies of the component (`host-tokens`, `host`, `host-button`, `icons`) and adds the host CSS variables to your stylesheet. Swap `inline-card` for any item above.
+
+Inside an MCP App, apply the host context once the app has connected and on every change:
 
 ```ts
 import { applyHostContext } from "@/lib/host"
 
 app.onhostcontextchanged = (ctx) => applyHostContext(ctx)
 ```
+
+Full guides: [Installation](https://mcpblocks.dev/docs/installation) and [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server) (register a tool and `ui://` resource with `@modelcontextprotocol/ext-apps`, then render the view with these components).
 
 ## Attribution
 

@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "Design tokens for Claude MCP Apps",
   description:
     "The colors, type scale and radii from Anthropic's MCP Apps for Claude kit, in light and dark, as CSS variables and Tailwind utilities.",
+  alternates: { canonical: "/tokens" },
+  openGraph: { images: ["/opengraph-image"] },
 }
 
 function Swatch({ value, dark }: { value: string; dark?: boolean }) {

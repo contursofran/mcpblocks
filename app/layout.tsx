@@ -1,15 +1,25 @@
 import type { Metadata } from "next"
 
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
 import { SiteFooter, SiteHeader } from "@/components/site/chrome"
 import "./globals.css"
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "MCP Blocks UI | UI components for Claude MCP Apps",
     template: "%s · MCP Blocks UI",
   },
-  description:
-    "React components for Claude MCP Apps and interactive connectors, built on Claude's host tokens, display modes and mobile safe areas. Works in ChatGPT too.",
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: "MCP Blocks UI | UI components for Claude MCP Apps",
+    description: SITE_DESCRIPTION,
+    url: "/",
+  },
+  twitter: { card: "summary_large_image" },
 }
 
 export default function RootLayout({
