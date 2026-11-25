@@ -52,6 +52,20 @@ export function ConfirmActionDemo() {
   )
 }
 
+/** Shorter Slack list for the landing-page hero chat. */
+export function HeroSlackList() {
+  return (
+    <ListView
+      items={[
+        { id: "1", initials: "MJ", avatarColor: "#835EEE", title: "Marcus Johnson", meta: "#design", timestamp: "Nov 12", body: "Mocked up a version that delays the notification prompt until after the first task." },
+        { id: "2", initials: "SC", avatarColor: "#6366E9", title: "Sarah Chen", meta: "#design-critiques", timestamp: "Nov 15", body: "Tested the revised onboarding with 5 users. Completion went from 34% to 67%." },
+      ]}
+      summary="Showing 2 of 12 results"
+      viewAll={{ label: "View in Slack" }}
+    />
+  )
+}
+
 export function MediaPlayerDemo() {
   return (
     <MediaPlayer
