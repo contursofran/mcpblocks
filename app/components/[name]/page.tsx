@@ -6,6 +6,7 @@ import { CodeBlock } from "@/components/site/code-block"
 import { ComponentPreview } from "@/components/site/component-preview"
 import { cn } from "@/lib/utils"
 import { components, getComponent } from "@/lib/docs"
+import { OG_IMAGE } from "@/lib/site"
 
 export function generateStaticParams() {
   return components.map((c) => ({ name: c.slug }))
@@ -18,7 +19,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { name } = await params
   const doc = getComponent(name)
-  return doc ? { title: doc.title } : {}
+  if (!doc) return {}
+  const title = `${doc.title} component for Claude MCP Apps`
+  const path = `/components/${doc.slug}`
+  return {
+    title,
+    description: doc.description,
+    alternates: { canonical: path },
+    openGraph: { title: `${title} | MCP Blocks UI`, description: doc.description, images: [OG_IMAGE], url: path },
+  }
 }
 
 export default async function ComponentPage({
