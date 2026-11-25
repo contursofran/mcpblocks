@@ -118,5 +118,5 @@ Cloudflare Pages, static export (domain is already in the same Cloudflare accoun
 
 - `wrangler.jsonc` has `main` (the demo MCP Worker at `/mcp`, source in `examples/deal-app/worker`) plus static `assets`; only `/mcp` runs the Worker first.
 - Cloudflare builds with `pnpm run build`; branch builds run `npx wrangler preview` (needs the `previews` block) and master runs `npx wrangler deploy`.
-- `.node-version` pins Node 22 because wrangler 4 needs >= 22.12 and Cloudflare defaults to Node 20.
+- Do not add `wrangler` to package.json: it needs Node >= 22.12 but Cloudflare builds on Node 20 (a `.node-version` file was not honored), so `npx wrangler` must resolve to Cloudflare's own copy. `pnpm worker:dev` fetches one locally.
 - The Worker bundles `examples/deal-app/dist/view.html`; after changing `examples/deal-app/src`, run `npm --prefix examples/deal-app run build` and commit it.
