@@ -13,6 +13,7 @@ Copy-paste React components for **MCP Apps** that feel native inside Claude, and
 | `app/` | Docs site: landing page and one page per component |
 | `components/site/` | Site-only pieces: host preview frame, demos, code blocks |
 | `lib/docs.ts` | Component docs content (descriptions, usage, props, checks) |
+| `examples/deal-app/` | Example MCP server rendering the blocks as MCP App views; add it to Claude as a custom connector |
 
 ### Components (free)
 
