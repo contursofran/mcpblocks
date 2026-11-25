@@ -39,7 +39,7 @@ const toneClass: Record<InlineCardTone, string> = {
   info: "bg-host-info-bg text-host-info-fg",
   success: "bg-host-success-bg text-host-success-fg",
   warning: "bg-host-warning-bg text-host-warning-fg",
-  danger: "bg-host-danger-bg text-host-danger-fg",
+  danger: "bg-host-danger-border/15 text-host-danger-fg",
 }
 
 const columnClass = {

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils"
  * 44px minimum height so it meets mobile tap-target guidance.
  */
 const hostButtonVariants = cva(
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-host-md px-4 text-sm font-semibold whitespace-nowrap transition-[opacity,background-color] outline-none focus-visible:ring-2 focus-visible:ring-host-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-host-md px-4 text-sm font-semibold whitespace-nowrap transition-[opacity,background-color] outline-none focus-visible:ring-2 focus-visible:ring-host-ring disabled:pointer-events-none disabled:text-host-fg-disabled disabled:opacity-60 [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -17,7 +17,7 @@ const hostButtonVariants = cva(
           "border-[length:var(--border-width-regular,0.5px)] border-host-border bg-transparent text-host-fg hover:bg-host-bg-secondary",
         ghost: "bg-transparent text-host-fg hover:bg-host-bg-secondary",
         danger:
-          "border-[length:var(--border-width-regular,0.5px)] border-host-danger-border bg-host-danger-bg text-host-danger-fg hover:opacity-90",
+          "bg-host-danger-bg text-white hover:opacity-90",
       },
       block: {
         true: "w-full flex-1",

@@ -21,7 +21,7 @@ const tones: Record<
   success: { icon: CheckCircleIcon, chip: "bg-host-success-bg text-host-success-fg", label: "Success" },
   info: { icon: InfoIcon, chip: "bg-host-info-bg text-host-info-fg", label: "Info" },
   warning: { icon: WarningIcon, chip: "bg-host-warning-bg text-host-warning-fg", label: "Warning" },
-  danger: { icon: ProhibitIcon, chip: "bg-host-danger-bg text-host-danger-fg", label: "Error" },
+  danger: { icon: ProhibitIcon, chip: "bg-host-danger-border/15 text-host-danger-fg", label: "Error" },
 }
 
 /** Confirms the result of an action, using the host's semantic colors. */
