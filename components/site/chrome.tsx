@@ -2,7 +2,7 @@ import Link from "next/link"
 
 import { components } from "@/lib/docs"
 
-export const GITHUB_URL = "https://github.com/your-org/inlinekit"
+export const GITHUB_URL = "https://github.com/contursofran/mcpblocks"
 
 export function Logo() {
   return (
@@ -12,26 +12,26 @@ export function Logo() {
           <rect x="3" y="6" width="18" height="12" rx="3" />
         </svg>
       </span>
-      inlinekit
+      mcpblocks
     </Link>
   )
 }
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-20 border-b bg-background/85 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-3">
+    <header className="sticky top-0 z-20 border-b bg-background">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-3 gap-y-1 px-6 py-3">
         <Logo />
         <nav className="flex flex-wrap items-center gap-1 text-sm">
-          <Link href={`/components/${components[0].slug}`} className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground">
+          <Link href={`/components/${components[0].slug}`} className="rounded-md px-2 py-2 text-muted-foreground hover:text-foreground sm:px-3">
             Components
           </Link>
-          <Link href="/#roadmap" className="rounded-md px-3 py-2 text-muted-foreground hover:text-foreground">
+          <Link href="/#roadmap" className="rounded-md px-2 py-2 text-muted-foreground hover:text-foreground sm:px-3">
             Roadmap
           </Link>
           <a
             href={GITHUB_URL}
-            className="ml-2 inline-flex min-h-10 items-center rounded-lg bg-primary px-4 font-semibold text-primary-foreground hover:opacity-90"
+            className="rounded-md px-2 py-2 text-muted-foreground hover:text-foreground sm:px-3"
           >
             GitHub
           </a>
@@ -56,7 +56,7 @@ export function SiteFooter() {
           </a>
           . Changes: rebuilt as React components, adapted for other MCP hosts. Site built on the shadcn registry template (MIT).
         </p>
-        <p>inlinekit is an independent project, not affiliated with or endorsed by Anthropic or OpenAI.</p>
+        <p>mcpblocks is an independent project, not affiliated with or endorsed by Anthropic or OpenAI.</p>
       </div>
     </footer>
   )

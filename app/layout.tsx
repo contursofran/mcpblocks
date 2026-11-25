@@ -4,7 +4,10 @@ import { SiteFooter, SiteHeader } from "@/components/site/chrome"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "inlinekit: widgets that feel native inside Claude",
+  title: {
+    default: "mcpblocks | React components for MCP Apps",
+    template: "%s · mcpblocks",
+  },
   description:
     "Copy-paste React components for MCP Apps, built on Claude's host tokens and display-mode rules. Free and open source.",
 }
@@ -22,7 +25,7 @@ export default function RootLayout({
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         />
       </head>
       <body className="flex min-h-svh flex-col">

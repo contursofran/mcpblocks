@@ -1,13 +1,12 @@
 import Link from "next/link"
 
 import { CodeBlock } from "@/components/site/code-block"
-import { GITHUB_URL } from "@/components/site/chrome"
-import { CarouselDemo, ConfirmActionDemo } from "@/components/site/demos"
+import { ConfirmActionDemo } from "@/components/site/demos"
 import { components, roadmap } from "@/lib/docs"
 
 const features = [
   {
-    title: "Host tokens, not hex codes",
+    title: "Host theme tokens",
     body: "Components read the CSS variables the host injects, so light and dark mode match Claude with no extra work.",
   },
   {
@@ -27,39 +26,27 @@ const features = [
 export default function Home() {
   return (
     <main>
-      <section className="mx-auto flex max-w-6xl flex-wrap items-center gap-14 px-6 pt-16 pb-14 sm:pt-24">
-        <div className="min-w-0 flex-[1_1_440px]">
-          <span className="inline-flex rounded-full bg-[#d6e4f6] px-3 py-1 text-[13px] font-semibold text-[#3266ad]">
-            MCP Apps · spec 2026-01-26
-          </span>
-          <h1 className="mt-5 mb-5 font-serif text-5xl leading-[1.02] font-normal tracking-tight sm:text-[64px]">
-            Widgets that feel native inside Claude.
+      <section className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-14 sm:py-20 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-14">
+        <div className="min-w-0">
+          <h1 className="mb-5 max-w-[16ch] text-4xl leading-[1.08] font-semibold tracking-tight text-balance sm:text-5xl xl:text-6xl">
+            React components for MCP Apps
           </h1>
-          <p className="mb-7 max-w-[520px] text-lg text-[#3d3d3a]">
-            Copy-paste React components for MCP Apps. Built on Claude&apos;s host tokens, inline and
-            fullscreen display rules, and mobile safe areas, and they still work in ChatGPT and other
-            MCP hosts.
+          <p className="mb-7 max-w-lg text-base leading-relaxed text-foreground/80 sm:text-lg">
+            Copy and paste cards, approvals, and other interactive widgets that adapt to the host&apos;s
+            theme, display mode, and mobile safe areas. Built for Claude, with support for ChatGPT
+            and other hosts.
           </p>
-          <div className="mb-7 flex flex-wrap gap-3">
-            <Link
-              href={`/components/${components[0].slug}`}
-              className="inline-flex min-h-11 items-center rounded-lg bg-primary px-5 font-semibold text-primary-foreground hover:opacity-90"
-            >
-              Browse components
-            </Link>
-            <a
-              href={GITHUB_URL}
-              className="inline-flex min-h-11 items-center rounded-lg border border-input bg-card px-5 font-semibold hover:bg-secondary"
-            >
-              Star on GitHub
-            </a>
-          </div>
-          <CodeBlock prompt code="npx shadcn@latest add https://inlinekit.dev/r/inline-card.json" className="max-w-[560px]" />
+          <Link
+            href={`/components/${components[0].slug}`}
+            className="mb-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground hover:opacity-90"
+          >
+            Browse components
+          </Link>
+          <CodeBlock prompt code="npx shadcn@latest add https://inlinekit.dev/r/inline-card.json" className="max-w-xl" />
         </div>
 
-        <div className="flex min-w-0 flex-[1_1_400px] flex-col gap-4 overflow-hidden">
+        <div className="min-w-0">
           <ConfirmActionDemo />
-          <CarouselDemo />
         </div>
       </section>
 
@@ -68,54 +55,46 @@ export default function Home() {
           {features.map((f) => (
             <div key={f.title}>
               <h2 className="mb-1.5 font-semibold">{f.title}</h2>
-              <p className="text-[15px] text-[#3d3d3a]">{f.body}</p>
+              <p className="text-sm leading-relaxed text-foreground/80">{f.body}</p>
             </div>
           ))}
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-6 pt-16">
-        <h2 className="mb-2 font-serif text-4xl font-normal sm:text-[44px]">Components</h2>
-        <p className="mb-8 text-[#3d3d3a]">The small set Claude&apos;s guidelines actually allow, done well. Every one has a live host preview.</p>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <h2 className="mb-6 text-3xl font-semibold tracking-tight">Components</h2>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {components.map((c) => (
             <Link
               key={c.slug}
               href={`/components/${c.slug}`}
               className="flex flex-col gap-2 rounded-xl border bg-card p-5 transition-colors hover:border-input"
             >
-              <div className="flex items-center justify-between">
-                <span className="font-semibold">{c.title}</span>
-                <span className="rounded-full bg-[#e9f1dc] px-2 py-0.5 text-xs font-semibold text-[#265b19]">Free</span>
-              </div>
-              <p className="text-sm text-[#3d3d3a]">{c.description}</p>
-              <span className="font-mono text-xs text-muted-foreground">{c.displayModes}</span>
+              <h3 className="font-semibold">{c.title}</h3>
+              <p className="text-sm leading-relaxed text-foreground/80">{c.description}</p>
+              <span className="mt-auto pt-2 text-xs text-muted-foreground">{c.displayModes}</span>
             </Link>
           ))}
         </div>
       </section>
 
       <section id="roadmap" className="mx-auto max-w-6xl scroll-mt-20 px-6 pt-16">
-        <h2 className="mb-2 font-serif text-4xl font-normal sm:text-[44px]">On the roadmap</h2>
-        <p className="mb-8 text-[#3d3d3a]">Tell us which one you&apos;d use first.</p>
-        <div className="grid gap-4 sm:grid-cols-3">
+        <h2 className="mb-6 text-3xl font-semibold tracking-tight">Roadmap</h2>
+        <ul className="grid gap-x-6 sm:grid-cols-3">
           {roadmap.map((r) => (
-            <div key={r.title} className="flex flex-col gap-2 rounded-xl border bg-card p-5">
-              <div className="flex items-center justify-between">
-                <span className="font-semibold">{r.title}</span>
-                <span className="rounded-full bg-[#f6eedf] px-2 py-0.5 text-xs font-semibold text-[#5a4815]">Soon</span>
-              </div>
-              <p className="text-sm text-[#3d3d3a]">{r.description}</p>
-            </div>
+            <li key={r.title} className="border-t py-4">
+              <h3 className="mb-1 font-semibold">{r.title}</h3>
+              <p className="text-sm leading-relaxed text-foreground/80">{r.description}</p>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <div className="flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-[#141413] p-8 text-[#faf9f5] sm:p-10">
+        <div className="flex flex-wrap items-center justify-between gap-6 border-t pt-8">
           <div className="min-w-0 flex-[1_1_360px]">
-            <h2 className="mb-2 font-serif text-4xl font-normal">Free and open source.</h2>
-            <p className="text-[#c2c0b6]">
+            <h2 className="mb-2 text-3xl font-semibold tracking-tight">Free and open source</h2>
+            <p className="max-w-lg text-sm leading-relaxed text-foreground/80">
               Every component is MIT. Leave your email to hear when templates ship, or if you need an MCP App built for your company.
             </p>
           </div>
@@ -130,9 +109,9 @@ export default function Home() {
               type="email"
               required
               placeholder="you@company.com"
-              className="min-h-11 min-w-0 flex-[1_1_200px] rounded-lg border border-white/30 bg-[#30302e] px-3.5 text-[15px] text-[#faf9f5] placeholder:text-[#9c9a92]"
+              className="min-h-11 min-w-0 flex-[1_1_200px] rounded-lg border border-input bg-card px-3.5 text-sm placeholder:text-muted-foreground"
             />
-            <button type="submit" className="min-h-11 rounded-lg bg-[#faf9f5] px-5 font-semibold text-[#141413] hover:opacity-90">
+            <button type="submit" className="min-h-11 rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground hover:opacity-90">
               Join the list
             </button>
           </form>

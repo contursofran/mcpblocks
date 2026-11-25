@@ -1,12 +1,12 @@
-# AGENTS.md — inlinekit handoff
+# AGENTS.md — mcpblocks handoff
 
 Read this first. It is the full context for continuing this project.
 
 ## What this is
 
-**inlinekit** (working name) is a free, open-source shadcn-style component registry for **MCP Apps**: interactive UI widgets that MCP servers render inside AI hosts. It is designed Claude-first (Claude's host CSS tokens, display-mode rules, mobile safe areas) and should degrade gracefully in ChatGPT, VS Code and other MCP Apps hosts.
+The project is named **mcpblocks** (2026-11-24). It is a free, open-source shadcn-style component registry for **MCP Apps**, the interactive UI widgets that MCP servers render inside AI hosts. It is designed Claude-first (Claude's host CSS tokens, display-mode rules, mobile safe areas) and should degrade gracefully in ChatGPT, VS Code and other MCP Apps hosts.
 
-**Strategy (decided):** ship free first, measure traffic, waitlist signups and template votes. Only add paid templates/blocks if there is demand. A likely paid candidate later is a local CLI host preview (`npx inlinekit preview`) that works with any MCP App. A "we build your MCP App" service is also a possible revenue path.
+**Strategy (decided):** ship free first, measure traffic, waitlist signups and template votes. Only add paid templates/blocks if there is demand. A likely paid candidate later is a local CLI host preview (`npx mcpblocks preview`) that works with any MCP App. A "we build your MCP App" service is also a possible revenue path.
 
 **Positioning vs existing work:** Manifest UI (mnfst/manifest-ui) and others already do shadcn-for-MCP-Apps but lean ChatGPT. Our differentiators are (1) Claude-native tokens and rules, (2) a Claude-accurate host preview with guideline checks, (3) later, templates for the new "full app inside Claude" mode (Nov 2026, in developer preview).
 
@@ -49,7 +49,7 @@ Current state: `pnpm build`, `pnpm lint` and `pnpm registry:build` all pass. Pag
 2. **Safe areas** are CSS vars `--ik-safe-top|right|bottom|left` set by `applySafeAreaInsets()` from `hostContext.safeAreaInsets`.
 3. **Claude guideline limits are enforced softly**: `guideline()` logs dev-only warnings (InlineCard >5 fields or >2 actions; Carousel outside 3–8 items). Inline widgets: no nested scrolling, no dropdowns/popovers, height fits content, max 2 actions, 44px tap targets, skeletons not spinners. Edits go back through chat (`ui/message`), not forms in the widget.
 4. **Registry imports** use `@/registry/inlinekit/...` paths; the shadcn CLI rewrites them on install. Internal `registryDependencies` use full URLs `https://inlinekit.dev/r/<name>.json`.
-5. **Font**: components use `font-[family-name:var(--font-sans)]` so Claude's injected font applies. Do NOT bundle Anthropic Sans/Serif (not covered by the CC BY license). Site uses Inter / Instrument Serif / JetBrains Mono via a Google Fonts `<link>` (not `next/font`, so builds don't need network).
+5. **Font**: components use `font-[family-name:var(--font-sans)]` so Claude's injected font applies. Do NOT bundle Anthropic Sans/Serif (not covered by the CC BY license). Use upright Inter for site text and headings and JetBrains Mono for code via a Google Fonts `<link>` so builds run without network access (2026-11-24).
 6. **ext-apps API** (`@modelcontextprotocol/ext-apps`, class `App`): `app.callServerTool({ name, arguments })`, `app.sendMessage({ role: "user", content: [{ type: "text", text }] })`, `app.requestDisplayMode({ mode: "fullscreen" })`, `app.onhostcontextchanged = (ctx) => ...`. Verify against the package's `dist/src/app.d.ts` before adding new calls.
 
 ## Legal / attribution (must keep)
@@ -62,9 +62,7 @@ Current state: `pnpm build`, `pnpm lint` and `pnpm registry:build` all pass. Pag
 ## Placeholders to replace before launch
 
 - Domain `inlinekit.dev` (in `registry.json` homepage + every `registryDependencies` URL, `lib`/pages install commands, README). Then `pnpm registry:build`.
-- `GITHUB_URL` in `components/site/chrome.tsx` (`your-org/inlinekit`).
 - Waitlist form in `app/page.tsx` has `action="#"`; wire to an email provider (server action + e.g. Resend/Loops/Buttondown) and add basic analytics (Vercel Analytics or Plausible) to measure the free-first experiment.
-- Name "inlinekit" is a working title.
 
 ## Not yet verified
 

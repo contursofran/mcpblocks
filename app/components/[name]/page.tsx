@@ -18,7 +18,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { name } = await params
   const doc = getComponent(name)
-  return { title: doc ? `${doc.title} · inlinekit` : "inlinekit" }
+  return doc ? { title: doc.title } : {}
 }
 
 export default async function ComponentPage({
@@ -34,7 +34,7 @@ export default async function ComponentPage({
     <div className="mx-auto flex max-w-6xl flex-wrap gap-10 px-6 py-10">
       <aside className="w-full sm:w-48 sm:shrink-0">
         <nav aria-label="Components" className="flex flex-wrap gap-1 sm:flex-col">
-          <p className="mb-1 hidden px-3 text-xs font-semibold tracking-wide text-muted-foreground uppercase sm:block">
+          <p className="mb-1 hidden px-3 text-xs font-medium text-muted-foreground sm:block">
             Components
           </p>
           {components.map((c) => (
@@ -55,7 +55,7 @@ export default async function ComponentPage({
 
       <article className="flex min-w-0 flex-[999_1_560px] flex-col gap-8">
         <header className="flex flex-col gap-2">
-          <h1 className="font-serif text-4xl font-normal sm:text-5xl">{doc.title}</h1>
+          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{doc.title}</h1>
           <p className="max-w-2xl text-lg text-[#3d3d3a]">{doc.description}</p>
           <p className="font-mono text-xs text-muted-foreground">Display modes: {doc.displayModes}</p>
         </header>

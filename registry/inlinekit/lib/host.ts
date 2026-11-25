@@ -1,9 +1,9 @@
 /**
- * Small helpers for wiring inlinekit components to an MCP Apps host.
+ * Small helpers for wiring mcpblocks components to an MCP Apps host.
  *
  * The host sends a `hostContext` during `ui/initialize` and on change.
  * Pass it here to expose safe-area insets as CSS variables that
- * inlinekit components read (`--ik-safe-top` … `--ik-safe-left`).
+ * the components read (`--ik-safe-top` … `--ik-safe-left`).
  */
 
 export type SafeAreaInsets = {
@@ -32,7 +32,7 @@ export function applySafeAreaInsets(
 }
 
 /**
- * Applies the parts of hostContext inlinekit cares about.
+ * Applies the host context fields used by mcpblocks.
  * Theme tokens themselves are injected by the host; this only
  * toggles the `.dark` class so fallback values match outside a host.
  */
@@ -49,6 +49,6 @@ export function applyHostContext(
 /** Logs a development-only warning when a guideline limit is exceeded. */
 export function guideline(condition: boolean, message: string) {
   if (process.env.NODE_ENV !== "production" && condition) {
-    console.warn(`[inlinekit] ${message}`)
+    console.warn(`[mcpblocks] ${message}`)
   }
 }

@@ -29,7 +29,10 @@ export function CodeBlock({
 
   return (
     <div className={cn("group relative flex items-start rounded-xl bg-[#141413] text-[#faf9f5]", className)}>
-      <pre className="min-w-0 flex-1 overflow-x-auto p-4 font-mono text-[13px] leading-relaxed">
+      <pre className={cn(
+        "min-w-0 flex-1 p-4 font-mono text-[13px] leading-relaxed",
+        prompt ? "wrap-anywhere whitespace-pre-wrap" : "overflow-x-auto"
+      )}>
         {prompt ? <span className="mr-2 select-none text-[#9c9a92]">$</span> : null}
         <code>{code}</code>
       </pre>

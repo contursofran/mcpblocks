@@ -1,8 +1,8 @@
-# inlinekit
+# mcpblocks
 
 Copy-paste React components for **MCP Apps** that feel native inside Claude, and still work in ChatGPT and other MCP hosts. Distributed as a [shadcn registry](https://ui.shadcn.com/docs/registry).
 
-> Working name and placeholder domain (`inlinekit.dev`). Search-and-replace both before publishing.
+> Replace the placeholder registry domain `inlinekit.dev` before publishing.
 
 ## What's here
 
@@ -53,4 +53,4 @@ Component designs are adapted from [MCP Apps for Claude](https://www.figma.com/c
 
 The site is built on the [shadcn registry template](https://github.com/shadcn-ui/registry-template) (MIT).
 
-inlinekit is an independent project, not affiliated with or endorsed by Anthropic or OpenAI.
+mcpblocks is an independent project, not affiliated with or endorsed by Anthropic or OpenAI.
