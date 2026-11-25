@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 
 import { AppBridgeHost } from "@/components/site/app-bridge-host"
 import { PageShell } from "@/components/site/chrome"
+import { JsonLd } from "@/components/site/json-ld"
+import { guideJsonLd } from "@/lib/schema"
 import { OG_IMAGE } from "@/lib/site"
 
 const description =
@@ -22,6 +24,13 @@ export const metadata: Metadata = {
 export default function PlaygroundPage() {
   return (
     <PageShell rails="wide">
+      <JsonLd
+        data={guideJsonLd({
+          title: "AppBridge Host Playground for Claude MCP Apps",
+          description,
+          path: "/playground",
+        })}
+      />
       <div className="border-t border-[#141413]/[0.075] px-4 sm:px-6">
         <div className="mx-auto max-w-7xl px-2 py-12 lg:py-16">
           <p className="mb-3 font-mono text-xs font-semibold tracking-widest text-[#B5543A] uppercase">

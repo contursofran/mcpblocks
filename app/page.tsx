@@ -4,7 +4,9 @@ import { PageShell } from "@/components/site/chrome"
 import { CodeBlock } from "@/components/site/code-block"
 import { ComponentGallery } from "@/components/site/component-gallery"
 import { HeroChat } from "@/components/site/hero-chat"
+import { JsonLd } from "@/components/site/json-ld"
 import { components, roadmap } from "@/lib/docs"
+import { homeFaqs, homeJsonLd } from "@/lib/schema"
 
 const features = [
   {
@@ -28,6 +30,7 @@ const features = [
 export default function Home() {
   return (
     <PageShell rails="home">
+      <JsonLd data={homeJsonLd()} />
       {/* Headless UI–style full-width editorial hero above the rounded sheet */}
       <div className="relative z-10 border-t border-[#141413]/[0.075] px-4 sm:px-6">
         <div className="mx-auto max-w-7xl px-2 py-16 lg:py-24">
@@ -110,6 +113,21 @@ export default function Home() {
               </li>
             ))}
           </ul>
+        </section>
+
+        {/* Frequently asked questions (matches FAQPage JSON-LD for Google & AI search) */}
+        <section id="faq" className="mx-auto mt-14 max-w-7xl scroll-mt-20 border-t border-[#141413]/[0.075] px-2 pt-14">
+          <h2 className="mb-8 font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
+            Frequently asked questions
+          </h2>
+          <dl className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+            {homeFaqs.map((faq) => (
+              <div key={faq.question} className="flex flex-col gap-2">
+                <dt className="text-sm font-semibold text-[#141413]">{faq.question}</dt>
+                <dd className="text-sm/6 text-[#73726c]">{faq.answer}</dd>
+              </div>
+            ))}
+          </dl>
         </section>
       </main>
     </PageShell>

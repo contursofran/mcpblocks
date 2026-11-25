@@ -5,9 +5,11 @@ import { notFound } from "next/navigation"
 import { PageShell } from "@/components/site/chrome"
 import { CodeBlock } from "@/components/site/code-block"
 import { ComponentPreview } from "@/components/site/component-preview"
+import { JsonLd } from "@/components/site/json-ld"
 import { cn } from "@/lib/utils"
 import { componentCategories, components, getComponent } from "@/lib/docs"
-import { docsPages, OG_IMAGE } from "@/lib/site"
+import { componentJsonLd } from "@/lib/schema"
+import { docsPages, OG_IMAGE, SITE_URL } from "@/lib/site"
 
 export function generateStaticParams() {
   return components.map((c) => ({ name: c.slug }))
@@ -26,12 +28,23 @@ export async function generateMetadata({
   return {
     title,
     description: doc.description,
-    alternates: { canonical: path },
+    alternates: {
+      canonical: path,
+      types: {
+        "text/markdown": `${SITE_URL}/docs/components/${doc.slug}.md`,
+      },
+    },
     openGraph: {
       title: `${title} | MCP Blocks UI`,
       description: doc.description,
       images: [OG_IMAGE],
       url: path,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | MCP Blocks UI`,
+      description: doc.description,
+      images: [OG_IMAGE],
     },
   }
 }
@@ -65,6 +78,7 @@ export default async function ComponentPage({
 
   return (
     <PageShell rails="docs">
+      <JsonLd data={componentJsonLd(doc)} />
       <main className="relative z-10 rounded-[2.5rem] bg-white/95 px-4 backdrop-blur-sm sm:px-6">
         <div className="relative mx-auto flex max-w-7xl lg:gap-[14px]">
           {/* Left sticky sidebar (aligned inside w-68 rail) */}
@@ -286,6 +300,26 @@ export default async function ComponentPage({
                 >
                   Open playground →
                 </Link>
+              </div>
+
+              <div className="mt-8 border-t border-[#141413]/[0.075] pt-6">
+                <p className="font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
+                  For Agents
+                </p>
+                <div className="mt-3 flex flex-col gap-2 font-mono text-xs text-[#73726c]">
+                  <a
+                    href={`/docs/components/${doc.slug}.md`}
+                    className="transition-colors hover:text-[#141413]"
+                  >
+                    Markdown docs (.md)
+                  </a>
+                  <a
+                    href={`/r/${doc.slug}.json`}
+                    className="transition-colors hover:text-[#141413]"
+                  >
+                    Registry JSON (.json)
+                  </a>
+                </div>
               </div>
             </div>
           </aside>

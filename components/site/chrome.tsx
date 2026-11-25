@@ -92,6 +92,27 @@ export function SiteFooter() {
           MCP Blocks UI is an independent project, not affiliated with or endorsed by Anthropic or OpenAI. Built on the
           shadcn registry template (MIT).
         </p>
+        <p className="pt-1 font-mono text-xs text-[#141413]/50">
+          For agents &amp; LLMs:{" "}
+          <a className="underline decoration-[#141413]/25 underline-offset-2 hover:text-[#141413]" href="/llms.txt">
+            llms.txt
+          </a>{" "}
+          ·{" "}
+          <a className="underline decoration-[#141413]/25 underline-offset-2 hover:text-[#141413]" href="/llms-full.txt">
+            llms-full.txt
+          </a>{" "}
+          ·{" "}
+          <a className="underline decoration-[#141413]/25 underline-offset-2 hover:text-[#141413]" href="/agents.md">
+            agents.md
+          </a>{" "}
+          ·{" "}
+          <a
+            className="underline decoration-[#141413]/25 underline-offset-2 hover:text-[#141413]"
+            href="/r/registry.json"
+          >
+            registry.json
+          </a>
+        </p>
       </div>
     </footer>
   )

@@ -202,6 +202,15 @@ if (!hostTokens?.css) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// 4. LLM / agent discovery docs presence
+// ---------------------------------------------------------------------------
+for (const rel of ["public/llms.txt", "public/llms-full.txt", "public/agents.md"]) {
+  if (!existsSync(join(root, rel))) {
+    fail("llms", `Missing ${rel} (run pnpm llms:build)`)
+  }
+}
+
 if (errors.length > 0) {
   console.error(`Conformance check failed with ${errors.length} issue(s):\n`)
   for (const err of errors) console.error(`  - ${err}`)

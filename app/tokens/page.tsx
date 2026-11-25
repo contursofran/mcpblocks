@@ -2,14 +2,30 @@ import type { Metadata } from "next"
 
 import { PageShell } from "@/components/site/chrome"
 import { CodeBlock } from "@/components/site/code-block"
+import { JsonLd } from "@/components/site/json-ld"
+import { guideJsonLd } from "@/lib/schema"
+import { OG_IMAGE } from "@/lib/site"
 import { colorGroups, radii, typeScale } from "@/lib/tokens"
+
+const description =
+  "The colors, type scale and radii from Anthropic's MCP Apps for Claude kit, in light and dark, as CSS variables and Tailwind utilities."
 
 export const metadata: Metadata = {
   title: "Design tokens for Claude MCP Apps",
-  description:
-    "The colors, type scale and radii from Anthropic's MCP Apps for Claude kit, in light and dark, as CSS variables and Tailwind utilities.",
+  description,
   alternates: { canonical: "/tokens" },
-  openGraph: { images: ["/opengraph-image"] },
+  openGraph: {
+    title: "Design tokens for Claude MCP Apps | MCP Blocks UI",
+    description,
+    url: "/tokens",
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Design tokens for Claude MCP Apps | MCP Blocks UI",
+    description,
+    images: [OG_IMAGE],
+  },
 }
 
 function Swatch({ value, dark }: { value: string; dark?: boolean }) {
@@ -26,6 +42,13 @@ function Swatch({ value, dark }: { value: string; dark?: boolean }) {
 export default function TokensPage() {
   return (
     <PageShell rails="wide">
+      <JsonLd
+        data={guideJsonLd({
+          title: "Design tokens for Claude MCP Apps",
+          description,
+          path: "/tokens",
+        })}
+      />
       <main className="rounded-[2.5rem] bg-white/85 px-4 py-14 backdrop-blur-sm sm:px-6">
         <div className="mx-auto flex max-w-7xl flex-col gap-12 px-2">
           <header className="flex max-w-2xl flex-col gap-3">
