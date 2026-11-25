@@ -36,17 +36,25 @@ Docs and live previews: <https://mcpblocks.dev>
 - `host-button`: button with host tokens and a 44px tap target.
 - `icons`: 38 icons from the kit as `currentColor` components.
 
-### Host preview
+### Host preview & AppBridge playground
 
-Each component page renders the demo inside `HostPreview`, a simulated host frame with light/dark, inline/fullscreen and web/mobile toggles. It sets the same token and safe-area variables the host does and flags inline widgets taller than ~520px. It is a visual simulation, not a sandboxed iframe speaking the MCP Apps protocol yet. That's the natural next step (the `AppBridge` in `@modelcontextprotocol/ext-apps` handles the protocol side).
+- Each component page renders the demo inside `HostPreview`, a simulated host frame with Light/Dark, Inline/Fullscreen, and Web/Mobile toggles plus live DOM guideline linting (inline height cap, nested vertical scroll, floating menus, 44px tap targets, horizontal overflow).
+- `/playground` runs a real sandboxed iframe host wired to `@modelcontextprotocol/ext-apps/app-bridge` (`AppBridge` + `PostMessageTransport`) so you can test the bundled `deal-app` view or any single-file MCP App HTML against Claude's tokens, safe areas, and editable mock tool results.
+
+### Conformance & LLM/agent docs
+
+- See [CONFORMANCE.md](./CONFORMANCE.md) for how Claude's MCP Apps guidelines are enforced via ESLint and `pnpm check:conformance`.
+- Machine-readable docs for coding agents and LLMs: [`llms.txt`](https://mcpblocks.dev/llms.txt), [`llms-full.txt`](https://mcpblocks.dev/llms-full.txt), [`agents.md`](https://mcpblocks.dev/agents.md), and [`r/registry.json`](https://mcpblocks.dev/r/registry.json).
 
 ## Develop
 
 ```bash
 pnpm install
-pnpm dev             # docs site on http://localhost:3000
-pnpm registry:build  # regenerate public/r/*.json after changing registry/
-pnpm build           # production build
+pnpm dev               # docs site on http://localhost:3000
+pnpm registry:build    # regenerate public/r/*.json after changing registry/
+pnpm llms:build        # regenerate public/llms*.txt, public/agents.md, component .md docs
+pnpm check:conformance # verify MCP Apps rules, registry freshness, and token sync
+pnpm build             # production static export
 ```
 
 ## Install a component (consumers)
@@ -69,7 +77,9 @@ app.onhostcontextchanged = (ctx) => applyHostContext(ctx)
 
 Full guides: [Installation](https://mcpblocks.dev/docs/installation) and [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server) (register a tool and `ui://` resource with `@modelcontextprotocol/ext-apps`, then render the view with these components).
 
-## Attribution
+## License & Attribution
+
+Code in this repository is licensed under the [MIT License](./LICENSE).
 
 Component designs are adapted from [MCP Apps for Claude](https://www.figma.com/community/file/1597641111449594397/mcp-apps-for-claude) by Anthropic, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Changes: rebuilt as React components and adapted for other MCP hosts. Fonts from that file (Anthropic Sans/Serif) are not included; Claude provides them at runtime.
 
