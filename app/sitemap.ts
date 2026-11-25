@@ -11,6 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...docsPages.map((p) => p.href),
     ...components.map((c) => `/components/${c.slug}`),
     "/tokens",
+    "/playground",
   ]
   return paths.map((path) => ({ url: `${SITE_URL}${path}`, changeFrequency: "weekly" }))
 }

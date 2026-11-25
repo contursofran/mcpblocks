@@ -231,7 +231,7 @@ export function LineChart({
                   onRangeChange?.(r)
                 }}
                 className={cn(
-                  "rounded-full px-3 py-[5px] text-xs leading-[1.4]",
+                  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-xs leading-[1.4]",
                   r === current ? "bg-host-bg text-host-fg-secondary" : "text-host-fg-tertiary hover:text-host-fg"
                 )}
               >

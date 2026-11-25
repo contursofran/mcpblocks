@@ -65,7 +65,7 @@ export function DocumentCard({
               <dt className="w-[72px] shrink-0 text-host-fg-tertiary">{p.label}</dt>
               <dd className="min-w-0 py-1 text-host-fg-secondary">
                 {p.tag ? (
-                  <span className="rounded-host-sm bg-host-info-bg px-2 py-1 text-host-info-fg">{p.value}</span>
+                  <span className="rounded-host-sm border-[length:var(--border-width-regular,0.5px)] border-host-info-border/40 bg-host-info-bg px-2 py-1 text-host-fg">{p.value}</span>
                 ) : (
                   p.value
                 )}

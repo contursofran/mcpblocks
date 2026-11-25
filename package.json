@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "check:conformance": "node scripts/check-conformance.mjs",
     "registry:build": "shadcn build",
-    "demo:build": "npm --prefix examples/deal-app run build",
+    "demo:build": "npm --prefix examples/deal-app run build && cp examples/deal-app/dist/view.html public/demo/deal-app.html",
     "worker:dev": "npx wrangler dev"
   },
   "dependencies": {

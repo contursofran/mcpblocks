@@ -32,6 +32,9 @@ export function SiteHeader() {
           <Link href="/tokens" className="rounded-md px-2 py-2 text-muted-foreground hover:text-foreground sm:px-3">
             Tokens
           </Link>
+          <Link href="/playground" className="rounded-md px-2 py-2 text-muted-foreground hover:text-foreground sm:px-3">
+            Playground
+          </Link>
           <Link href="/#roadmap" className="rounded-md px-2 py-2 text-muted-foreground hover:text-foreground sm:px-3">
             Roadmap
           </Link>

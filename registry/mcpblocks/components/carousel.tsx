@@ -85,8 +85,12 @@ export function Carousel({
         aria-label={label}
         tabIndex={0}
         onScroll={updateEdges}
-        className="flex snap-x snap-mandatory scroll-px-4 gap-3 overflow-x-auto px-4 outline-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        style={{ maskImage: fade, WebkitMaskImage: fade }}
+        className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 outline-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        style={{
+          maskImage: fade,
+          WebkitMaskImage: fade,
+          scrollPaddingInline: "max(16px, var(--mb-safe-left, 0px)) max(16px, var(--mb-safe-right, 0px))",
+        }}
       >
         {items.map((item) => {
           const isSaved = saved[item.id]
@@ -107,7 +111,7 @@ export function Carousel({
                       setSaved((s) => ({ ...s, [item.id]: next }))
                       item.onSave?.(next)
                     }}
-                    className="absolute top-4 right-4 inline-flex size-9 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-white/90 text-[#141413] backdrop-blur-[9px]"
+                    className="absolute top-3 right-3 inline-flex size-11 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg/90 text-host-fg backdrop-blur-[9px]"
                   >
                     <Bookmark className="size-5" fill={isSaved ? "currentColor" : "none"} aria-hidden="true" />
                   </button>
@@ -153,7 +157,7 @@ export function Carousel({
           type="button"
           aria-label="Previous"
           onClick={() => page(-1)}
-          className="absolute top-[calc(16px+var(--img-h)/2)] left-2 inline-flex size-9 -translate-y-1/2 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg text-host-fg shadow-[0_0_16px_rgba(0,0,0,0.12)]"
+          className="absolute top-[calc(16px+var(--img-h)/2)] left-2 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg text-host-fg shadow-md"
           style={{ ["--img-h" as string]: `${imageHeight}px` }}
         >
           <CaretLeftIcon className="size-5" />
@@ -164,7 +168,7 @@ export function Carousel({
           type="button"
           aria-label="Next"
           onClick={() => page(1)}
-          className="absolute top-[calc(16px+var(--img-h)/2)] right-2 inline-flex size-9 -translate-y-1/2 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg text-host-fg shadow-[0_0_16px_rgba(0,0,0,0.12)]"
+          className="absolute top-[calc(16px+var(--img-h)/2)] right-2 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg text-host-fg shadow-md"
           style={{ ["--img-h" as string]: `${imageHeight}px` }}
         >
           <CaretRightIcon className="size-5" />

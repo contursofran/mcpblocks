@@ -36,7 +36,7 @@ export type InlineCardProps = Omit<React.ComponentProps<"section">, "title"> & {
 
 const toneClass: Record<InlineCardTone, string> = {
   neutral: "bg-host-bg-secondary text-host-fg-secondary",
-  info: "bg-host-info-bg text-host-info-fg",
+  info: "bg-host-info-bg text-host-fg border-[length:var(--border-width-regular,0.5px)] border-host-info-border/40",
   success: "bg-host-success-bg text-host-success-fg",
   warning: "bg-host-warning-bg text-host-warning-fg",
   danger: "bg-host-danger-border/15 text-host-danger-fg",
