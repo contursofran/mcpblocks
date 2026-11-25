@@ -113,3 +113,10 @@ Cloudflare Pages, static export (domain is already in the same Cloudflare accoun
 - Add a component: create `registry/mcpblocks/components/<name>.tsx`, add an item to `registry.json`, add a demo to `components/site/demos.tsx` (+ `demos` map), add docs to `lib/docs.ts`, run `pnpm registry:build && pnpm build`.
 - Accessibility: real `<button>`/`<a>`, `aria-label` on icon-only buttons, text contrast ≥ 4.5:1, status icons with labels.
 - Keep components presentational (props + callbacks); host wiring stays in the consumer's app.
+
+## Deploy notes (Cloudflare Workers Builds)
+
+- `wrangler.jsonc` has `main` (the demo MCP Worker at `/mcp`, source in `examples/deal-app/worker`) plus static `assets`; only `/mcp` runs the Worker first.
+- Cloudflare builds with `pnpm run build`; branch builds run `npx wrangler preview` (needs the `previews` block) and master runs `npx wrangler deploy`.
+- `.node-version` pins Node 22 because wrangler 4 needs >= 22.12 and Cloudflare defaults to Node 20.
+- The Worker bundles `examples/deal-app/dist/view.html`; after changing `examples/deal-app/src`, run `npm --prefix examples/deal-app run build` and commit it.
