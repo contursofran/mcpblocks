@@ -232,10 +232,12 @@ function Composer({ floating }: { floating?: boolean }) {
  */
 export function AppFrame({
   name,
+  icon,
   borderless,
   children,
 }: {
   name: string
+  icon?: React.ReactNode
   borderless?: boolean
   children: React.ReactNode
 }) {
@@ -253,12 +255,18 @@ export function AppFrame({
         )}
       >
         <span className="flex items-center gap-2 text-sm leading-[19.6px]">
-          <span
-            aria-hidden="true"
-            className="flex size-5 items-center justify-center rounded-host-xs border-[length:var(--border-width-regular,0.5px)] border-host-border bg-host-bg text-[11px] font-semibold"
-          >
-            {name.charAt(0).toUpperCase()}
-          </span>
+          {icon ? (
+            <span aria-hidden="true" className="flex size-5 items-center justify-center">
+              {icon}
+            </span>
+          ) : (
+            <span
+              aria-hidden="true"
+              className="flex size-5 items-center justify-center rounded-host-xs border-[length:var(--border-width-regular,0.5px)] border-host-border bg-host-bg text-[11px] font-semibold"
+            >
+              {name.charAt(0).toUpperCase()}
+            </span>
+          )}
           {name}
         </span>
         <span aria-hidden="true" className="flex size-8 items-center justify-center rounded-host-md text-host-fg">

@@ -1,5 +1,5 @@
 import { AppFrame } from "@/components/site/host-preview"
-import { ConfirmActionDemo } from "@/components/site/demos"
+import { ListViewDemo } from "@/components/site/demos"
 
 /**
  * Landing-page hero: a desktop chat window with an MCP App rendered inline.
@@ -11,15 +11,17 @@ type HeroChatProps = {
   prompt?: string
   reply?: string
   app?: string
+  icon?: React.ReactNode
   children?: React.ReactNode
 }
 
 export function HeroChat({
-  title = "Lead assignment",
-  prompt = "Give Sarah Johnson access to lead assignment.",
-  reply = "I found Sarah in your directory. Review the permissions below and confirm to apply them.",
-  app = "Leads",
-  children = <ConfirmActionDemo />,
+  title = "Onboarding feedback",
+  prompt = "What did the team say about onboarding?",
+  reply = "Four threads stand out. The revised flow doubled completion in testing.",
+  app = "Slack",
+  icon = <SlackLogo />,
+  children = <ListViewDemo />,
 }: HeroChatProps) {
   return (
     <div className="flex flex-col overflow-hidden rounded-xl border border-[#1f1e1d]/15 bg-[#faf9f5] font-[family-name:var(--font-sans)] text-[#141413] shadow-[0_24px_48px_-20px_rgba(20,20,19,0.28)] dark:border-white/10 dark:bg-[#262624] dark:text-[#faf9f5]">
@@ -46,7 +48,7 @@ export function HeroChat({
           <p className="font-serif text-[15px] leading-relaxed">
             {reply}
           </p>
-          <AppFrame name={app}>
+          <AppFrame name={app} icon={icon}>
             {children}
           </AppFrame>
         </div>
@@ -59,5 +61,16 @@ export function HeroChat({
         </div>
       </div>
     </div>
+  )
+}
+
+function SlackLogo() {
+  return (
+    <svg viewBox="0 0 122.8 122.8" className="size-4">
+      <path fill="#e01e5a" d="M25.8 77.6c0 7.1-5.8 12.9-12.9 12.9S0 84.7 0 77.6s5.8-12.9 12.9-12.9h12.9v12.9zm6.5 0c0-7.1 5.8-12.9 12.9-12.9s12.9 5.8 12.9 12.9v32.3c0 7.1-5.8 12.9-12.9 12.9s-12.9-5.8-12.9-12.9V77.6z" />
+      <path fill="#36c5f0" d="M45.2 25.8c-7.1 0-12.9-5.8-12.9-12.9S38.1 0 45.2 0s12.9 5.8 12.9 12.9v12.9H45.2zm0 6.5c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H12.9C5.8 58.1 0 52.3 0 45.2s5.8-12.9 12.9-12.9h32.3z" />
+      <path fill="#2eb67d" d="M97 45.2c0-7.1 5.8-12.9 12.9-12.9s12.9 5.8 12.9 12.9-5.8 12.9-12.9 12.9H97V45.2zm-6.5 0c0 7.1-5.8 12.9-12.9 12.9s-12.9-5.8-12.9-12.9V12.9C64.7 5.8 70.5 0 77.6 0s12.9 5.8 12.9 12.9v32.3z" />
+      <path fill="#ecb22e" d="M77.6 97c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9-12.9-5.8-12.9-12.9V97h12.9zm0-6.5c-7.1 0-12.9-5.8-12.9-12.9s5.8-12.9 12.9-12.9h32.3c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H77.6z" />
+    </svg>
   )
 }
