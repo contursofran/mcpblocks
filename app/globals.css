@@ -257,7 +257,29 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
+}
+
+/* Headless UI–inspired light-mode atmospheric aura (daylight counterpart to bg-top/bg-bottom) */
+.headless-bg-top {
+  background:
+    radial-gradient(58% 420px at 36% 0%, rgba(217, 119, 87, 0.24), transparent 72%),
+    radial-gradient(48% 360px at 72% 40px, rgba(99, 102, 233, 0.14), transparent 70%),
+    radial-gradient(40% 300px at 14% 120px, rgba(235, 190, 128, 0.22), transparent 70%);
+}
+
+.headless-bg-bottom {
+  background:
+    radial-gradient(55% 360px at 62% 100%, rgba(217, 119, 87, 0.2), transparent 72%),
+    radial-gradient(45% 320px at 26% 100%, rgba(99, 102, 233, 0.12), transparent 72%);
+}
+
+.site-stage-dots {
+  background-image: radial-gradient(rgba(20, 20, 19, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
 }

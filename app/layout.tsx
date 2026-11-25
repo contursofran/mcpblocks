@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site"
-import { SiteFooter, SiteHeader } from "@/components/site/chrome"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -28,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full bg-[#f5f3eb]">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
@@ -38,10 +37,8 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
         />
       </head>
-      <body className="flex min-h-svh flex-col">
-        <SiteHeader />
-        <div className="flex-1">{children}</div>
-        <SiteFooter />
+      <body className="relative min-h-full bg-[#f5f3eb] text-[#141413] antialiased">
+        {children}
       </body>
     </html>
   )

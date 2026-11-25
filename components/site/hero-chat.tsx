@@ -93,18 +93,31 @@ export function HeroChat({
             </p>
           </div>
 
-          {mode === "after" ? (
-            <div key="after" className="flex animate-in flex-col gap-2.5 duration-300 fade-in">
+          {/* Stack both panels in one grid cell so the window height stays fixed at max(before, after) with zero layout shift. */}
+          <div className="grid">
+            <div
+              aria-hidden={mode !== "after"}
+              className={
+                "col-start-1 row-start-1 flex flex-col gap-2.5 transition-opacity duration-200 " +
+                (mode === "after" ? "opacity-100" : "pointer-events-none invisible opacity-0 select-none")
+              }
+            >
               <p className="font-serif text-[15px] leading-relaxed">{reply}</p>
               <AppFrame name={app} icon={icon}>
                 {children}
               </AppFrame>
             </div>
-          ) : (
-            <div key="before" className="animate-in duration-300 fade-in">
+
+            <div
+              aria-hidden={mode !== "before"}
+              className={
+                "col-start-1 row-start-1 transition-opacity duration-200 " +
+                (mode === "before" ? "opacity-100" : "pointer-events-none invisible opacity-0 select-none")
+              }
+            >
               {before}
             </div>
-          )}
+          </div>
         </div>
 
         <div className="px-4 pb-4 sm:px-5" aria-hidden="true">

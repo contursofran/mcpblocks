@@ -28,7 +28,12 @@ export function CodeBlock({
   }
 
   return (
-    <div className={cn("group relative flex items-start rounded-xl bg-[#141413] text-[#faf9f5]", className)}>
+    <div
+      className={cn(
+        "group relative flex items-start rounded-2xl bg-[#141413] text-[#faf9f5] shadow-xs ring-1 ring-[#141413]/15",
+        className
+      )}
+    >
       <pre className={cn(
         "min-w-0 flex-1 p-4 font-mono text-[13px] leading-relaxed",
         prompt ? "wrap-anywhere whitespace-pre-wrap" : "overflow-x-auto"

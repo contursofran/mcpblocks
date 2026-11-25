@@ -2,11 +2,12 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 
+import { PageShell } from "@/components/site/chrome"
 import { CodeBlock } from "@/components/site/code-block"
 import { ComponentPreview } from "@/components/site/component-preview"
 import { cn } from "@/lib/utils"
-import { components, getComponent } from "@/lib/docs"
-import { OG_IMAGE } from "@/lib/site"
+import { componentCategories, components, getComponent } from "@/lib/docs"
+import { docsPages, OG_IMAGE } from "@/lib/site"
 
 export function generateStaticParams() {
   return components.map((c) => ({ name: c.slug }))
@@ -26,8 +27,31 @@ export async function generateMetadata({
     title,
     description: doc.description,
     alternates: { canonical: path },
-    openGraph: { title: `${title} | MCP Blocks UI`, description: doc.description, images: [OG_IMAGE], url: path },
+    openGraph: {
+      title: `${title} | MCP Blocks UI`,
+      description: doc.description,
+      images: [OG_IMAGE],
+      url: path,
+    },
   }
+}
+
+function SectionHeading({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <h2
+      id={id}
+      className="group relative scroll-mt-12 text-xl font-semibold tracking-tight text-[#141413]"
+    >
+      <a
+        href={`#${id}`}
+        aria-label={typeof children === "string" ? children : id}
+        className="absolute -ml-5 font-normal text-[#141413]/30 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+      >
+        #
+      </a>
+      {children}
+    </h2>
+  )
 }
 
 export default async function ComponentPage({
@@ -40,78 +64,233 @@ export default async function ComponentPage({
   if (!doc) notFound()
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-wrap gap-10 px-6 py-10">
-      <aside className="w-full sm:w-48 sm:shrink-0">
-        <nav aria-label="Components" className="flex flex-wrap gap-1 sm:flex-col">
-          <p className="mb-1 hidden px-3 text-xs font-medium text-muted-foreground sm:block">
-            Components
-          </p>
-          {components.map((c) => (
-            <Link
-              key={c.slug}
-              href={`/components/${c.slug}`}
-              aria-current={c.slug === doc.slug ? "page" : undefined}
-              className={cn(
-                "rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-secondary hover:text-foreground",
-                c.slug === doc.slug && "bg-secondary font-medium text-foreground"
-              )}
-            >
-              {c.title}
-            </Link>
-          ))}
-        </nav>
-      </aside>
+    <PageShell rails="docs">
+      <main className="relative z-10 rounded-[2.5rem] bg-white/95 px-4 backdrop-blur-sm sm:px-6">
+        <div className="relative mx-auto flex max-w-7xl lg:gap-[14px]">
+          {/* Left sticky sidebar (aligned inside w-68 rail) */}
+          <aside className="sticky top-0 hidden h-screen w-[17rem] shrink-0 border-x border-[#141413]/[0.075] lg:block">
+            <div className="h-full overflow-y-auto pb-24">
+              <div className="flex gap-2 px-4 pt-16 pb-8">
+                <div className="rounded-full bg-[#141413]/[0.08] px-3 py-1 text-sm/6 font-semibold text-[#141413] select-none">
+                  Components
+                </div>
+                <Link
+                  href="/playground"
+                  className="rounded-full px-3 py-1 text-sm/6 font-semibold text-[#141413]/45 transition-colors hover:bg-[#141413]/[0.04] hover:text-[#141413]/75"
+                >
+                  Playground
+                </Link>
+              </div>
 
-      <article className="flex min-w-0 flex-[999_1_560px] flex-col gap-8">
-        <header className="flex flex-col gap-2">
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">{doc.title}</h1>
-          <p className="max-w-2xl text-lg text-[#3d3d3a]">{doc.description}</p>
-          <p className="font-mono text-xs text-muted-foreground">Display modes: {doc.displayModes} · Design: {doc.source}</p>
-        </header>
+              <nav aria-label="Components">
+                {componentCategories.map((category) => {
+                  const group = components.filter((c) => c.category === category)
+                  return (
+                    <div key={category} className="border-t border-[#141413]/[0.075] py-7">
+                      <h2 className="px-4 pb-4 font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
+                        {category}
+                      </h2>
+                      <div className="flex flex-col gap-3.5 px-4">
+                        {group.map((c) => {
+                          const active = c.slug === doc.slug
+                          return (
+                            <Link
+                              key={c.slug}
+                              href={`/components/${c.slug}`}
+                              aria-current={active ? "page" : undefined}
+                              className={cn(
+                                "block whitespace-nowrap text-sm transition-colors duration-150",
+                                active
+                                  ? "font-semibold text-[#141413]"
+                                  : "text-[#141413]/70 hover:text-[#141413]"
+                              )}
+                            >
+                              {c.title}
+                            </Link>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  )
+                })}
 
-        <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold">Preview</h2>
-          <ComponentPreview slug={doc.slug} checks={doc.checks} variant={doc.variant} />
-        </section>
+                <div className="border-t border-[#141413]/[0.075] py-7">
+                  <h2 className="px-4 pb-4 font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
+                    Guides
+                  </h2>
+                  <div className="flex flex-col gap-3.5 px-4">
+                    {docsPages.map((p) => (
+                      <Link
+                        key={p.href}
+                        href={p.href}
+                        className="block whitespace-nowrap text-sm text-[#141413]/70 transition-colors hover:text-[#141413]"
+                      >
+                        {p.title}
+                      </Link>
+                    ))}
+                    <Link
+                      href="/tokens"
+                      className="block whitespace-nowrap text-sm text-[#141413]/70 transition-colors hover:text-[#141413]"
+                    >
+                      Host tokens
+                    </Link>
+                  </div>
+                </div>
+              </nav>
+            </div>
+          </aside>
 
-        <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold">Install</h2>
-          <CodeBlock prompt code={`npx shadcn@latest add https://mcpblocks.dev/r/${doc.slug}.json`} />
-          <p className="text-sm text-muted-foreground">
-            Pulls in <code className="font-mono">host-tokens</code> too, which adds the host CSS variables and
-            Tailwind utilities like <code className="font-mono">bg-host-bg</code> to your stylesheet.
-          </p>
-        </section>
+          {/* Center documentation column */}
+          <div className="flex min-w-0 flex-1 flex-col pt-8 pb-20 lg:border-x lg:border-[#141413]/[0.075] lg:pt-16">
+            {/* Mobile component strip */}
+            <div className="mb-8 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] lg:hidden [&::-webkit-scrollbar]:hidden">
+              {components.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/components/${c.slug}`}
+                  aria-current={c.slug === doc.slug ? "page" : undefined}
+                  className={cn(
+                    "shrink-0 rounded-full px-3 py-1 text-xs font-semibold transition-colors",
+                    c.slug === doc.slug
+                      ? "bg-[#141413] text-[#faf9f5]"
+                      : "bg-[#141413]/[0.06] text-[#141413]/70 hover:text-[#141413]"
+                  )}
+                >
+                  {c.title}
+                </Link>
+              ))}
+            </div>
 
-        <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold">Usage</h2>
-          <CodeBlock code={doc.usage} />
-        </section>
+            <article className="mx-auto w-full max-w-[46rem] min-w-0 px-2 md:px-8">
+              <header>
+                <h1 className="text-3xl font-semibold tracking-tight text-[#141413] sm:text-4xl">
+                  {doc.title}
+                </h1>
+                <p className="mt-4 mb-6 text-base/7 text-[#3d3d3a]">
+                  {doc.description}
+                </p>
+                <p className="font-mono text-xs text-[#141413]/50">
+                  Display modes: {doc.displayModes} · Source: {doc.source}
+                </p>
+              </header>
 
-        <section className="flex flex-col gap-3">
-          <h2 className="text-lg font-semibold">Props</h2>
-          <div className="overflow-x-auto rounded-xl border bg-card">
-            <table className="w-full text-left text-sm">
-              <thead className="border-b text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Prop</th>
-                  <th className="px-4 py-3 font-medium">Type</th>
-                  <th className="px-4 py-3 font-medium">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {doc.props.map((p) => (
-                  <tr key={p.name} className="border-b last:border-0">
-                    <td className="px-4 py-3 font-mono text-[13px]">{p.name}</td>
-                    <td className="px-4 py-3 font-mono text-[13px] text-muted-foreground">{p.type}</td>
-                    <td className="px-4 py-3">{p.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+              <section id="preview" className="mt-8 mb-12 scroll-mt-12">
+                <ComponentPreview
+                  slug={doc.slug}
+                  checks={doc.checks}
+                  variant={doc.variant}
+                  code={doc.usage}
+                />
+              </section>
+
+              <div className="flex flex-col gap-12">
+                <section className="flex flex-col gap-4">
+                  <SectionHeading id="installation">Installation</SectionHeading>
+                  <p className="text-sm/6 text-[#3d3d3a]">
+                    To get started, add the component to your project via the shadcn CLI:
+                  </p>
+                  <CodeBlock prompt code={`npx shadcn@latest add https://mcpblocks.dev/r/${doc.slug}.json`} />
+                  <p className="text-sm/6 text-[#73726c]">
+                    This also installs{" "}
+                    <code className="rounded bg-[#141413]/[0.06] px-1.5 py-0.5 font-mono text-xs text-[#141413]">
+                      host-tokens
+                    </code>
+                    , adding Claude&apos;s CSS variables and utilities like{" "}
+                    <code className="rounded bg-[#141413]/[0.06] px-1.5 py-0.5 font-mono text-xs text-[#141413]">
+                      bg-host-bg
+                    </code>{" "}
+                    to your stylesheet.
+                  </p>
+                </section>
+
+                <section className="flex flex-col gap-4">
+                  <SectionHeading id="basic-example">Basic example</SectionHeading>
+                  <CodeBlock code={doc.usage} />
+                </section>
+
+                <section className="flex flex-col gap-4">
+                  <SectionHeading id="component-api">Component API</SectionHeading>
+                  <div className="overflow-x-auto border-y border-[#141413]/[0.08]">
+                    <table className="w-full text-left text-sm">
+                      <thead className="border-b border-[#141413]/[0.08] font-mono text-xs text-[#141413]/55">
+                        <tr>
+                          <th className="py-3 pr-4 font-medium">Prop</th>
+                          <th className="px-4 py-3 font-medium">Type</th>
+                          <th className="py-3 pl-4 font-medium">Description</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {doc.props.map((p) => (
+                          <tr key={p.name} className="border-b border-[#141413]/[0.06] last:border-0">
+                            <td className="py-3.5 pr-4 align-top font-mono text-[13px] font-medium text-[#B5543A]">
+                              {p.name}
+                            </td>
+                            <td className="px-4 py-3.5 align-top font-mono text-[12px] text-[#73726c]">
+                              {p.type}
+                            </td>
+                            <td className="py-3.5 pl-4 align-top leading-relaxed text-[#3d3d3a]">
+                              {p.description}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+              </div>
+            </article>
           </div>
-        </section>
-      </article>
-    </div>
+
+          {/* Right sticky TOC (aligned inside w-68 rail) */}
+          <aside className="sticky top-0 hidden h-screen w-[17rem] shrink-0 border-x border-[#141413]/[0.075] xl:block">
+            <div className="h-full overflow-y-auto px-6 pt-16 pb-24">
+              <p className="font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
+                On this page
+              </p>
+              <nav aria-label="On this page">
+                <ul className="text-sm text-[#141413]/70">
+                  <li className="mt-4">
+                    <a href="#preview" className="transition-colors hover:text-[#141413]">
+                      Preview
+                    </a>
+                  </li>
+                  <li className="mt-4">
+                    <a href="#installation" className="transition-colors hover:text-[#141413]">
+                      Installation
+                    </a>
+                  </li>
+                  <li className="mt-4">
+                    <a href="#basic-example" className="transition-colors hover:text-[#141413]">
+                      Basic example
+                    </a>
+                  </li>
+                  <li className="mt-4">
+                    <a href="#component-api" className="transition-colors hover:text-[#141413]">
+                      Component API
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+
+              <div className="mt-10 border-t border-[#141413]/[0.075] pt-6">
+                <p className="font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
+                  Live Host
+                </p>
+                <p className="mt-3 text-xs/5 text-[#73726c]">
+                  Test MCP Apps in a sandboxed iframe over real{" "}
+                  <code className="font-mono text-[#141413]">AppBridge</code> JSON-RPC.
+                </p>
+                <Link
+                  href="/playground"
+                  className="mt-3 inline-flex rounded-full bg-[#141413]/[0.08] px-3 py-1 text-xs/5 font-semibold text-[#141413] transition-colors hover:bg-[#141413]/[0.14]"
+                >
+                  Open playground →
+                </Link>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </PageShell>
   )
 }

@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 
+import { PageShell } from "@/components/site/chrome"
 import { CodeBlock } from "@/components/site/code-block"
 import { colorGroups, radii, typeScale } from "@/lib/tokens"
 
@@ -24,15 +25,17 @@ function Swatch({ value, dark }: { value: string; dark?: boolean }) {
 
 export default function TokensPage() {
   return (
-    <main className="mx-auto flex max-w-6xl flex-col gap-12 px-6 py-12">
-      <header className="flex max-w-2xl flex-col gap-3">
-        <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Tokens</h1>
-        <p className="text-lg text-foreground/80">
-          Every color, type size and radius from the MCP Apps for Claude kit, in light and dark. Inside Claude the host
-          injects these variables; outside it, these are the fallbacks your components use.
-        </p>
-        <CodeBlock prompt code="npx shadcn@latest add https://mcpblocks.dev/r/host-tokens.json" />
-      </header>
+    <PageShell rails="wide">
+      <main className="rounded-[2.5rem] bg-white/85 px-4 py-14 backdrop-blur-sm sm:px-6">
+        <div className="mx-auto flex max-w-7xl flex-col gap-12 px-2">
+          <header className="flex max-w-2xl flex-col gap-3">
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Tokens</h1>
+            <p className="text-base/7 text-[#3d3d3a]">
+              Every color, type size and radius from the MCP Apps for Claude kit, in light and dark. Inside Claude the
+              host injects these variables; outside it, these are the fallbacks your components use.
+            </p>
+            <CodeBlock prompt code="npx shadcn@latest add https://mcpblocks.dev/r/host-tokens.json" />
+          </header>
 
       {colorGroups.map((g) => (
         <section key={g.group} className="flex flex-col gap-3">
@@ -108,6 +111,8 @@ export default function TokensPage() {
           ))}
         </div>
       </section>
-    </main>
+        </div>
+      </main>
+    </PageShell>
   )
 }

@@ -98,7 +98,11 @@ export function Segmented<T extends string>({
   onChange: (v: T) => void
 }) {
   return (
-    <div role="radiogroup" aria-label={label} className="inline-flex rounded-lg bg-secondary p-1">
+    <div
+      role="radiogroup"
+      aria-label={label}
+      className="inline-flex rounded-full border border-[#141413]/[0.08] bg-[#f5f4ed] p-1"
+    >
       {options.map((o) => {
         const Icon = o.icon
         const active = o.value === value
@@ -110,11 +114,11 @@ export function Segmented<T extends string>({
             aria-checked={active}
             onClick={() => onChange(o.value)}
             className={cn(
-              "inline-flex min-h-9 items-center gap-1.5 rounded-md px-3 text-sm font-medium text-muted-foreground transition-colors",
-              active && "bg-card text-foreground shadow-sm"
+              "inline-flex min-h-8 items-center gap-1.5 rounded-full px-3 text-xs font-medium text-muted-foreground transition-all",
+              active && "bg-white text-foreground shadow-xs ring-1 ring-[#141413]/[0.06]"
             )}
           >
-            <Icon className="size-4" aria-hidden="true" />
+            <Icon className="size-3.5" aria-hidden="true" />
             {o.label}
           </button>
         )
@@ -264,7 +268,7 @@ export function HostPreview({
       </div>
 
       {/* Host frame */}
-      <div className="flex justify-center rounded-2xl border bg-secondary/60 p-4 sm:p-8">
+      <div className="site-stage-dots flex justify-center rounded-2xl border border-[#141413]/[0.08] bg-[#f6f5ee]/90 p-4 sm:p-8">
         <div
           data-host-theme={theme}
           style={hostVars}
@@ -313,7 +317,7 @@ export function HostPreview({
       </div>
 
       {/* Live DOM checks + static guidelines */}
-      <div className="grid gap-2 rounded-xl border bg-card p-4 text-sm sm:grid-cols-2">
+      <div className="grid gap-2.5 rounded-2xl border border-[#141413]/[0.08] bg-white p-4 text-xs shadow-2xs sm:grid-cols-2">
         {liveChecks.map((item) => (
           <div key={item.label} className="flex items-center gap-2">
             {item.ok ? (
