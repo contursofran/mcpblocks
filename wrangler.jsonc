@@ -1,0 +1,6 @@
+{
+  // Cloudflare Pages: `pnpm build` writes the static site (incl. out/r/*.json) to out/
+  "name": "mcpblocks",
+  "compatibility_date": "2025-01-01",
+  "pages_build_output_dir": "./out"
+}
