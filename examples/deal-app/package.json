@@ -8,8 +8,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "sync-blocks": "node scripts/sync-blocks.mjs",
-    "build": "npm run sync-blocks && tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build",
     "start": "tsx server/main.ts",
     "start:stdio": "tsx server/main.ts --stdio",
     "dev": "npm run build && npm start"
@@ -28,7 +27,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.3.1",
-    "zod": "^4.2.0"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.11",

@@ -46,9 +46,22 @@ export function applyHostContext(
   applySafeAreaInsets(ctx.safeAreaInsets, el)
 }
 
+// Bundlers (Vite, Next, webpack) replace `process.env.NODE_ENV` at build time. The
+// declaration keeps this file compiling in projects without @types/node.
+declare const process: { env: { NODE_ENV?: string } }
+
+function isProduction() {
+  try {
+    return process.env.NODE_ENV === "production"
+  } catch {
+    // No bundler replacement and no `process` global: behave like development.
+    return false
+  }
+}
+
 /** Logs a development-only warning when a guideline limit is exceeded. */
 export function guideline(condition: boolean, message: string) {
-  if (process.env.NODE_ENV !== "production" && condition) {
+  if (condition && !isProduction()) {
     console.warn(`[mcpblocks] ${message}`)
   }
 }

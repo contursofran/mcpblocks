@@ -1,6 +1,3 @@
 node_modules
-dist
-# copied from ../../registry by `npm run sync-blocks`
-src/registry
-src/lib
-src/host-tokens.css
+dist/*
+!dist/view.html
