@@ -79,7 +79,13 @@ export function SiteFooter() {
           </a>
           ). Rebuilt as React components and adapted for other MCP hosts.
         </p>
-        <p className="text-xs text-[#141413]/50">Independent project, not affiliated with Anthropic or OpenAI.</p>
+        <p className="text-xs text-[#141413]/50">
+          Open source under the{" "}
+          <a className="underline decoration-[#141413]/25 underline-offset-2 hover:text-[#141413]" href={`${GITHUB_URL}/blob/master/LICENSE`}>
+            MIT license
+          </a>
+          . Independent project, not affiliated with Anthropic or OpenAI.
+        </p>
         <p className="pt-1 font-mono text-xs text-[#141413]/50">
           For agents &amp; LLMs:{" "}
           <a className="underline decoration-[#141413]/25 underline-offset-2 hover:text-[#141413]" href="/llms.txt">
