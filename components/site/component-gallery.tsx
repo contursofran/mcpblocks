@@ -264,9 +264,6 @@ export function ComponentGallery() {
       ? components
       : components.filter((c) => c.category === filter)
 
-  // Pad horizontal hairline row bands so 2-col and 3-col grids always close their last row cleanly.
-  const pad3 = (3 - (visible.length % 3)) % 3
-
   return (
     <div>
       {/* Exact Headless UI pill bar */}

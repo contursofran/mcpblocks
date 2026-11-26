@@ -1,7 +1,6 @@
 "use client"
 
 import * as React from "react"
-import Link from "next/link"
 import { AlertTriangle, CheckCircle2, Maximize2, Monitor, Moon, Smartphone, Sun } from "lucide-react"
 
 import { insetsFor, type PreviewDevice, type PreviewMode, type PreviewTheme } from "@/lib/host-context"

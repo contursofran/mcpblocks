@@ -114,7 +114,6 @@ export function SiteFooter() {
  * - Header & footer sitting directly on the atmospheric canvas outside the rounded-[2.5rem] sheet
  */
 export function PageShell({
-  rails = "home",
   children,
 }: {
   rails?: "home" | "docs" | "wide"
