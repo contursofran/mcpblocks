@@ -24,6 +24,14 @@ export default function Home() {
             >
               Browse components
             </Link>
+            <a
+              href="https://github.com/contursofran/mcpblocks"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-10 items-center px-2 text-sm text-[#141413]/60 transition-colors hover:text-[#141413]"
+            >
+              Open source · MIT on GitHub
+            </a>
           </div>
         </div>
       </div>

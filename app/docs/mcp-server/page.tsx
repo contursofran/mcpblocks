@@ -22,7 +22,7 @@ export default function McpServerPage() {
     <DocsShell
       current="/docs/mcp-server"
       title="Using with an MCP server"
-      lead="An MCP App has two halves: a server that registers a tool plus a ui:// resource, and a React view that the host renders in a sandboxed iframe. MCP Blocks covers the view."
+      lead="An MCP App is a server that registers a tool and a ui:// resource, plus a React view the host renders. MCP Blocks covers the view."
     >
       <JsonLd
         data={guideJsonLd({
@@ -37,12 +37,11 @@ export default function McpServerPage() {
           code="npm install @modelcontextprotocol/ext-apps @modelcontextprotocol/server @modelcontextprotocol/node zod react react-dom"
         />
         <p className="text-sm text-muted-foreground">
-          Package names and APIs follow ext-apps 2.x and may change. Check the{" "}
+          APIs follow ext-apps 2.x. See the{" "}
           <a className="underline underline-offset-2" href="https://apps.extensions.modelcontextprotocol.io/api/">
             ext-apps docs
           </a>{" "}
-          before copying. ext-apps also needs <Code>@modelcontextprotocol/client</Code> and <Code>zod</Code> 4.2 or newer as
-          peers; npm installs them for you, pnpm and yarn may ask you to add them.
+          if something has changed.
         </p>
       </Step>
 
@@ -88,10 +87,8 @@ registerAppResource(server, "Deal summary", viewUri, { mimeType: RESOURCE_MIME_T
 }))`}
         />
         <p className="text-foreground/80">
-          Serve it over Streamable HTTP, then add the URL as a custom connector in Claude. On any runtime with web
-          standard <Code>Request</Code> and <Code>Response</Code> (Cloudflare Workers, Deno, Bun) that is one line with{" "}
-          <Code>createMcpHandler</Code>. On Node use <Code>NodeStreamableHTTPServerTransport</Code> from{" "}
-          <Code>@modelcontextprotocol/node</Code>, or stdio for local use.
+          Serve it over Streamable HTTP. On Workers, Deno or Bun, <Code>createMcpHandler</Code> does it in one line; on
+          Node use <Code>NodeStreamableHTTPServerTransport</Code>.
         </p>
         <CodeBlock
           code={`import { createMcpHandler } from "@modelcontextprotocol/server"
@@ -183,39 +180,18 @@ export function DealView() {
   )
 }`}
         />
-        <p className="text-sm text-muted-foreground">
-          The initial host context is available from <Code>app.getHostContext()</Code> once connected, which is why the
-          effect above applies it too.
+        </Step>
+
+      <Step n={5} title="Test it in Claude">
+        <p className="text-foreground/80">
+          Run the server and add its <Code>/mcp</Code> URL under Settings, Connectors, Add custom connector. To try ours
+          first, add <Code>https://mcpblocks.dev/mcp</Code> and ask Claude to show your open deals. Check light and dark,
+          fullscreen and a narrow window, and watch the console for <Code>[mcpblocks]</Code> guideline warnings.
         </p>
-      </Step>
-
-      <Step n={5} title="Talk back to the host">
-        <ul className="list-disc space-y-1 pl-5 text-foreground/80">
-          <li>
-            <Code>app.callServerTool</Code> runs another tool on your server, for example on a confirm button.
-          </li>
-          <li>
-            <Code>app.sendMessage</Code> adds a message to the chat. Prefer this over in-widget forms for edits.
-          </li>
-          <li>
-            <Code>app.requestDisplayMode</Code> asks for <Code>fullscreen</Code> or <Code>pip</Code>.
-          </li>
-        </ul>
-      </Step>
-
-      <Step n={6} title="Test it">
-        <ul className="list-disc space-y-1 pl-5 text-foreground/80">
-          <li>
-            Run the server and add it as a custom connector in Claude (Settings, Connectors, Add custom connector, then paste
-            the <Code>/mcp</Code> URL), or use the basic host from the ext-apps repo. To try ours first, add{" "}
-            <Code>https://mcpblocks.dev/mcp</Code> and ask Claude to show your open deals.
-          </li>
-          <li>Check light and dark, inline and fullscreen, and a phone-sized window.</li>
-          <li>
-            Watch the console for <Code>[mcpblocks]</Code> warnings. They flag guideline limits such as more than two
-            inline actions.
-          </li>
-        </ul>
+        <p className="text-sm text-muted-foreground">
+          From the view, <Code>app.callServerTool</Code> runs another tool, <Code>app.sendMessage</Code> adds a chat
+          message (better than in-widget forms), and <Code>app.requestDisplayMode</Code> asks for fullscreen or pip.
+        </p>
       </Step>
     </DocsShell>
   )
