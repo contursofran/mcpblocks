@@ -75,7 +75,7 @@ export function HeroChat({
           </button>
         ))}
       </div>
-      <div className="flex flex-col overflow-hidden rounded-xl border border-[#1f1e1d]/15 bg-[#faf9f5] font-[family-name:var(--font-sans)] text-[#141413] shadow-[0_24px_48px_-20px_rgba(20,20,19,0.28)] dark:border-white/10 dark:bg-[#262624] dark:text-[#faf9f5]">
+      <div className="flex flex-col overflow-hidden rounded-xl border border-[#1f1e1d]/15 bg-[#faf9f5] font-[family-name:var(--font-sans)] text-[#141413] dark:border-white/10 dark:bg-[#262624] dark:text-[#faf9f5]">
         {/* Window title bar */}
         <div className="relative flex h-10 shrink-0 items-center border-b border-[#1f1e1d]/10 px-4 dark:border-white/10">
           <div className="flex gap-2" aria-hidden="true">
@@ -93,22 +93,35 @@ export function HeroChat({
             </p>
           </div>
 
-          {mode === "after" ? (
-            <div key="after" className="flex animate-in flex-col gap-2.5 duration-300 fade-in">
+          {/* Stack both panels in one grid cell so the window height stays fixed at max(before, after) with zero layout shift. */}
+          <div className="grid">
+            <div
+              aria-hidden={mode !== "after"}
+              className={
+                "col-start-1 row-start-1 flex flex-col gap-2.5 transition-opacity duration-200 " +
+                (mode === "after" ? "opacity-100" : "pointer-events-none invisible opacity-0 select-none")
+              }
+            >
               <p className="font-serif text-[15px] leading-relaxed">{reply}</p>
               <AppFrame name={app} icon={icon}>
                 {children}
               </AppFrame>
             </div>
-          ) : (
-            <div key="before" className="animate-in duration-300 fade-in">
+
+            <div
+              aria-hidden={mode !== "before"}
+              className={
+                "col-start-1 row-start-1 transition-opacity duration-200 " +
+                (mode === "before" ? "opacity-100" : "pointer-events-none invisible opacity-0 select-none")
+              }
+            >
               {before}
             </div>
-          )}
+          </div>
         </div>
 
         <div className="px-4 pb-4 sm:px-5" aria-hidden="true">
-          <div className="flex items-center justify-between rounded-2xl border border-[#1f1e1d]/15 bg-white py-2 pr-2 pl-4 text-sm text-[#73726c] shadow-[0_4px_16px_-8px_rgba(20,20,19,0.15)] dark:border-white/10 dark:bg-[#30302e] dark:text-[#a6a39a]">
+          <div className="flex items-center justify-between rounded-2xl border border-[#1f1e1d]/15 bg-white py-2 pr-2 pl-4 text-sm text-[#73726c] dark:border-white/10 dark:bg-[#30302e] dark:text-[#a6a39a]">
             <span>Reply…</span>
             <span className="flex size-8 items-center justify-center rounded-lg bg-[#c96442] text-base text-white">
               ↑

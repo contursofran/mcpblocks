@@ -93,7 +93,7 @@ export function MediaPlayer({
               type="button"
               onClick={onRegenerate}
               aria-label="Regenerate"
-              className="inline-flex size-10 items-center justify-center rounded-host-md border-[length:var(--border-width-regular,0.5px)] border-host-border text-host-fg hover:bg-host-bg-secondary"
+              className="inline-flex size-11 items-center justify-center rounded-host-md border-[length:var(--border-width-regular,0.5px)] border-host-border text-host-fg hover:bg-host-bg-secondary"
             >
               <ReloadIcon className="size-5" />
             </button>
@@ -103,7 +103,7 @@ export function MediaPlayer({
               type="button"
               onClick={onDownload}
               aria-label="Download"
-              className="inline-flex size-10 items-center justify-center rounded-host-md bg-host-bg-inverse text-host-fg-inverse hover:opacity-90"
+              className="inline-flex size-11 items-center justify-center rounded-host-md bg-host-bg-inverse text-host-fg-inverse hover:opacity-90"
             >
               <DownloadIcon className="size-5" />
             </button>

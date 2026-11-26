@@ -78,7 +78,7 @@ Working copy of the kit: https://www.figma.com/design/Bbp7doY8pEPK2gwNU4fzc9 (pa
 
 - Verified locally (shadcn@3 CLI, fresh Next 16 + Tailwind 4.3, registry served from localhost with URLs rewritten): cssVars/theme merge into globals.css, deps install, files resolve, app builds, `host-*` utilities compile. Not verified: the CLI's final file-write step (sandbox blocked ui.shadcn.com) and the deployed URL.
 - End-to-end `npx shadcn add <url>` into a fresh Next.js + Tailwind v4 project (needs the registry deployed to a real URL). Check: cssVars land correctly, import paths rewrite, `host-tokens` utilities resolve.
-- Rendering inside real Claude (deploy a sample MCP App using the components).
+- Claude Desktop dark mode verified for the four deal-app tool views. Remaining registry blocks: media player, document card, carousel, loading skeleton and status update. [Coverage issue](https://github.com/contursofran/mcpblocks/issues/13)
 
 ## SEO (decided)
 
@@ -103,7 +103,7 @@ Cloudflare Pages, static export (domain is already in the same Cloudflare accoun
 ## Next steps (suggested order)
 
 1. Deploy to Cloudflare Pages (see Deploy), replace placeholders, run the install test above in a scratch app.
-2. ~~Add a minimal example MCP server~~ Done: `examples/deal-app/` (ext-apps 2.x, React + Vite single-file view, Streamable HTTP/stdio). Still to do: test it as a custom connector in real Claude through a tunnel (see its README).
+2. ~~Add a minimal example MCP server~~ Done: `examples/deal-app/` (ext-apps 2.x, React + Vite single-file view, Streamable HTTP/stdio). The hosted connector rendered all four tool views in Claude Desktop dark mode. [Verification details](examples/deal-app/README.md#verification)
 3. **Real host preview:** upgrade `HostPreview` from CSS simulation to a sandboxed iframe host using ext-apps' `AppBridge`, sending `ui/initialize` with hostContext (theme, displayMode, safeAreaInsets, platform) and the token style variables; support pasting a mock tool result as JSON. Keep the guideline checks panel and add DOM-based lint (nested scroll containers, >2 buttons inline, `<select>`/popovers, tap targets <44px, hardcoded colors).
 4. Roadmap (from the kit's Full screen page, listed in `lib/docs.ts` → `roadmap`): document editor, cohort heatmap, task table. Build them from the Figma nodes under 467:39707.
 5. Later, only if demand: paid templates (approval inbox, record viewer, booking flow, full-app shell) and/or the local CLI preview.

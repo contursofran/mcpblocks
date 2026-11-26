@@ -2,8 +2,10 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 import { OG_IMAGE } from "@/lib/site"
+import { guideJsonLd } from "@/lib/schema"
 import { CodeBlock } from "@/components/site/code-block"
 import { Code, DocsShell, Step } from "@/components/site/docs-shell"
+import { JsonLd } from "@/components/site/json-ld"
 
 const description =
   "Build an MCP server that returns a UI resource, then render it with MCP Blocks components and wire up host theme, display mode and safe areas."
@@ -22,6 +24,13 @@ export default function McpServerPage() {
       title="Using with an MCP server"
       lead="An MCP App has two halves: a server that registers a tool plus a ui:// resource, and a React view that the host renders in a sandboxed iframe. MCP Blocks covers the view."
     >
+      <JsonLd
+        data={guideJsonLd({
+          title: "Using with an MCP server: build a Claude MCP App",
+          description,
+          path: "/docs/mcp-server",
+        })}
+      />
       <Step n={1} title="Install the SDKs">
         <CodeBlock
           prompt

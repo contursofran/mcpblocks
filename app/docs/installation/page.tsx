@@ -2,8 +2,10 @@ import type { Metadata } from "next"
 import Link from "next/link"
 
 import { OG_IMAGE } from "@/lib/site"
+import { guideJsonLd } from "@/lib/schema"
 import { CodeBlock } from "@/components/site/code-block"
 import { Code, DocsShell, Step } from "@/components/site/docs-shell"
+import { JsonLd } from "@/components/site/json-ld"
 
 const description =
   "Add MCP Blocks UI components to a React project with the shadcn CLI: prerequisites, one command per component, and what lands in your repo."
@@ -22,6 +24,13 @@ export default function InstallationPage() {
       title="Installation"
       lead="MCP Blocks UI is a shadcn registry. Each component is copied into your repo, so you own the code and there is no runtime package to keep up to date."
     >
+      <JsonLd
+        data={guideJsonLd({
+          title: "Installation: shadcn CLI setup for Claude MCP Apps",
+          description,
+          path: "/docs/installation",
+        })}
+      />
       <Step n={1} title="Prerequisites">
         <ul className="list-disc space-y-1 pl-5 text-foreground/80">
           <li>A React 18+ project (Vite, Next.js or anything that builds a single-file MCP App view).</li>

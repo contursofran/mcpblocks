@@ -1,0 +1,682 @@
+# MCP Blocks UI — Complete Documentation
+
+> UI components for Claude MCP Apps. React components for Claude MCP Apps and interactive connectors, built on Claude's host tokens, display modes and mobile safe areas. Works in ChatGPT too.
+
+- Website: https://mcpblocks.dev
+- Registry JSON: https://mcpblocks.dev/r/registry.json
+- Live demo MCP server: https://mcpblocks.dev/mcp
+- GitHub: https://github.com/contursofran/mcpblocks
+
+---
+
+## Installation
+
+Prerequisites: React 18+, Tailwind CSS v4 (`@theme inline`), `components.json` (`npx shadcn@latest init`), and `@modelcontextprotocol/ext-apps`.
+
+Install any component (dependencies such as `host-tokens`, `host`, `host-button`, and `icons` are installed automatically):
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/<component-slug>.json
+```
+
+---
+
+# MCP Blocks UI — Agent Integration Guide
+
+This file helps AI coding assistants (Claude Code, Cursor, Codex, Antigravity, etc.) choose, install, and wire **MCP Blocks UI** components when building **MCP Apps** (interactive UI views rendered inside Claude, ChatGPT, VS Code, Goose, and Vercel AI SDK hosts).
+
+- **Homepage:** https://mcpblocks.dev
+- **Full docs (single file):** https://mcpblocks.dev/llms-full.txt
+- **LLM index:** https://mcpblocks.dev/llms.txt
+- **Registry manifest:** https://mcpblocks.dev/r/registry.json
+- **Live demo MCP server:** https://mcpblocks.dev/mcp
+- **Source repo:** https://github.com/contursofran/mcpblocks
+
+## Component Selection Matrix
+
+| User need / UI pattern | Recommended component | Install command |
+| --- | --- | --- |
+| Search results, Slack threads, tickets, or short list of records (4–5 rows) | `ListView` | `npx shadcn@latest add https://mcpblocks.dev/r/list-view.json` |
+| Compact summary card with ≤5 key/value fields and ≤2 action buttons | `InlineCard` | `npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json` |
+| Approval / confirmation step for a write action Claude prepared | `ConfirmAction` | `npx shadcn@latest add https://mcpblocks.dev/r/confirm-action.json` |
+| Success, info, warning, or error result banner with optional Undo/View button | `StatusUpdate` | `npx shadcn@latest add https://mcpblocks.dev/r/status-update.json` |
+| Time-series / metrics trend chart (dependency-free SVG, borderless) | `LineChart` | `npx shadcn@latest add https://mcpblocks.dev/r/line-chart.json` |
+| Inline audio playback with seekable waveform + regenerate/download | `MediaPlayer` | `npx shadcn@latest add https://mcpblocks.dev/r/media-player.json` |
+| 3–8 visual comparable items (places, products, trails) with save toggle | `Carousel` | `npx shadcn@latest add https://mcpblocks.dev/r/carousel.json` |
+| Editable document/notes card with properties, bullet items, and checkboxes | `DocumentCard` | `npx shadcn@latest add https://mcpblocks.dev/r/document-card.json` |
+| Loading state while tool results arrive (use skeletons, never spinners) | `RowsSkeleton` / `InlineCardSkeleton` / `CarouselSkeleton` | `npx shadcn@latest add https://mcpblocks.dev/r/skeleton.json` |
+
+## Hard Rules for Claude MCP Apps
+
+Follow these rules whenever generating or modifying MCP App views:
+
+1. **Use `host-*` Tailwind utilities only** (`bg-host-bg`, `bg-host-bg-secondary`, `text-host-fg`, `text-host-fg-tertiary`, `border-host-border-secondary`, `rounded-host-md`, etc.). Never hardcode hex/rgb colors — Claude injects host CSS variables at runtime for light and dark themes.
+2. **No floating UI layers:** Do not use dropdowns, popovers, context menus, native `<select>`, or Radix floating primitives. They clip at iframe boundaries and conflict with host z-index.
+3. **No nested vertical scrolling or viewport height units:** Inline widgets must auto-fit their content height (stay under ~520px). Never use `overflow-y-auto`, `overflow-auto`, `h-screen`, `vh`, or `dvh`.
+4. **Inline limits:** Keep inline cards to ≤5 fields and ≤2 actions at the bottom. Keep carousels to 3–8 items. Send edits back through chat via `app.sendMessage(...)` rather than building full forms inline.
+5. **44×44px minimum tap targets:** Use `HostButton` (`min-h-11`) or `size-11` for interactive icon buttons.
+6. **Skeletons, not spinners:** Render `RowsSkeleton`, `InlineCardSkeleton`, or `CarouselSkeleton` while waiting for tool results.
+7. **Borderless views:** For `LineChart`, `Carousel`, `InlineCard`, and `StatusUpdate`, set `_meta: { ui: { prefersBorder: false } }` on the `ui://` resource so the host does not draw a double border.
+8. **Sandbox constraints:** Never rely on `localStorage`, `sessionStorage`, `document.cookie`, or `window.openai`.
+
+## Standard View Wiring (`@modelcontextprotocol/ext-apps` 2.x)
+
+```tsx
+import { useApp, useHostStyles } from "@modelcontextprotocol/ext-apps/react"
+import { useEffect, useState } from "react"
+import { InlineCard } from "@/components/inline-card"
+import { RowsSkeleton } from "@/components/skeleton"
+import { applyHostContext } from "@/lib/host"
+
+export function View() {
+  const [data, setData] = useState<any>(null)
+  const { app } = useApp({
+    appInfo: { name: "my-mcp-app", version: "1.0.0" },
+    capabilities: {},
+    onAppCreated: (app) => {
+      app.ontoolresult = (result) => setData(result.structuredContent)
+      app.onhostcontextchanged = (ctx) => applyHostContext(ctx)
+    },
+  })
+
+  useHostStyles(app, app?.getHostContext())
+  useEffect(() => {
+    if (app) applyHostContext(app.getHostContext())
+  }, [app])
+
+  if (!data) return <RowsSkeleton rows={3} columns={3} />
+  return <InlineCard title={data.title} fields={data.fields} actions={data.actions} />
+}
+```
+
+## Server Pattern (`@modelcontextprotocol/ext-apps/server`)
+
+- Register tools with `registerAppTool` pointing `_meta: { ui: { resourceUri: "ui://my-app/view.html" } }`.
+- Keep mutating confirmation tools hidden from the LLM using `visibility: ["app"]` so only the UI can invoke them via `app.callServerTool(...)`.
+- Always return useful text in `content` alongside `structuredContent` so text-only hosts still work.
+- Bundle the React view into a single HTML file (e.g. `vite-plugin-singlefile`) and serve it via `registerAppResource` with `mimeType: RESOURCE_MIME_TYPE` (`text/html;profile=mcp-app`).
+
+---
+
+## Component Reference
+
+# List view — MCP Blocks UI
+
+> A short list of rich rows (messages, tickets, search results) with avatars, metadata and a footer link to the rest.
+
+- **Category:** Inline cards
+- **Display modes:** inline
+- **Host container variant:** `card`
+- **Design source:** MCP Apps for Claude kit · Inline card / List views
+- **Docs URL:** https://mcpblocks.dev/components/list-view
+- **Registry JSON:** https://mcpblocks.dev/r/list-view.json
+
+## Install
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/list-view.json
+```
+
+Automatically installs `host-tokens` (Claude CSS variables + Tailwind v4 `host-*` utilities) and required helpers.
+
+## Guidelines
+
+- 4–5 rows inline, link to the rest
+- Rows clamp to two lines
+- Footer link opens your app or fullscreen
+
+## Usage
+
+```tsx
+import { ListView } from "@/components/list-view"
+
+<ListView
+  items={messages.map((m) => ({
+    id: m.id,
+    initials: m.author.initials,
+    title: m.author.name,
+    meta: m.channel,
+    timestamp: m.date,
+    body: m.text,
+  }))}
+  summary={`Showing 4 of ${total} results`}
+  viewAll={{ label: "View in App", onClick: () => app.requestDisplayMode({ mode: "fullscreen" }) }}
+/>
+```
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `items` | `ListViewItem[]` | id, initials, avatarColor?, title, meta?, timestamp?, body?, onClick? |
+| `summary` | `string` | Footer text, e.g. "Showing 4 of 12 results". |
+| `viewAll` | `{ label, href?, onClick? }` | Footer link to the full list. |
+
+---
+
+# Confirm action — MCP Blocks UI
+
+> Confirmation for a change Claude has prepared: what will happen, who it applies to, one confirm button, and what the change includes.
+
+- **Category:** Inline cards
+- **Display modes:** inline
+- **Host container variant:** `card`
+- **Design source:** MCP Apps for Claude kit · Inline card / Confirmation actions
+- **Docs URL:** https://mcpblocks.dev/components/confirm-action
+- **Registry JSON:** https://mcpblocks.dev/r/confirm-action.json
+
+## Install
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/confirm-action.json
+```
+
+Automatically installs `host-tokens` (Claude CSS variables + Tailwind v4 `host-*` utilities) and required helpers.
+
+## Guidelines
+
+- One confirm action; edits stay in the chat
+- Working, done and error states in place
+- Undo offered after success
+
+## Usage
+
+```tsx
+import { ConfirmAction } from "@/components/confirm-action"
+
+<ConfirmAction
+  title="Set lead assignment permission"
+  subject={{ name: "Sarah Johnson", detail: "sarah.johnson@company.com" }}
+  confirmLabel="Confirm assignment"
+  onConfirm={() => app.callServerTool({ name: "assign_permission", arguments: { userId } })}
+  details={{ heading: "Lead assignment permissions", items: permissions }}
+  doneTitle="Permission assigned"
+/>
+```
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `title` | `ReactNode` | What will happen. |
+| `subject` | `{ name, detail?, initials?, avatarColor? }` | The person or record it applies to. |
+| `onConfirm` | `() => unknown` | Return a promise to show the working state; a rejection shows the error state. |
+| `details` | `{ heading, items[] }` | What the change includes, as a checklist. |
+| `status` | `pending \| working \| done \| error` | Control the state from outside. |
+
+---
+
+# Media player — MCP Blocks UI
+
+> An inline audio card with play/pause, a waveform you can click to seek, the duration and optional regenerate/download actions.
+
+- **Category:** Data & media
+- **Display modes:** inline
+- **Host container variant:** `card`
+- **Design source:** MCP Apps for Claude kit · Inline card / Media card
+- **Docs URL:** https://mcpblocks.dev/components/media-player
+- **Registry JSON:** https://mcpblocks.dev/r/media-player.json
+
+## Install
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/media-player.json
+```
+
+Automatically installs `host-tokens` (Claude CSS variables + Tailwind v4 `host-*` utilities) and required helpers.
+
+## Guidelines
+
+- Playback stays inline, no new window
+- Waveform is keyboard-seekable (←/→)
+- Two actions at most
+
+## Usage
+
+```tsx
+import { MediaPlayer } from "@/components/media-player"
+
+<MediaPlayer
+  title="Podcast Intro"
+  subtitle="Rachel · Warm"
+  src={result.audioUrl}
+  peaks={result.peaks}
+  onRegenerate={() => app.sendMessage({ role: "user", content: [{ type: "text", text: "Try a different voice" }] })}
+  onDownload={() => app.openLink({ url: result.audioUrl })}
+/>
+```
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `src` | `string` | Audio URL. Without it the card is a static preview. |
+| `peaks` | `number[]` | Waveform values 0–1. A stable placeholder is generated if omitted. |
+| `duration` | `number` | Seconds, shown before metadata loads. |
+| `onRegenerate / onDownload` | `() => void` | Show the matching icon buttons. |
+
+---
+
+# Line chart — MCP Blocks UI
+
+> A borderless line chart with soft area fills, a hover tooltip, range tabs and a legend. Dependency-free SVG.
+
+- **Category:** Data & media
+- **Display modes:** inline, borderless
+- **Host container variant:** `borderless` (set `_meta.ui.prefersBorder: false`)
+- **Design source:** MCP Apps for Claude kit · Inline card / Borderless card
+- **Docs URL:** https://mcpblocks.dev/components/line-chart
+- **Registry JSON:** https://mcpblocks.dev/r/line-chart.json
+
+## Install
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/line-chart.json
+```
+
+Automatically installs `host-tokens` (Claude CSS variables + Tailwind v4 `host-*` utilities) and required helpers.
+
+## Guidelines
+
+- Borderless: set _meta.ui.prefersBorder = false
+- Tooltip on hover, no popovers
+- Fits inline without scrolling
+
+## Usage
+
+```tsx
+import { LineChart } from "@/components/line-chart"
+
+<LineChart
+  title="Chats and messages"
+  labels={days}
+  series={[
+    { name: "Messages", values: messages },
+    { name: "Chats", values: chats },
+  ]}
+  ranges={["1D", "1W", "1M", "1Y"]}
+  onRangeChange={(r) => app.callServerTool({ name: "get_usage", arguments: { range: r } })}
+/>
+```
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `labels` | `string[]` | One label per point; also shown in the tooltip. |
+| `series` | `{ name, values[], color? }[]` | Up to ~4 series. |
+| `ranges / range / onRangeChange` | `string[] / string / fn` | Optional range tabs. |
+| `formatValue` | `(v) => string` | Axis and tooltip formatting. |
+
+---
+
+# Document card — MCP Blocks UI
+
+> A page or document preview with properties, lists and tasks that the user can edit in place, then hand back to Claude.
+
+- **Category:** Inline cards
+- **Display modes:** inline
+- **Host container variant:** `card`
+- **Design source:** MCP Apps for Claude kit · Inline card / Inline editing
+- **Docs URL:** https://mcpblocks.dev/components/document-card
+- **Registry JSON:** https://mcpblocks.dev/r/document-card.json
+
+## Install
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/document-card.json
+```
+
+Automatically installs `host-tokens` (Claude CSS variables + Tailwind v4 `host-*` utilities) and required helpers.
+
+## Guidelines
+
+- Small edits in place, big changes in chat
+- Checkboxes are real inputs
+- onChange returns the full updated content
+
+## Usage
+
+```tsx
+import { DocumentCard } from "@/components/document-card"
+
+<DocumentCard
+  icon="📋"
+  title={page.title}
+  properties={[{ label: "Type", value: "Meeting notes", tag: true }]}
+  sections={[
+    { kind: "list", heading: "Agenda", items: page.agenda },
+    { kind: "tasks", heading: "Action items", items: page.tasks, placeholder: "To be filled during meeting" },
+  ]}
+  onChange={(sections) => app.callServerTool({ name: "update_page", arguments: { id: page.id, sections } })}
+/>
+```
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `properties` | `{ label, value, tag? }[]` | Key/value rows at the top. |
+| `sections` | `DocumentSection[]` | "list" (editable text) or "tasks" (checkboxes). |
+| `editable` | `boolean` | Default true. |
+| `onChange` | `(sections) => void` | Fires after each edit. |
+
+---
+
+# Carousel — MCP Blocks UI
+
+> A horizontal row of comparable items with tall images, a save toggle, a rating and a meta row, with a fading edge and next button.
+
+- **Category:** Data & media
+- **Display modes:** inline, borderless
+- **Host container variant:** `borderless` (set `_meta.ui.prefersBorder: false`)
+- **Design source:** MCP Apps for Claude kit · Inline carousel
+- **Docs URL:** https://mcpblocks.dev/components/carousel
+- **Registry JSON:** https://mcpblocks.dev/r/carousel.json
+
+## Install
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/carousel.json
+```
+
+Automatically installs `host-tokens` (Claude CSS variables + Tailwind v4 `host-*` utilities) and required helpers.
+
+## Guidelines
+
+- 3–8 items (dev warning outside that range)
+- Next card peeks behind a fade
+- One action per card (save)
+
+## Usage
+
+```tsx
+import { Carousel } from "@/components/carousel"
+
+<Carousel
+  label="Nearby hikes"
+  items={trails.map((t) => ({
+    id: t.id,
+    title: t.name,
+    subtitle: t.park,
+    image: t.photo,
+    rating: t.rating,
+    meta: [t.difficulty, t.distance],
+    saved: t.saved,
+    onSave: (saved) => app.callServerTool({ name: "save_trail", arguments: { id: t.id, saved } }),
+  }))}
+/>
+```
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `items` | `CarouselItem[]` | id, title, subtitle?, image?, rating?, meta?, saved?, onSave?, onClick? |
+| `cardWidth / imageHeight` | `number` | Default 220 × 280, as in the kit. |
+| `label` | `string` | Accessible name for the scroll region. |
+
+---
+
+# Skeleton — MCP Blocks UI
+
+> Loading placeholders. RowsSkeleton is the kit's loading state for lists and tables; InlineCardSkeleton and CarouselSkeleton match those components.
+
+- **Category:** Feedback
+- **Display modes:** inline, fullscreen
+- **Host container variant:** `card`
+- **Design source:** MCP Apps for Claude kit · Inline card / Loading
+- **Docs URL:** https://mcpblocks.dev/components/skeleton
+- **Registry JSON:** https://mcpblocks.dev/r/skeleton.json
+
+## Install
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/skeleton.json
+```
+
+Automatically installs `host-tokens` (Claude CSS variables + Tailwind v4 `host-*` utilities) and required helpers.
+
+## Guidelines
+
+- Matches the final layout
+- No spinners
+- Announced as loading to screen readers
+
+## Usage
+
+```tsx
+import { RowsSkeleton } from "@/components/skeleton"
+
+{data ? <ListView items={data.items} /> : <RowsSkeleton rows={4} columns={3} />}
+```
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `RowsSkeleton` | `{ rows?, columns?, avatar? }` | Avatar + columns, as in the kit. |
+| `InlineCardSkeleton` | `{ fields?, actions? }` | Matches InlineCard. |
+| `CarouselSkeleton` | `{ count?, cardWidth? }` | Matches Carousel. |
+| `HostSkeleton` | `component` | A single pulsing block. |
+
+---
+
+# Inline card — MCP Blocks UI
+
+> A compact card for the conversation: a title, up to five data points and up to two actions. Its height always fits its content.
+
+- **Category:** Inline cards
+- **Display modes:** inline
+- **Host container variant:** `borderless` (set `_meta.ui.prefersBorder: false`)
+- **Design source:** MCP Blocks UI
+- **Docs URL:** https://mcpblocks.dev/components/inline-card
+- **Registry JSON:** https://mcpblocks.dev/r/inline-card.json
+
+## Install
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
+```
+
+Automatically installs `host-tokens` (Claude CSS variables + Tailwind v4 `host-*` utilities) and required helpers.
+
+## Guidelines
+
+- At most 5 data points (dev warning above that)
+- At most 2 actions, placed at the bottom
+- No inner scrolling, height fits content
+- 44px tap targets
+
+## Usage
+
+```tsx
+import { InlineCard } from "@/components/inline-card"
+
+export function DealSummary({ deal }) {
+  return (
+    <InlineCard
+      title={deal.name}
+      badge={{ label: "At risk", tone: "warning" }}
+      fields={[
+        { label: "Owner", value: deal.owner },
+        { label: "Stage", value: deal.stage },
+      ]}
+      actions={[
+        { label: "Open record", onClick: () => app.requestDisplayMode({ mode: "fullscreen" }) },
+        { label: "Draft follow-up", onClick: () => app.sendMessage({ role: "user", content: [{ type: "text", text: "Draft a follow-up" }] }) },
+      ]}
+    />
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `title` | `ReactNode` | Card heading. |
+| `badge` | `{ label, tone? }` | Status chip: neutral, info, success, warning or danger. |
+| `fields` | `{ label, value }[]` | Data points. Keep to 5 or fewer. |
+| `actions` | `{ label, onClick?, variant? }[]` | Up to 2 buttons. First is primary. |
+| `columns` | `1 \| 2 \| 3 \| 4` | Field grid columns. 4 collapses to 2 on narrow widths. |
+
+---
+
+# Status update — MCP Blocks UI
+
+> Confirms what happened after an action, with the host's semantic colors and one optional follow-up.
+
+- **Category:** Feedback
+- **Display modes:** inline
+- **Host container variant:** `borderless` (set `_meta.ui.prefersBorder: false`)
+- **Design source:** MCP Blocks UI
+- **Docs URL:** https://mcpblocks.dev/components/status-update
+- **Registry JSON:** https://mcpblocks.dev/r/status-update.json
+
+## Install
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/status-update.json
+```
+
+Automatically installs `host-tokens` (Claude CSS variables + Tailwind v4 `host-*` utilities) and required helpers.
+
+## Guidelines
+
+- Semantic host tokens only
+- Icon has a text label
+- One follow-up action at most
+
+## Usage
+
+```tsx
+import { StatusUpdate } from "@/components/status-update"
+
+<StatusUpdate
+  tone="success"
+  title="Invoice sent to Northwind"
+  description="INV-2041 · delivered just now"
+  action={{ label: "View", onClick: openInvoice }}
+/>
+```
+
+## Props
+
+| Prop | Type | Description |
+| --- | --- | --- |
+| `tone` | `success \| info \| warning \| danger` | Sets icon and colors. |
+| `title` | `ReactNode` | What happened. |
+| `action` | `{ label, onClick? }` | Optional follow-up, like Undo or View. |
+
+---
+
+## Design Tokens (`host-tokens`)
+
+Install tokens standalone with:
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/host-tokens.json
+```
+
+### Colors
+
+| Group | Token | CSS Variable | Tailwind Utility | Light | Dark |
+| --- | --- | --- | --- | --- | --- |
+| Background | primary | `--color-background-primary` | `bg-host-bg` | `#ffffff` | `#30302e` |
+| Background | secondary | `--color-background-secondary` | `bg-host-bg-secondary` | `#f5f4ed` | `#262624` |
+| Background | tertiary | `--color-background-tertiary` | `bg-host-bg-tertiary` | `#faf9f5` | `#141413` |
+| Background | inverse | `--color-background-inverse` | `bg-host-bg-inverse` | `#141413` | `#faf9f5` |
+| Background | info | `--color-background-info` | `bg-host-info-bg` | `#d6e4f6` | `#253e5f` |
+| Background | danger | `--color-background-danger` | `bg-host-danger-bg` | `#b53333` | `#dd5353` |
+| Background | success | `--color-background-success` | `bg-host-success-bg` | `#e9f1dc` | `#1b4614` |
+| Background | warning | `--color-background-warning` | `bg-host-warning-bg` | `#f6eedf` | `#483a0f` |
+| Background | ghost | `--color-background-ghost` | `bg-host-bg-ghost` | `rgba(255, 255, 255, 0)` | `rgba(48, 48, 46, 0)` |
+| Background | disabled | `--color-background-disabled` | `bg-host-bg-disabled` | `rgba(255, 255, 255, 0.5)` | `rgba(48, 48, 46, 0.5)` |
+| Text | primary | `--color-text-primary` | `text-host-fg` | `#141413` | `#faf9f5` |
+| Text | secondary | `--color-text-secondary` | `text-host-fg-secondary` | `#3d3d3a` | `#c2c0b6` |
+| Text | tertiary | `--color-text-tertiary` | `text-host-fg-tertiary` | `#73726c` | `#9c9a92` |
+| Text | inverse | `--color-text-inverse` | `text-host-fg-inverse` | `#ffffff` | `#141413` |
+| Text | info | `--color-text-info` | `text-host-info-fg` | `#3266ad` | `#80aadd` |
+| Text | danger | `--color-text-danger` | `text-host-danger-fg` | `#7f2c28` | `#ee8884` |
+| Text | success | `--color-text-success` | `text-host-success-fg` | `#265b19` | `#7ab948` |
+| Text | warning | `--color-text-warning` | `text-host-warning-fg` | `#5a4815` | `#d1a041` |
+| Text | disabled | `--color-text-disabled` | `text-host-fg-disabled` | `rgba(20, 20, 19, 0.5)` | `rgba(250, 249, 245, 0.5)` |
+| Text | ghost | `--color-text-ghost` | `text-host-fg-ghost` | `rgba(115, 114, 108, 0.5)` | `rgba(156, 154, 146, 0.5)` |
+| Border | primary | `--color-border-primary` | `border-host-border` | `rgba(31, 30, 29, 0.4)` | `rgba(222, 220, 209, 0.4)` |
+| Border | secondary | `--color-border-secondary` | `border-host-border-secondary` | `rgba(31, 30, 29, 0.3)` | `rgba(222, 220, 209, 0.3)` |
+| Border | tertiary | `--color-border-tertiary` | `border-host-border-tertiary` | `rgba(31, 30, 29, 0.15)` | `rgba(222, 220, 209, 0.15)` |
+| Border | info | `--color-border-info` | `border-host-info-border` | `#4682d5` | `#4682d5` |
+| Border | danger | `--color-border-danger` | `border-host-danger-border` | `#a73d39` | `#cd5c58` |
+| Border | success | `--color-border-success` | `border-host-success-border` | `#437426` | `#599130` |
+| Border | warning | `--color-border-warning` | `border-host-warning-border` | `#805c1f` | `#a87829` |
+| Border | inverse | `--color-border-inverse` | `border-host-border-inverse` | `rgba(255, 255, 255, 0.3)` | `rgba(20, 20, 19, 0.15)` |
+| Border | ghost | `--color-border-ghost` | `border-host-border-ghost` | `rgba(31, 30, 29, 0)` | `rgba(222, 220, 209, 0)` |
+| Border | disabled | `--color-border-disabled` | `border-host-border-disabled` | `rgba(31, 30, 29, 0.1)` | `rgba(222, 220, 209, 0.1)` |
+| Ring | primary | `--color-ring-primary` | `ring-host-ring` | `rgba(20, 20, 19, 0.7)` | `rgba(250, 249, 245, 0.7)` |
+| Ring | secondary | `--color-ring-secondary` | `ring-host-ring-secondary` | `rgba(61, 61, 58, 0.7)` | `rgba(194, 192, 182, 0.7)` |
+| Ring | inverse | `--color-ring-inverse` | `ring-host-ring-inverse` | `rgba(255, 255, 255, 0.7)` | `rgba(20, 20, 19, 0.7)` |
+| Ring | info | `--color-ring-info` | `ring-host-ring-info` | `rgba(50, 102, 173, 0.5)` | `rgba(128, 170, 221, 0.5)` |
+| Ring | danger | `--color-ring-danger` | `ring-host-ring-danger` | `rgba(167, 61, 57, 0.5)` | `rgba(205, 92, 88, 0.5)` |
+| Ring | success | `--color-ring-success` | `ring-host-ring-success` | `rgba(67, 116, 38, 0.5)` | `rgba(89, 145, 48, 0.5)` |
+| Ring | warning | `--color-ring-warning` | `ring-host-ring-warning` | `rgba(128, 92, 31, 0.5)` | `rgba(168, 120, 41, 0.5)` |
+
+### Typography Scale
+
+| Scale | Tailwind Utility | Size | Line Height |
+| --- | --- | --- | --- |
+| Text xs | `text-host-xs` | 12px | 16.8px |
+| Text sm | `text-host-sm` | 14px | 19.6px |
+| Text md | `text-host-md` | 16px | 22.4px |
+| Text lg | `text-host-lg` | 18px | 25px |
+| Heading xs | `text-host-heading-xs` | 12px | 16.8px |
+| Heading sm | `text-host-heading-sm` | 14px | 19.6px |
+| Heading md | `text-host-heading-md` | 16px | 22.4px |
+| Heading lg | `text-host-heading-lg` | 20px | 25px |
+| Heading xl | `text-host-heading-xl` | 24px | 30px |
+| Heading 2xl | `text-host-heading-2xl` | 28px | 30.8px |
+| Heading 3xl | `text-host-heading-3xl` | 36px | 36px |
+
+### Border Radii
+
+| Name | Tailwind Utility | Value |
+| --- | --- | --- |
+| full | `rounded-host-full` | 999px |
+| xs | `rounded-host-xs` | 4px |
+| sm | `rounded-host-sm` | 6px |
+| md | `rounded-host-md` | 8px |
+| lg | `rounded-host-lg` | 10px |
+| xl | `rounded-host-xl` | 12px |
+
+---
+
+# Conformance
+
+Tracks `mcpblocks` against Anthropic's [MCP Apps design guidelines](https://claude.com/docs/connectors/building/mcp-apps/design-guidelines) and the [MCP Apps specification](https://modelcontextprotocol.io/).
+
+| | |
+| --- | --- |
+| **Last verified** | 2026-11-25 |
+| **Automated checks** | `pnpm lint` + `pnpm check:conformance` + live DOM linter in `HostPreview` |
+
+## Rules & Enforcement
+
+| Rule | How `mcpblocks` enforces it |
+| --- | --- |
+| **No dropdowns, context menus, popovers or floating panels** | ESLint `no-restricted-imports` and `scripts/check-conformance.mjs` ban floating `@radix-ui/react-*` primitives and the `radix-ui` barrel in `registry/mcpblocks/`. `HostPreview` DOM linter flags `<select>` and `role="menu"` / `role="dialog"` / `role="listbox"` elements inline. |
+| **Inline cards auto-fit height; no nested vertical scrolling** | ESLint and `scripts/check-conformance.mjs` ban `overflow-auto`, `overflow-y-auto`, `overflow-scroll`, and `overflow-y-scroll` in `registry/mcpblocks/`. `HostPreview` DOM linter checks rendered computed styles for vertical scroll containers (`scrollHeight > clientHeight` with `overflow-y: auto|scroll`) and flags inline widgets taller than ~520px. |
+| **No viewport units for height** | ESLint and `scripts/check-conformance.mjs` ban `h-screen`, `vh`, `svh`, `lvh`, and `dvh` in `registry/mcpblocks/`. |
+| **At most 2 actions and 4–5 fields in inline cards** | `InlineCard` logs dev-only `[mcpblocks]` warnings via `guideline()` when `actions.length > 2` or `fields.length > 5`, and slices actions to 2. `HostPreview` DOM linter flags >2 action buttons in inline mode. |
+| **3–8 comparable items in inline carousels** | `Carousel` warns via `guideline()` outside 3–8 items and uses `scroll-padding-inline` with `--mb-safe-left` / `--mb-safe-right`. |
+| **Tap targets at least 44×44px** | `HostButton` enforces `min-h-11` (44px); interactive icon buttons in `Carousel` and `MediaPlayer` use `size-11` (44×44px). Inline text links (such as the footer link in `ListView`) follow the WCAG 2.5.8 inline exception. `HostPreview` DOM linter flags interactive buttons under 44px. |
+| **Host CSS tokens only (no hardcoded colors)** | Components use `host-*` Tailwind utilities backed by Claude's host variables (`--color-background-primary`, etc.) with light/dark fallbacks in `host-tokens`. `scripts/check-conformance.mjs` blocks literal hex/rgb/hsl colors in `registry/mcpblocks/` (allowlisting only `LineChart`'s categorical `PALETTE` array) and verifies `app/globals.css` matches `registry.json`. |
+| **Icons use `currentColor`** | `scripts/check-conformance.mjs` checks `registry/mcpblocks/ui/icons.tsx` so icons inherit host text colors in light and dark themes. |
+| **No sandbox-blocked APIs or ChatGPT globals** | ESLint and `scripts/check-conformance.mjs` ban `localStorage`, `sessionStorage`, `document.cookie`, and `window.openai` in `registry/mcpblocks/`. |
+| **Skeletons, not spinners** | `skeleton` provides `RowsSkeleton`, `InlineCardSkeleton`, and `CarouselSkeleton`; no spinner component is shipped. |
+| **Safe-area insets honored** | `applySafeAreaInsets()` writes `--mb-safe-{top,right,bottom,left}` from `hostContext.safeAreaInsets`; `Carousel` and fullscreen previews read them. |
+| **Registry manifest & built artifacts stay in sync** | `scripts/check-conformance.mjs` validates `registry.json` paths, internal `registryDependencies`, and verifies every `public/r/*.json` matches source on disk. |
+
+## Notes & Known Findings
+
+- **WCAG AA contrast on `info` badges in light mode:** Claude's published `--color-text-info` (`#3266ad`) on `--color-background-info` (`#d6e4f6`) measures **4.47:1** in light mode (just under the 4.5:1 AA minimum for normal text). Text badges in `InlineCard` and `DocumentCard` therefore use `bg-host-info-bg` with `text-host-fg` and a subtle `border-host-info-border/40` (14.3:1 light / 10.0:1 dark). `StatusUpdate`'s info chip renders an icon only, where 4.47:1 clears WCAG's 3:1 non-text threshold.
+- **Data visualization palette:** `LineChart` uses a four-color categorical `PALETTE` array because MCP Apps host tokens do not define multi-series chart colors. Consumers can override per-series `color` props.

@@ -1,96 +1,57 @@
 import Link from "next/link"
 
+import { PageShell } from "@/components/site/chrome"
 import { CodeBlock } from "@/components/site/code-block"
+import { ComponentGallery } from "@/components/site/component-gallery"
 import { HeroChat } from "@/components/site/hero-chat"
-import { components, roadmap } from "@/lib/docs"
-
-const features = [
-  {
-    title: "Host theme tokens",
-    body: "Components read the CSS variables the host injects, so light and dark mode match Claude with no extra work.",
-  },
-  {
-    title: "Display-mode aware",
-    body: "Inline cards fit their height and cap at two actions. Fullscreen layouts leave room for the composer.",
-  },
-  {
-    title: "Mobile safe areas built in",
-    body: "Safe-area insets become CSS variables, tap targets are 44px, and there are no popovers to get clipped.",
-  },
-  {
-    title: "You own the code",
-    body: "A shadcn registry: components land in your repo, with no runtime dependency to break when the spec moves.",
-  },
-]
+import { JsonLd } from "@/components/site/json-ld"
+import { components } from "@/lib/docs"
+import { homeJsonLd } from "@/lib/schema"
 
 export default function Home() {
   return (
-    <main>
-      <section className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-14 sm:py-20 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-14">
-        <div className="min-w-0">
-          <h1 className="mb-5 max-w-[16ch] text-4xl leading-[1.08] font-semibold tracking-tight text-balance sm:text-5xl xl:text-6xl">
-            React components for MCP Apps
+    <PageShell rails="home">
+      <JsonLd data={homeJsonLd()} />
+            <div className="relative z-10 px-4 sm:px-6">
+        <div className="mx-auto max-w-7xl px-2 py-20 lg:py-28">
+          <h1 className="max-w-5xl text-2xl font-semibold tracking-tight text-balance text-[#141413] sm:text-[clamp(2rem,3.75vw,3rem)]/tight">
+            React components for MCP Apps, built for Claude and adaptable to any host.
           </h1>
-          <p className="mb-7 max-w-lg text-base leading-relaxed text-foreground/80 sm:text-lg">
-            Copy and paste cards, approvals, and other interactive widgets that adapt to the host&apos;s
-            theme, display mode, and mobile safe areas. Built for Claude, with support for ChatGPT
-            and other hosts.
-          </p>
-          <Link
-            href={`/components/${components[0].slug}`}
-            className="mb-6 inline-flex min-h-11 items-center rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground hover:opacity-90"
-          >
-            Browse components
-          </Link>
-          <CodeBlock prompt code="npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json" className="max-w-xl" />
-        </div>
-
-        <div className="min-w-0">
-          <HeroChat />
-        </div>
-      </section>
-
-      <section className="border-y bg-secondary">
-        <div className="mx-auto grid max-w-6xl gap-8 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4">
-          {features.map((f) => (
-            <div key={f.title}>
-              <h2 className="mb-1.5 font-semibold">{f.title}</h2>
-              <p className="text-sm leading-relaxed text-foreground/80">{f.body}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-6 pt-16">
-        <h2 className="mb-6 text-3xl font-semibold tracking-tight">Components</h2>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {components.map((c) => (
+          <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
-              key={c.slug}
-              href={`/components/${c.slug}`}
-              className="flex flex-col gap-2 rounded-xl border bg-card p-5 transition-colors hover:border-input"
+              href={`/components/${components[0].slug}`}
+              className="inline-flex min-h-10 items-center rounded-md bg-[#141413] px-4 text-sm font-medium text-[#faf9f5] transition-opacity hover:opacity-90"
             >
-              <h3 className="font-semibold">{c.title}</h3>
-              <p className="text-sm leading-relaxed text-foreground/80">{c.description}</p>
-              <span className="mt-auto pt-2 text-xs text-muted-foreground">{c.displayModes}</span>
+              Browse components
             </Link>
-          ))}
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section id="roadmap" className="mx-auto max-w-6xl scroll-mt-20 px-6 pt-16">
-        <h2 className="mb-6 text-3xl font-semibold tracking-tight">Roadmap</h2>
-        <ul className="grid gap-x-6 sm:grid-cols-3">
-          {roadmap.map((r) => (
-            <li key={r.title} className="border-t py-4">
-              <h3 className="mb-1 font-semibold">{r.title}</h3>
-              <p className="text-sm leading-relaxed text-foreground/80">{r.description}</p>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <main className="relative z-10 bg-white px-4 pb-16 sm:px-6">
+        <ComponentGallery />
 
-      <div className="pb-16" />
-    </main>
+        {/* Interactive Before / After comparison inside the same 3-rail sheet */}
+        <section className="mx-auto mt-8 max-w-7xl px-2 py-20">
+          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-12">
+            <div className="flex flex-col gap-5">
+              <h2 className="text-2xl font-semibold tracking-tight text-[#141413] sm:text-3xl">
+                Replace walls of chat text with native UI.
+              </h2>
+              <CodeBlock
+                prompt
+                code="npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json"
+                className="max-w-lg"
+              />
+            </div>
+
+            <div className="min-w-0">
+              <HeroChat />
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </PageShell>
   )
 }

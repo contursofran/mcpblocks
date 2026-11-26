@@ -81,8 +81,22 @@ The server has **no authentication**, which is fine for a throwaway tunnel but n
   ```
 - **Anything else** that supports MCP Apps (VS Code, Goose, MCPJam, the ext-apps `basic-host`): point it at `http://localhost:3001/mcp`.
 
-## Verified vs. not yet verified
+## Verification
 
 - Verified: builds; server answers `initialize`, `tools/list`, `tools/call`, `resources/read`; the bundled view renders all four blocks in light and dark against a scripted host and completes the confirm round trip (`tools/call` then `ui/update-model-context`).
 - Verified against an `AppBridge` host in a browser (light and dark): `list_deals` row click sends the follow-up message, Confirm calls `update_deal_stage`, charts and cards render with the shadcn-installed blocks. The Worker answers `initialize`, `tools/list`, `tools/call` and `resources/read` under `wrangler dev`.
-- Not yet verified: running inside real Claude. Menu names above are from memory of the current Claude UI, so adjust if they've moved.
+
+### Claude Desktop visual check (2026-11-25)
+
+With the MCP Blocks connector enabled, ask Claude: “Use MCP Blocks to show every available widget with sample data.” In a dark-mode desktop chat, all four tools produced visible widgets:
+
+| Tool | Observed in Claude |
+| --- | --- |
+| `list_deals` | Four deal rows with amounts, stages, and a count in the footer |
+| `show_deal` | Deal details, a stage badge, and both action buttons |
+| `propose_stage_change` | Proposed transition, confirmation button, and a summary of what would change |
+| `pipeline_trend` | Two plotted series with axis labels and a legend |
+
+The four layouts fit the tested desktop width without visible clipping or overlap. The check ended at the confirmation screen. Light mode, mobile widths, and the remaining five registry blocks still need visual checks in Claude. [Full registry coverage (#13)](https://github.com/contursofran/mcpblocks/issues/13)
+
+The demo bundles component source installed by `shadcn add`. Earlier install tests in a fresh Vite app and in this demo caught two issues: self-referencing CSS variables in the generated theme and a host helper that required Node types. Both installs built after the fixes. The Claude check used the deployed bundle. [Install test and fixes (#8)](https://github.com/contursofran/mcpblocks/pull/8)

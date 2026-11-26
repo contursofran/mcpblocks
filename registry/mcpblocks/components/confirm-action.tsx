@@ -121,7 +121,7 @@ export function ConfirmAction({
             ) : null}
           </span>
         </div>
-        <HostButton onClick={confirm} disabled={status === "working"} className="min-h-9 h-9">
+        <HostButton onClick={confirm} disabled={status === "working"}>
           {status === "working" ? "Working…" : confirmLabel}
         </HostButton>
       </div>

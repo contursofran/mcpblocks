@@ -1,6 +1,9 @@
+export type ComponentCategory = "Inline cards" | "Data & media" | "Feedback"
+
 export type ComponentDoc = {
   slug: string
   title: string
+  category: ComponentCategory
   description: string
   displayModes: string
   /** How the host preview frames it: "card" (host border) or "borderless". */
@@ -12,12 +15,19 @@ export type ComponentDoc = {
   props: { name: string; type: string; description: string }[]
 }
 
+export const componentCategories: ComponentCategory[] = [
+  "Inline cards",
+  "Data & media",
+  "Feedback",
+]
+
 const KIT = "MCP Apps for Claude kit"
 
 export const components: ComponentDoc[] = [
   {
     slug: "list-view",
     title: "List view",
+    category: "Inline cards",
     description:
       "A short list of rich rows (messages, tickets, search results) with avatars, metadata and a footer link to the rest.",
     displayModes: "inline",
@@ -47,6 +57,7 @@ export const components: ComponentDoc[] = [
   {
     slug: "confirm-action",
     title: "Confirm action",
+    category: "Inline cards",
     description:
       "Confirmation for a change Claude has prepared: what will happen, who it applies to, one confirm button, and what the change includes.",
     displayModes: "inline",
@@ -74,6 +85,7 @@ export const components: ComponentDoc[] = [
   {
     slug: "media-player",
     title: "Media player",
+    category: "Data & media",
     description:
       "An inline audio card with play/pause, a waveform you can click to seek, the duration and optional regenerate/download actions.",
     displayModes: "inline",
@@ -100,6 +112,7 @@ export const components: ComponentDoc[] = [
   {
     slug: "line-chart",
     title: "Line chart",
+    category: "Data & media",
     description:
       "A borderless line chart with soft area fills, a hover tooltip, range tabs and a legend. Dependency-free SVG.",
     displayModes: "inline, borderless",
@@ -128,6 +141,7 @@ export const components: ComponentDoc[] = [
   {
     slug: "document-card",
     title: "Document card",
+    category: "Inline cards",
     description:
       "A page or document preview with properties, lists and tasks that the user can edit in place, then hand back to Claude.",
     displayModes: "inline",
@@ -156,6 +170,7 @@ export const components: ComponentDoc[] = [
   {
     slug: "carousel",
     title: "Carousel",
+    category: "Data & media",
     description:
       "A horizontal row of comparable items with tall images, a save toggle, a rating and a meta row, with a fading edge and next button.",
     displayModes: "inline, borderless",
@@ -186,6 +201,7 @@ export const components: ComponentDoc[] = [
   {
     slug: "skeleton",
     title: "Skeleton",
+    category: "Feedback",
     description:
       "Loading placeholders. RowsSkeleton is the kit's loading state for lists and tables; InlineCardSkeleton and CarouselSkeleton match those components.",
     displayModes: "inline, fullscreen",
@@ -205,6 +221,7 @@ export const components: ComponentDoc[] = [
   {
     slug: "inline-card",
     title: "Inline card",
+    category: "Inline cards",
     description:
       "A compact card for the conversation: a title, up to five data points and up to two actions. Its height always fits its content.",
     displayModes: "inline",
@@ -245,6 +262,7 @@ export function DealSummary({ deal }) {
   {
     slug: "status-update",
     title: "Status update",
+    category: "Feedback",
     description:
       "Confirms what happened after an action, with the host's semantic colors and one optional follow-up.",
     displayModes: "inline",

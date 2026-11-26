@@ -1,78 +1,119 @@
-# mcpblocks
+# MCP Blocks UI (`mcpblocks`)
 
-Copy-paste React components for **MCP Apps** that feel native inside Claude, and still work in ChatGPT and other MCP hosts. Distributed as a [shadcn registry](https://ui.shadcn.com/docs/registry).
+**Claude-native React UI components for [MCP Apps](https://modelcontextprotocol.io/).**
 
-Docs and live previews: <https://mcpblocks.dev>
+Copy-and-paste cards, approvals, charts, media players, carousels, and skeletons built on Claude's host CSS tokens, display-mode rules, and mobile safe areas — degrading cleanly in ChatGPT, VS Code, Goose, and Vercel AI SDK hosts. Distributed as a free, open-source [shadcn/ui registry](https://ui.shadcn.com/docs/registry).
 
-## What's here
+- **Docs & live previews:** <https://mcpblocks.dev>
+- **Live demo MCP server:** `https://mcpblocks.dev/mcp` (add as a custom connector in Claude)
+- **LLM / Agent docs:** [`llms.txt`](https://mcpblocks.dev/llms.txt) · [`llms-full.txt`](https://mcpblocks.dev/llms-full.txt) · [`agents.md`](https://mcpblocks.dev/agents.md) · [`r/registry.json`](https://mcpblocks.dev/r/registry.json)
 
-| Path | What it is |
-| --- | --- |
-| `registry/mcpblocks/` | The components you distribute (source of truth) |
-| `registry.json` | Registry manifest; `pnpm registry:build` writes `public/r/*.json` |
-| `app/` | Docs site: landing page, component pages, tokens, installation and MCP server guides |
-| `components/site/` | Site-only pieces: host preview frame, demos, code blocks |
-| `lib/docs.ts` | Component docs content (descriptions, usage, props, checks) |
-| `examples/deal-app/` | Example MCP server rendering the blocks as MCP App views; add it to Claude as a custom connector |
+---
 
-### Components (free)
+## Quick start
 
-| Item | What it is |
-| --- | --- |
-| `list-view` | Short list of rich rows (avatar, title, meta, body) with a footer link |
-| `confirm-action` | Confirmation for a change Claude prepared, with one confirm button and a checklist |
-| `media-player` | Inline audio card with play/pause and a seekable waveform |
-| `line-chart` | Borderless SVG line chart with tooltip, range tabs and legend |
-| `document-card` | Document preview with properties, editable lists and tasks |
-| `carousel` | 3–8 comparable items with tall images, save toggle and rating |
-| `inline-card` | Compact card with up to 5 data points and 2 actions |
-| `status-update` | Success, info, warning and error confirmations |
-| `skeleton` | Loading placeholders (`RowsSkeleton`, `InlineCardSkeleton`, `CarouselSkeleton`) |
-
-### Building blocks
-
-- `host-tokens`: every color, type size and radius from the MCP Apps for Claude kit (light and dark) as fallbacks for the CSS variables the host injects, mapped to Tailwind utilities (`bg-host-bg`, `text-host-fg`, `text-host-heading-lg`, `rounded-host-md`, …). Inside Claude, the host's values win.
-- `host` (lib): `applyHostContext()` for theme, display mode and safe-area insets, plus dev-only guideline warnings.
-- `host-button`: button with host tokens and a 44px tap target.
-- `icons`: 38 icons from the kit as `currentColor` components.
-
-### Host preview
-
-Each component page renders the demo inside `HostPreview`, a simulated host frame with light/dark, inline/fullscreen and web/mobile toggles. It sets the same token and safe-area variables the host does and flags inline widgets taller than ~520px. It is a visual simulation, not a sandboxed iframe speaking the MCP Apps protocol yet. That's the natural next step (the `AppBridge` in `@modelcontextprotocol/ext-apps` handles the protocol side).
-
-## Develop
-
-```bash
-pnpm install
-pnpm dev             # docs site on http://localhost:3000
-pnpm registry:build  # regenerate public/r/*.json after changing registry/
-pnpm build           # production build
-```
-
-## Install a component (consumers)
-
-Requires a React project with Tailwind CSS v4 and a `components.json` (run `npx shadcn@latest init` if you don't have one).
+Requires React 18+, Tailwind CSS v4 (`@theme inline`), and a `components.json` (`npx shadcn@latest init`).
 
 ```bash
 npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 ```
 
-The CLI also installs the dependencies of the component (`host-tokens`, `host`, `host-button`, `icons`) and adds the host CSS variables to your stylesheet. Swap `inline-card` for any item above.
+The shadcn CLI copies the component source directly into your repo and installs its dependencies (`host-tokens`, `host`, `host-button`, `icons`). Swap `inline-card` for any component below.
 
-Inside an MCP App, apply the host context once the app has connected and on every change:
+Inside your MCP App view (`@modelcontextprotocol/ext-apps` 2.x), apply host styles and context on connect and change:
 
-```ts
+```tsx
+import { useApp, useHostStyles } from "@modelcontextprotocol/ext-apps/react"
+import { useEffect } from "react"
+
 import { applyHostContext } from "@/lib/host"
 
-app.onhostcontextchanged = (ctx) => applyHostContext(ctx)
+const { app } = useApp({
+  appInfo: { name: "my-mcp-app", version: "1.0.0" },
+  capabilities: {},
+  onAppCreated: (app) => {
+    app.onhostcontextchanged = (ctx) => applyHostContext(ctx)
+  },
+})
+
+useHostStyles(app, app?.getHostContext())
+useEffect(() => {
+  if (app) applyHostContext(app.getHostContext())
+}, [app])
 ```
 
-Full guides: [Installation](https://mcpblocks.dev/docs/installation) and [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server) (register a tool and `ui://` resource with `@modelcontextprotocol/ext-apps`, then render the view with these components).
+Full guides: **[Installation](https://mcpblocks.dev/docs/installation)** · **[Using with an MCP server](https://mcpblocks.dev/docs/mcp-server)** · **[Design tokens](https://mcpblocks.dev/tokens)**
 
-## Attribution
+---
 
-Component designs are adapted from [MCP Apps for Claude](https://www.figma.com/community/file/1597641111449594397/mcp-apps-for-claude) by Anthropic, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Changes: rebuilt as React components and adapted for other MCP hosts. Fonts from that file (Anthropic Sans/Serif) are not included; Claude provides them at runtime.
+## Components
 
-The site is built on the [shadcn registry template](https://github.com/shadcn-ui/registry-template) (MIT).
+| Component | Display mode | What it is | Install |
+| --- | --- | --- | --- |
+| [`list-view`](https://mcpblocks.dev/components/list-view) | inline | Short list of rich rows (avatar, title, meta, body) with a footer link | `.../r/list-view.json` |
+| [`confirm-action`](https://mcpblocks.dev/components/confirm-action) | inline | Confirmation for a change Claude prepared, with one confirm button and a checklist | `.../r/confirm-action.json` |
+| [`inline-card`](https://mcpblocks.dev/components/inline-card) | inline, borderless | Compact card with up to 5 data points and 2 actions | `.../r/inline-card.json` |
+| [`document-card`](https://mcpblocks.dev/components/document-card) | inline | Document preview with properties, editable lists, and tasks | `.../r/document-card.json` |
+| [`line-chart`](https://mcpblocks.dev/components/line-chart) | inline, borderless | Dependency-free SVG line chart with tooltip, range tabs, and legend | `.../r/line-chart.json` |
+| [`media-player`](https://mcpblocks.dev/components/media-player) | inline | Inline audio card with play/pause and a keyboard-seekable waveform | `.../r/media-player.json` |
+| [`carousel`](https://mcpblocks.dev/components/carousel) | inline, borderless | 3–8 comparable items with tall images, save toggle, rating, and safe-area scroll snap | `.../r/carousel.json` |
+| [`status-update`](https://mcpblocks.dev/components/status-update) | inline, borderless | Success, info, warning, and error confirmations using semantic host tokens | `.../r/status-update.json` |
+| [`skeleton`](https://mcpblocks.dev/components/skeleton) | inline, fullscreen | Loading placeholders (`RowsSkeleton`, `InlineCardSkeleton`, `CarouselSkeleton`) | `.../r/skeleton.json` |
 
-mcpblocks is an independent project, not affiliated with or endorsed by Anthropic or OpenAI.
+### Building blocks
+
+- **`host-tokens`**: Full color (light/dark), typography scale, and radius token fallbacks for Claude's injected CSS variables, mapped to Tailwind utilities (`bg-host-bg`, `text-host-fg`, `text-host-heading-lg`, `rounded-host-md`, …).
+- **`host`** (`lib/host.ts`): `applyHostContext()`, `applySafeAreaInsets()`, and dev-only `guideline()` warnings.
+- **`host-button`**: Button styled with host tokens and a 44px minimum tap target.
+- **`icons`**: 38 `currentColor` icons adapted from Anthropic's *MCP Apps for Claude* kit.
+
+---
+
+## Host preview & conformance
+
+- **Live DOM linter (`HostPreview`):** Every component page simulates Light/Dark, Inline/Fullscreen, and Web/Mobile frames while checking inline height (~520px cap), nested vertical scroll, floating menus, 44px tap targets, and horizontal overflow in real time.
+- **Automated conformance ([`CONFORMANCE.md`](./CONFORMANCE.md)):** ESLint and `pnpm check:conformance` enforce Claude's MCP Apps rules (no floating Radix primitives, no vertical scroll containers, no `vh`/`dvh` units, no hardcoded colors, `currentColor` icons, token parity, and registry freshness).
+
+---
+
+## Repository layout
+
+| Path | Purpose |
+| --- | --- |
+| `registry/mcpblocks/` | Distributable component source (source of truth) |
+| `registry.json` | Registry manifest; `pnpm registry:build` writes `public/r/*.json` |
+| `app/` | Docs site: landing page, component pages, tokens, and guides |
+| `components/site/` | Site-only UI: `HostPreview`, demos, code blocks |
+| `lib/` | Component docs content (`docs.ts`), tokens (`tokens.ts`), host context, and JSON-LD schema |
+| `scripts/` | Conformance checker (`check-conformance.mjs`) and LLM/agent doc generator (`generate-llms.mjs`) |
+| `examples/deal-app/` | Example MCP server (Node + Cloudflare Worker at `https://mcpblocks.dev/mcp`) |
+
+---
+
+## Develop & contribute
+
+Contributions are welcome! Open an issue or pull request against `master`.
+
+```bash
+pnpm install
+pnpm dev               # docs site at http://localhost:3000
+pnpm registry:build    # regenerate public/r/*.json after editing registry/
+pnpm llms:build        # regenerate public/llms*.txt, public/agents.md, and component .md docs
+pnpm check:conformance # verify MCP Apps guidelines, token parity, and registry freshness
+pnpm lint              # ESLint (includes MCP Apps rules for registry/mcpblocks/)
+pnpm build             # production static export
+```
+
+Before opening a PR that modifies `registry/mcpblocks/` or `lib/docs.ts`, run `pnpm registry:build && pnpm llms:build && pnpm check:conformance && pnpm lint && pnpm build` and commit the updated generated files in `public/`.
+
+---
+
+## License & Attribution
+
+Code in this repository is licensed under the **[MIT License](./LICENSE)**.
+
+Component designs and icons are adapted from [MCP Apps for Claude](https://www.figma.com/community/file/1597641111449594397/mcp-apps-for-claude) by Anthropic, licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Changes: rebuilt as React components and adapted for other MCP hosts. Proprietary fonts from that file (Anthropic Sans/Serif) are not included; Claude provides them at runtime.
+
+The docs site is based on the [shadcn registry template](https://github.com/shadcn-ui/registry-template) (MIT).
+
+MCP Blocks UI is an independent project, not affiliated with or endorsed by Anthropic or OpenAI.

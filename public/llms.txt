@@ -1,0 +1,46 @@
+# MCP Blocks UI
+
+> UI components for Claude MCP Apps. React components for Claude MCP Apps and interactive connectors, built on Claude's host tokens, display modes and mobile safe areas. Works in ChatGPT too. Distributed as a free, open-source shadcn CLI registry (MIT code; designs adapted from Anthropic's "MCP Apps for Claude" Figma kit under CC BY 4.0).
+
+## Quick Install
+
+Install any component directly into a React + Tailwind CSS v4 project:
+
+```bash
+npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
+```
+
+- [Full registry manifest (JSON)](https://mcpblocks.dev/r/registry.json): Machine-readable shadcn v3 registry index of all 13 items.
+- [Complete single-file LLM docs](https://mcpblocks.dev/llms-full.txt): Full documentation, usage snippets, props, tokens, and server setup in one file.
+- [Agent integration guide](https://mcpblocks.dev/agents.md): Decision matrix, hard Claude MCP Apps rules, and copy-paste wiring for coding agents.
+
+## Documentation
+
+- [Installation](https://mcpblocks.dev/docs/installation): Prerequisites, shadcn CLI setup, and what files get added.
+- [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server): Register tools + `ui://` resources with `@modelcontextprotocol/ext-apps` and wire `useApp` / `useHostStyles` / `applyHostContext`.
+- [Design tokens](https://mcpblocks.dev/tokens): Complete Claude MCP Apps light/dark CSS variables and Tailwind `host-*` utilities.
+
+## Components
+
+- [List view](https://mcpblocks.dev/docs/components/list-view.md) ([web](https://mcpblocks.dev/components/list-view), [registry](https://mcpblocks.dev/r/list-view.json)): A short list of rich rows (messages, tickets, search results) with avatars, metadata and a footer link to the rest. (inline)
+- [Confirm action](https://mcpblocks.dev/docs/components/confirm-action.md) ([web](https://mcpblocks.dev/components/confirm-action), [registry](https://mcpblocks.dev/r/confirm-action.json)): Confirmation for a change Claude has prepared: what will happen, who it applies to, one confirm button, and what the change includes. (inline)
+- [Media player](https://mcpblocks.dev/docs/components/media-player.md) ([web](https://mcpblocks.dev/components/media-player), [registry](https://mcpblocks.dev/r/media-player.json)): An inline audio card with play/pause, a waveform you can click to seek, the duration and optional regenerate/download actions. (inline)
+- [Line chart](https://mcpblocks.dev/docs/components/line-chart.md) ([web](https://mcpblocks.dev/components/line-chart), [registry](https://mcpblocks.dev/r/line-chart.json)): A borderless line chart with soft area fills, a hover tooltip, range tabs and a legend. Dependency-free SVG. (inline, borderless)
+- [Document card](https://mcpblocks.dev/docs/components/document-card.md) ([web](https://mcpblocks.dev/components/document-card), [registry](https://mcpblocks.dev/r/document-card.json)): A page or document preview with properties, lists and tasks that the user can edit in place, then hand back to Claude. (inline)
+- [Carousel](https://mcpblocks.dev/docs/components/carousel.md) ([web](https://mcpblocks.dev/components/carousel), [registry](https://mcpblocks.dev/r/carousel.json)): A horizontal row of comparable items with tall images, a save toggle, a rating and a meta row, with a fading edge and next button. (inline, borderless)
+- [Skeleton](https://mcpblocks.dev/docs/components/skeleton.md) ([web](https://mcpblocks.dev/components/skeleton), [registry](https://mcpblocks.dev/r/skeleton.json)): Loading placeholders. RowsSkeleton is the kit's loading state for lists and tables; InlineCardSkeleton and CarouselSkeleton match those components. (inline, fullscreen)
+- [Inline card](https://mcpblocks.dev/docs/components/inline-card.md) ([web](https://mcpblocks.dev/components/inline-card), [registry](https://mcpblocks.dev/r/inline-card.json)): A compact card for the conversation: a title, up to five data points and up to two actions. Its height always fits its content. (inline)
+- [Status update](https://mcpblocks.dev/docs/components/status-update.md) ([web](https://mcpblocks.dev/components/status-update), [registry](https://mcpblocks.dev/r/status-update.json)): Confirms what happened after an action, with the host's semantic colors and one optional follow-up. (inline)
+
+## Building Blocks
+
+- [Host tokens](https://mcpblocks.dev/r/host-tokens.json): All design tokens from the MCP Apps for Claude kit (colors light/dark, type scale, radii, border width) as fallbacks for the CSS variables the host injects, mapped to Tailwind utilities (bg-host-bg, text-host-fg, text-host-heading-lg, rounded-host-md…).
+- [Host helpers](https://mcpblocks.dev/r/host.json): Apply hostContext (theme, display mode, safe-area insets) and dev-only guideline warnings.
+- [Host button](https://mcpblocks.dev/r/host-button.json): Button styled with host tokens, 44px tap target.
+- [Icons](https://mcpblocks.dev/r/icons.json): 38 icons from the MCP Apps for Claude kit (Anthropic, CC BY 4.0) as currentColor React components.
+
+## Optional
+
+- [GitHub repository](https://github.com/contursofran/mcpblocks): Source code, conformance checks, and example MCP server (`examples/deal-app`).
+- [Live demo MCP server](https://mcpblocks.dev/mcp): Public Streamable HTTP MCP Apps server (add as a custom connector in Claude or connect from Vercel AI SDK `@ai-sdk/mcp`).
+- [Planned fullscreen roadmap](https://mcpblocks.dev/#roadmap): Document editor, Cohort heatmap, Task table.

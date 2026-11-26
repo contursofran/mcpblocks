@@ -1,3 +1,29 @@
+/
+  Link: </llms.txt>; rel="alternate"; type="text/plain", </agents.md>; rel="alternate"; type="text/markdown"
+
+/components/*
+  Link: </llms.txt>; rel="alternate"; type="text/plain"
+
+/llms.txt
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300, must-revalidate
+  Content-Type: text/plain; charset=utf-8
+
+/llms-full.txt
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300, must-revalidate
+  Content-Type: text/plain; charset=utf-8
+
+/agents.md
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300, must-revalidate
+  Content-Type: text/markdown; charset=utf-8
+
+/docs/components/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300, must-revalidate
+  Content-Type: text/markdown; charset=utf-8
+
 /r/*
   Access-Control-Allow-Origin: *
   Cache-Control: public, max-age=300, must-revalidate

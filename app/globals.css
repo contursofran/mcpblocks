@@ -257,7 +257,15 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
+}
+
+.site-stage-dots {
+  background-image: radial-gradient(rgba(20, 20, 19, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
 }
