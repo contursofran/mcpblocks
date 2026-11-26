@@ -87,7 +87,16 @@ function Root() {
             { label: "Email", value: d.email },
           ]}
           actions={[
-            { label: "Move to next stage", onClick: () => void ask(`Move ${d.company} (${d.id}) to its next stage.`) },
+            {
+              label: "Move to next stage",
+              // Claude blocks mutating requests that arrive as app-sent chat messages, so go
+              // straight to the server and show the confirmation in this same view.
+              onClick: async () => {
+                const res = await app.callServerTool({ name: "propose_stage_change", arguments: { id: d.id } })
+                if (res.isError) return setError(res.content?.find((c) => c.type === "text" && "text" in c)?.text ?? "Couldn't propose the change.")
+                setPayload(res.structuredContent as Payload)
+              },
+            },
             { label: "Draft follow-up", variant: "secondary", onClick: () => void ask(`Draft a follow-up email to ${d.contact} at ${d.company}.`) },
           ]}
         />
