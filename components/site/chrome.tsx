@@ -27,21 +27,12 @@ export function SiteHeader() {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-2 py-6">
         <div className="flex items-center gap-4 sm:gap-5">
           <Logo />
-          <Link
-            href="/docs/installation"
-            className="hidden items-center gap-1 rounded-2xl bg-[#141413]/[0.06] px-3 py-0.5 text-sm/6 font-medium text-[#141413] backdrop-blur-sm transition-colors hover:bg-[#141413]/[0.1] sm:inline-flex"
-          >
-            v1 · Claude
-          </Link>
         </div>
 
         <div className="flex items-center gap-4 sm:gap-6">
           <nav aria-label="Main" className="hidden items-center gap-5 text-sm/6 font-medium text-[#141413]/70 md:flex">
             <Link href={`/components/${components[0].slug}`} className="transition-colors hover:text-[#141413]">
               Components
-            </Link>
-            <Link href="/playground" className="transition-colors hover:text-[#141413]">
-              Playground
             </Link>
             <Link href="/docs/installation" className="transition-colors hover:text-[#141413]">
               Docs
@@ -88,10 +79,7 @@ export function SiteFooter() {
           </a>
           ). Rebuilt as React components and adapted for other MCP hosts.
         </p>
-        <p className="text-xs text-[#141413]/50">
-          MCP Blocks UI is an independent project, not affiliated with or endorsed by Anthropic or OpenAI. Built on the
-          shadcn registry template (MIT).
-        </p>
+        <p className="text-xs text-[#141413]/50">Independent project, not affiliated with Anthropic or OpenAI.</p>
         <p className="pt-1 font-mono text-xs text-[#141413]/50">
           For agents &amp; LLMs:{" "}
           <a className="underline decoration-[#141413]/25 underline-offset-2 hover:text-[#141413]" href="/llms.txt">
@@ -136,39 +124,6 @@ export function PageShell({
     <div className="relative min-h-svh overflow-x-clip">
       <SiteHeader />
 
-      {/* Top & bottom daylight atmospheric washes */}
-      <div
-        aria-hidden="true"
-        className="headless-bg-top pointer-events-none absolute inset-x-0 top-0 -z-10 h-[560px]"
-      />
-      <div
-        aria-hidden="true"
-        className="headless-bg-bottom pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[420px]"
-      />
-
-      {/* Continuous architectural vertical hairline rails (sits behind foreground UI so lines never cut text or pills) */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-0 px-4 sm:px-6"
-      >
-        {rails === "home" ? (
-          <div className="mx-auto flex h-full max-w-[calc(80rem+2px)] gap-[14px]">
-            <div className="flex-1 border-x border-[#141413]/[0.06]" />
-            <div className="hidden flex-1 border-x border-[#141413]/[0.06] sm:block" />
-            <div className="hidden flex-1 border-x border-[#141413]/[0.06] lg:block" />
-          </div>
-        ) : rails === "docs" ? (
-          <div className="mx-auto flex h-full max-w-[calc(80rem+2px)] gap-[14px]">
-            <div className="hidden w-[17rem] border-x border-[#141413]/[0.075] lg:block" />
-            <div className="flex-1 border-x border-[#141413]/[0.075]" />
-            <div className="hidden w-[17rem] border-x border-[#141413]/[0.075] xl:block" />
-          </div>
-        ) : (
-          <div className="mx-auto flex h-full max-w-[calc(80rem+2px)]">
-            <div className="flex-1 border-x border-[#141413]/[0.075]" />
-          </div>
-        )}
-      </div>
 
       {children}
 

@@ -49,7 +49,7 @@ export default function TokensPage() {
           path: "/tokens",
         })}
       />
-      <main className="rounded-[2.5rem] bg-white/85 px-4 py-14 backdrop-blur-sm sm:px-6">
+      <main className="rounded-[2.5rem] bg-white/85 px-4 py-14 sm:px-6">
         <div className="mx-auto flex max-w-7xl flex-col gap-12 px-2">
           <header className="flex max-w-2xl flex-col gap-3">
             <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Tokens</h1>

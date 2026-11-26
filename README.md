@@ -5,7 +5,6 @@
 Copy-and-paste cards, approvals, charts, media players, carousels, and skeletons built on Claude's host CSS tokens, display-mode rules, and mobile safe areas — degrading cleanly in ChatGPT, VS Code, Goose, and Vercel AI SDK hosts. Distributed as a free, open-source [shadcn/ui registry](https://ui.shadcn.com/docs/registry).
 
 - **Docs & live previews:** <https://mcpblocks.dev>
-- **AppBridge Playground:** <https://mcpblocks.dev/playground>
 - **Live demo MCP server:** `https://mcpblocks.dev/mcp` (add as a custom connector in Claude)
 - **LLM / Agent docs:** [`llms.txt`](https://mcpblocks.dev/llms.txt) · [`llms-full.txt`](https://mcpblocks.dev/llms-full.txt) · [`agents.md`](https://mcpblocks.dev/agents.md) · [`r/registry.json`](https://mcpblocks.dev/r/registry.json)
 
@@ -70,10 +69,9 @@ Full guides: **[Installation](https://mcpblocks.dev/docs/installation)** · **[U
 
 ---
 
-## Host preview, AppBridge playground & conformance
+## Host preview & conformance
 
 - **Live DOM linter (`HostPreview`):** Every component page simulates Light/Dark, Inline/Fullscreen, and Web/Mobile frames while checking inline height (~520px cap), nested vertical scroll, floating menus, 44px tap targets, and horizontal overflow in real time.
-- **Real protocol playground ([`/playground`](https://mcpblocks.dev/playground)):** Sandboxed iframe (`allow-scripts allow-forms`) wired to `@modelcontextprotocol/ext-apps/app-bridge` (`AppBridge` + `PostMessageTransport`). Test the bundled `deal-app` view or paste any single-file MCP App HTML with editable `structuredContent` JSON and a live JSON-RPC log.
 - **Automated conformance ([`CONFORMANCE.md`](./CONFORMANCE.md)):** ESLint and `pnpm check:conformance` enforce Claude's MCP Apps rules (no floating Radix primitives, no vertical scroll containers, no `vh`/`dvh` units, no hardcoded colors, `currentColor` icons, token parity, and registry freshness).
 
 ---
@@ -84,8 +82,8 @@ Full guides: **[Installation](https://mcpblocks.dev/docs/installation)** · **[U
 | --- | --- |
 | `registry/mcpblocks/` | Distributable component source (source of truth) |
 | `registry.json` | Registry manifest; `pnpm registry:build` writes `public/r/*.json` |
-| `app/` | Docs site: landing page, component pages, tokens, guides, and `/playground` |
-| `components/site/` | Site-only UI: `HostPreview`, `AppBridgeHost`, demos, code blocks |
+| `app/` | Docs site: landing page, component pages, tokens, and guides |
+| `components/site/` | Site-only UI: `HostPreview`, demos, code blocks |
 | `lib/` | Component docs content (`docs.ts`), tokens (`tokens.ts`), host context, and JSON-LD schema |
 | `scripts/` | Conformance checker (`check-conformance.mjs`) and LLM/agent doc generator (`generate-llms.mjs`) |
 | `examples/deal-app/` | Example MCP server (Node + Cloudflare Worker at `https://mcpblocks.dev/mcp`) |

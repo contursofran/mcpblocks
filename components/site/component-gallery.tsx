@@ -12,14 +12,13 @@ import {
 import { cn } from "@/lib/utils"
 
 /**
- * Crisp 1:1 minimalist schematic previews styled in Headless UI's visual grammar,
- * inverted to light mode with warm-neutral surfaces and subtle clay/host accents.
+ * Flat schematic previews on warm-neutral surfaces.
  */
 function MiniPreview({ slug }: { slug: string }) {
   switch (slug) {
     case "list-view":
       return (
-        <div className="flex w-full max-w-52 flex-col rounded-xl border border-[#141413]/[0.08] bg-white/95 text-[0.6875rem]/4 text-[#141413] shadow-[0_8px_24px_-12px_rgba(20,20,19,0.14)]">
+        <div className="flex w-full max-w-52 flex-col rounded-xl border border-[#141413]/[0.08] bg-white text-[0.6875rem]/4 text-[#141413]">
           {[
             { init: "SC", bg: "#6366E9", name: "Sarah Chen", meta: "#design", time: "Nov 12" },
             { init: "MJ", bg: "#835EEE", name: "Marcus Johnson", meta: "#design", time: "Nov 12" },
@@ -52,7 +51,7 @@ function MiniPreview({ slug }: { slug: string }) {
 
     case "confirm-action":
       return (
-        <div className="flex w-full max-w-52 flex-col gap-2.5 rounded-xl border border-[#141413]/[0.08] bg-white/95 p-3 text-[0.6875rem]/4 text-[#141413] shadow-[0_8px_24px_-12px_rgba(20,20,19,0.14)]">
+        <div className="flex w-full max-w-52 flex-col gap-2.5 rounded-xl border border-[#141413]/[0.08] bg-white p-3 text-[0.6875rem]/4 text-[#141413]">
           <div className="font-semibold">Approve permission</div>
           <div className="flex items-center justify-between gap-2 rounded-lg border border-[#141413]/[0.08] bg-[#faf9f5] p-2">
             <div className="flex items-center gap-1.5">
@@ -80,7 +79,7 @@ function MiniPreview({ slug }: { slug: string }) {
 
     case "media-player":
       return (
-        <div className="flex w-full max-w-52 flex-col gap-3 rounded-xl border border-[#141413]/[0.08] bg-white/95 p-3 text-[0.6875rem]/4 text-[#141413] shadow-[0_8px_24px_-12px_rgba(20,20,19,0.14)]">
+        <div className="flex w-full max-w-52 flex-col gap-3 rounded-xl border border-[#141413]/[0.08] bg-white p-3 text-[0.6875rem]/4 text-[#141413]">
           <div>
             <div className="font-semibold">Podcast Intro</div>
             <div className="text-[10px] text-[#73726c]">Rachel · Warm</div>
@@ -108,7 +107,7 @@ function MiniPreview({ slug }: { slug: string }) {
 
     case "line-chart":
       return (
-        <div className="flex w-full max-w-52 flex-col gap-2 rounded-xl border border-[#141413]/[0.08] bg-white/95 p-3 text-[0.6875rem]/4 text-[#141413] shadow-[0_8px_24px_-12px_rgba(20,20,19,0.14)]">
+        <div className="flex w-full max-w-52 flex-col gap-2 rounded-xl border border-[#141413]/[0.08] bg-white p-3 text-[0.6875rem]/4 text-[#141413]">
           <div className="flex items-center justify-between">
             <span className="font-semibold">Usage</span>
             <span className="rounded-full bg-[#f5f4ed] px-1.5 py-0.5 font-mono text-[9px] text-[#73726c]">
@@ -137,7 +136,7 @@ function MiniPreview({ slug }: { slug: string }) {
 
     case "document-card":
       return (
-        <div className="flex w-full max-w-52 flex-col gap-2 rounded-xl border border-[#141413]/[0.08] bg-white/95 p-3 text-[0.6875rem]/4 text-[#141413] shadow-[0_8px_24px_-12px_rgba(20,20,19,0.14)]">
+        <div className="flex w-full max-w-52 flex-col gap-2 rounded-xl border border-[#141413]/[0.08] bg-white p-3 text-[0.6875rem]/4 text-[#141413]">
           <div className="font-semibold">📋 Sprint Planning</div>
           <div className="flex items-center gap-2 rounded-md bg-[#faf9f5] px-2 py-1 text-[10px]">
             <span className="text-[#73726c]">Type</span>
@@ -164,14 +163,14 @@ function MiniPreview({ slug }: { slug: string }) {
       return (
         <div className="flex w-full max-w-52 items-center gap-2 overflow-hidden">
           {[
-            { title: "Ocean View", meta: "4.6 · 2.8 mi", grad: "from-[#d6e4f6] to-[#98bce8]", saved: true },
-            { title: "Redwood Loop", meta: "4.8 · 4 mi", grad: "from-[#e9f1dc] to-[#b8d49c]", saved: false },
+            { title: "Ocean View", meta: "4.6 · 2.8 mi", grad: "bg-[#d6e4f6]", saved: true },
+            { title: "Redwood Loop", meta: "4.8 · 4 mi", grad: "bg-[#e9f1dc]", saved: false },
           ].map((card) => (
             <div
               key={card.title}
-              className="flex w-28 shrink-0 flex-col gap-1.5 rounded-xl border border-[#141413]/[0.08] bg-white/95 p-1.5 shadow-[0_8px_24px_-12px_rgba(20,20,19,0.14)]"
+              className="flex w-28 shrink-0 flex-col gap-1.5 rounded-xl border border-[#141413]/[0.08] bg-white p-1.5"
             >
-              <div className={cn("relative h-16 rounded-lg bg-gradient-to-br", card.grad)}>
+              <div className={cn("relative h-16 rounded-lg ", card.grad)}>
                 <span className="absolute top-1.5 right-1.5 flex size-5 items-center justify-center rounded-full bg-white/90 text-[#141413]">
                   <Bookmark className="size-2.5" fill={card.saved ? "currentColor" : "none"} />
                 </span>
@@ -187,7 +186,7 @@ function MiniPreview({ slug }: { slug: string }) {
 
     case "skeleton":
       return (
-        <div className="flex w-full max-w-52 flex-col gap-2.5 rounded-xl border border-[#141413]/[0.08] bg-white/95 p-3 shadow-[0_8px_24px_-12px_rgba(20,20,19,0.14)]">
+        <div className="flex w-full max-w-52 flex-col gap-2.5 rounded-xl border border-[#141413]/[0.08] bg-white p-3">
           {[0, 1, 2].map((r) => (
             <div key={r} className="flex items-center gap-2">
               <span className="size-5 shrink-0 rounded-full bg-[#141413]/[0.08]" />
@@ -200,7 +199,7 @@ function MiniPreview({ slug }: { slug: string }) {
 
     case "inline-card":
       return (
-        <div className="flex w-full max-w-52 flex-col gap-2.5 rounded-xl border border-[#141413]/[0.08] bg-white/95 p-3 text-[0.6875rem]/4 text-[#141413] shadow-[0_8px_24px_-12px_rgba(20,20,19,0.14)]">
+        <div className="flex w-full max-w-52 flex-col gap-2.5 rounded-xl border border-[#141413]/[0.08] bg-white p-3 text-[0.6875rem]/4 text-[#141413]">
           <div className="flex items-center justify-between gap-1">
             <span className="font-semibold">Northwind renewal</span>
             <span className="rounded-full bg-[#f6eedf] px-1.5 py-0.5 text-[9px] font-semibold text-[#5a4815]">
@@ -231,7 +230,7 @@ function MiniPreview({ slug }: { slug: string }) {
     case "status-update":
       return (
         <div className="flex w-full max-w-52 flex-col gap-2 text-[0.6875rem]/4 text-[#141413]">
-          <div className="flex items-center gap-2 rounded-xl border border-[#141413]/[0.08] bg-white/95 p-2.5 shadow-[0_8px_24px_-12px_rgba(20,20,19,0.14)]">
+          <div className="flex items-center gap-2 rounded-xl border border-[#141413]/[0.08] bg-white p-2.5">
             <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#e9f1dc] text-[#265b19]">
               <Check className="size-3.5" />
             </span>
@@ -240,7 +239,7 @@ function MiniPreview({ slug }: { slug: string }) {
               <div className="truncate text-[9px] text-[#73726c]">INV-2041 · just now</div>
             </div>
           </div>
-          <div className="flex items-center gap-2 rounded-xl border border-[#141413]/[0.08] bg-white/95 p-2.5 shadow-[0_8px_24px_-12px_rgba(20,20,19,0.1)]">
+          <div className="flex items-center gap-2 rounded-xl border border-[#141413]/[0.08] bg-white p-2.5">
             <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-[#f6eedf] text-[10px] font-bold text-[#5a4815]">
               !
             </span>
@@ -283,7 +282,7 @@ export function ComponentGallery() {
                 aria-selected={active}
                 onClick={() => setFilter(tab)}
                 className={cn(
-                  "rounded-full px-3 py-1 text-sm/6 font-semibold transition-colors select-none",
+                  "rounded-md px-2.5 py-1 text-sm/6 font-medium transition-colors select-none",
                   active
                     ? "bg-[#141413]/[0.08] text-[#141413]"
                     : "text-[#141413]/45 hover:bg-[#141413]/[0.04] hover:text-[#141413]/75"
@@ -298,43 +297,6 @@ export function ComponentGallery() {
 
       {/* Headless UI signature horizontal hairline row bands + 3-column vertical tile rails */}
       <div className="relative">
-        {/* Crisp 3-column vertical rails scoped cleanly to the tile grid gutters */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 inset-x-0 z-0"
-        >
-          <div className="mx-auto flex h-full max-w-[calc(80rem+2px)] gap-[14px]">
-            <div className="flex-1 border-x border-[#141413]/[0.075]" />
-            <div className="hidden flex-1 border-x border-[#141413]/[0.075] sm:block" />
-            <div className="hidden flex-1 border-x border-[#141413]/[0.075] lg:block" />
-          </div>
-        </div>
-
-        {/* Exact-stride horizontal hairline row bands (always 8px above & 8px below every h-64 tile) */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 -inset-x-4 z-0 pb-8 sm:-inset-x-6"
-        >
-          <div className="mt-2 grid grid-cols-1 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-            {visible.map((c) => (
-              <div key={c.slug}>
-                <div className="relative h-64">
-                  <div className="absolute inset-x-0 -inset-y-[9px] border-y border-[#141413]/[0.075]" />
-                </div>
-                <div className="invisible mt-2 pt-2.5 text-sm">&nbsp;</div>
-              </div>
-            ))}
-            {Array.from({ length: pad3 }).map((_, i) => (
-              <div key={`pad-${i}`} className="hidden lg:block">
-                <div className="relative h-64">
-                  <div className="absolute inset-x-0 -inset-y-[9px] border-y border-[#141413]/[0.075]" />
-                </div>
-                <div className="invisible mt-2 pt-2.5 text-sm">&nbsp;</div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         <div className="relative z-10 mx-auto max-w-7xl px-2 pb-8">
           <div className="mt-2 grid grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((c) => (
@@ -344,10 +306,6 @@ export function ComponentGallery() {
                 className="group focus:outline-none"
               >
                 <div className="relative flex h-64 items-center justify-center bg-[#141413]/[0.03] px-4 transition-colors group-hover:bg-[#141413]/[0.055] group-focus-visible:ring-1 group-focus-visible:ring-[#141413]">
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-[32%] rounded-full bg-[#D97757]/18 blur-2xl"
-                  />
                   <div aria-hidden="true" className="relative z-10 flex w-full justify-center select-none">
                     <MiniPreview slug={c.slug} />
                   </div>

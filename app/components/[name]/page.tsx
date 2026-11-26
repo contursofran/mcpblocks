@@ -79,28 +79,22 @@ export default async function ComponentPage({
   return (
     <PageShell rails="docs">
       <JsonLd data={componentJsonLd(doc)} />
-      <main className="relative z-10 rounded-[2.5rem] bg-white/95 px-4 backdrop-blur-sm sm:px-6">
+      <main className="relative z-10 rounded-[2.5rem] bg-white/95 px-4 sm:px-6">
         <div className="relative mx-auto flex max-w-7xl lg:gap-[14px]">
           {/* Left sticky sidebar (aligned inside w-68 rail) */}
-          <aside className="sticky top-0 hidden h-screen w-[17rem] shrink-0 border-x border-[#141413]/[0.075] lg:block">
+          <aside className="sticky top-0 hidden h-screen w-[17rem] shrink-0 lg:block">
             <div className="h-full overflow-y-auto pb-24">
               <div className="flex gap-2 px-4 pt-16 pb-8">
                 <div className="rounded-full bg-[#141413]/[0.08] px-3 py-1 text-sm/6 font-semibold text-[#141413] select-none">
                   Components
                 </div>
-                <Link
-                  href="/playground"
-                  className="rounded-full px-3 py-1 text-sm/6 font-semibold text-[#141413]/45 transition-colors hover:bg-[#141413]/[0.04] hover:text-[#141413]/75"
-                >
-                  Playground
-                </Link>
               </div>
 
               <nav aria-label="Components">
                 {componentCategories.map((category) => {
                   const group = components.filter((c) => c.category === category)
                   return (
-                    <div key={category} className="border-t border-[#141413]/[0.075] py-7">
+                    <div key={category} className=" py-7">
                       <h2 className="px-4 pb-4 font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
                         {category}
                       </h2>
@@ -128,7 +122,7 @@ export default async function ComponentPage({
                   )
                 })}
 
-                <div className="border-t border-[#141413]/[0.075] py-7">
+                <div className=" py-7">
                   <h2 className="px-4 pb-4 font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
                     Guides
                   </h2>
@@ -155,7 +149,7 @@ export default async function ComponentPage({
           </aside>
 
           {/* Center documentation column */}
-          <div className="flex min-w-0 flex-1 flex-col pt-8 pb-20 lg:border-x lg:border-[#141413]/[0.075] lg:pt-16">
+          <div className="flex min-w-0 flex-1 flex-col pt-8 pb-20 lg:pt-16">
             {/* Mobile component strip */}
             <div className="mb-8 flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] lg:hidden [&::-webkit-scrollbar]:hidden">
               {components.map((c) => (
@@ -180,11 +174,8 @@ export default async function ComponentPage({
                 <h1 className="text-3xl font-semibold tracking-tight text-[#141413] sm:text-4xl">
                   {doc.title}
                 </h1>
-                <p className="mt-4 mb-6 text-base/7 text-[#3d3d3a]">
+                <p className="mt-4 mb-2 text-base/7 text-[#3d3d3a]">
                   {doc.description}
-                </p>
-                <p className="font-mono text-xs text-[#141413]/50">
-                  Display modes: {doc.displayModes} · Source: {doc.source}
                 </p>
               </header>
 
@@ -256,7 +247,7 @@ export default async function ComponentPage({
           </div>
 
           {/* Right sticky TOC (aligned inside w-68 rail) */}
-          <aside className="sticky top-0 hidden h-screen w-[17rem] shrink-0 border-x border-[#141413]/[0.075] xl:block">
+          <aside className="sticky top-0 hidden h-screen w-[17rem] shrink-0 xl:block">
             <div className="h-full overflow-y-auto px-6 pt-16 pb-24">
               <p className="font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
                 On this page
@@ -286,23 +277,8 @@ export default async function ComponentPage({
                 </ul>
               </nav>
 
-              <div className="mt-10 border-t border-[#141413]/[0.075] pt-6">
-                <p className="font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
-                  Live Host
-                </p>
-                <p className="mt-3 text-xs/5 text-[#73726c]">
-                  Test MCP Apps in a sandboxed iframe over real{" "}
-                  <code className="font-mono text-[#141413]">AppBridge</code> JSON-RPC.
-                </p>
-                <Link
-                  href="/playground"
-                  className="mt-3 inline-flex rounded-full bg-[#141413]/[0.08] px-3 py-1 text-xs/5 font-semibold text-[#141413] transition-colors hover:bg-[#141413]/[0.14]"
-                >
-                  Open playground →
-                </Link>
-              </div>
 
-              <div className="mt-8 border-t border-[#141413]/[0.075] pt-6">
+              <div className="mt-8 pt-6">
                 <p className="font-mono text-xs font-semibold tracking-widest text-[#141413]/45 uppercase">
                   For Agents
                 </p>

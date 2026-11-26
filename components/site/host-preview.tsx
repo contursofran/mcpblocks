@@ -91,8 +91,10 @@ export function Segmented<T extends string>({
   value,
   options,
   onChange,
+  iconOnly,
 }: {
   label: string
+  iconOnly?: boolean
   value: T
   options: { value: T; label: string; icon: React.ElementType }[]
   onChange: (v: T) => void
@@ -101,7 +103,7 @@ export function Segmented<T extends string>({
     <div
       role="radiogroup"
       aria-label={label}
-      className="inline-flex rounded-full border border-[#141413]/[0.08] bg-[#f5f4ed] p-1"
+      className="inline-flex gap-0.5 rounded-md bg-[#141413]/[0.05] p-0.5"
     >
       {options.map((o) => {
         const Icon = o.icon
@@ -113,13 +115,16 @@ export function Segmented<T extends string>({
             role="radio"
             aria-checked={active}
             onClick={() => onChange(o.value)}
+            aria-label={o.label}
+            title={o.label}
             className={cn(
-              "inline-flex min-h-8 items-center gap-1.5 rounded-full px-3 text-xs font-medium text-muted-foreground transition-all",
-              active && "bg-white text-foreground shadow-xs ring-1 ring-[#141413]/[0.06]"
+              "inline-flex min-h-7 items-center gap-1.5 rounded-[5px] text-xs font-medium text-muted-foreground transition-colors",
+              iconOnly ? "w-7 justify-center" : "px-2.5",
+              active ? "bg-white text-foreground" : "hover:text-foreground"
             )}
           >
             <Icon className="size-3.5" aria-hidden="true" />
-            {o.label}
+            {iconOnly ? null : o.label}
           </button>
         )
       })}
@@ -131,14 +136,16 @@ export function Segmented<T extends string>({
  * Simulated MCP Apps host frame with live DOM guideline checks. Sets the same
  * CSS variables the host injects (theme tokens, safe-area insets) and mimics
  * inline vs fullscreen layout. For a full sandboxed iframe running the real
- * MCP Apps JSON-RPC protocol (`AppBridge`), see `/playground`.
+ * MCP Apps JSON-RPC protocol (`AppBridge`).
  */
 export function HostPreview({
   children,
   checks = [],
   variant = "card",
   appName = "App",
+  leading,
 }: {
+  leading?: React.ReactNode
   children: React.ReactNode
   checks?: string[]
   /** "card": host draws a bordered app container. "borderless": `_meta.ui.prefersBorder: false`. */
@@ -231,7 +238,9 @@ export function HostPreview({
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2">
+          {leading}
           <Segmented
+            iconOnly
             label="Theme"
             value={theme}
             onChange={setTheme}
@@ -241,6 +250,7 @@ export function HostPreview({
             ]}
           />
           <Segmented
+            iconOnly
             label="Display mode"
             value={mode}
             onChange={setMode}
@@ -250,6 +260,7 @@ export function HostPreview({
             ]}
           />
           <Segmented
+            iconOnly
             label="Device"
             value={device}
             onChange={setDevice}
@@ -259,16 +270,10 @@ export function HostPreview({
             ]}
           />
         </div>
-        <Link
-          href="/playground"
-          className="text-xs font-medium text-muted-foreground underline underline-offset-4 hover:text-foreground"
-        >
-          Open live AppBridge playground →
-        </Link>
       </div>
 
       {/* Host frame */}
-      <div className="site-stage-dots flex justify-center rounded-2xl border border-[#141413]/[0.08] bg-[#f6f5ee]/90 p-4 sm:p-8">
+      <div className="flex justify-center rounded-xl bg-[#141413]/[0.03] p-4 sm:p-8">
         <div
           data-host-theme={theme}
           style={hostVars}
@@ -317,7 +322,7 @@ export function HostPreview({
       </div>
 
       {/* Live DOM checks + static guidelines */}
-      <div className="grid gap-2.5 rounded-2xl border border-[#141413]/[0.08] bg-white p-4 text-xs shadow-2xs sm:grid-cols-2">
+      <div className="grid gap-2 px-1 pt-2 text-xs text-[#73726c] sm:grid-cols-2">
         {liveChecks.map((item) => (
           <div key={item.label} className="flex items-center gap-2">
             {item.ok ? (

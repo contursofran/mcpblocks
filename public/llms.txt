@@ -19,7 +19,6 @@ npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 - [Installation](https://mcpblocks.dev/docs/installation): Prerequisites, shadcn CLI setup, and what files get added.
 - [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server): Register tools + `ui://` resources with `@modelcontextprotocol/ext-apps` and wire `useApp` / `useHostStyles` / `applyHostContext`.
 - [Design tokens](https://mcpblocks.dev/tokens): Complete Claude MCP Apps light/dark CSS variables and Tailwind `host-*` utilities.
-- [AppBridge Playground](https://mcpblocks.dev/playground): Live sandboxed iframe host running `@modelcontextprotocol/ext-apps/app-bridge` for testing MCP App views and mock tool results.
 
 ## Components
 

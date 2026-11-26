@@ -5,7 +5,7 @@ Tracks `mcpblocks` against Anthropic's [MCP Apps design guidelines](https://clau
 | | |
 | --- | --- |
 | **Last verified** | 2026-11-25 |
-| **Automated checks** | `pnpm lint` + `pnpm check:conformance` + live DOM linter in `HostPreview` / `/playground` |
+| **Automated checks** | `pnpm lint` + `pnpm check:conformance` + live DOM linter in `HostPreview` |
 
 ## Rules & Enforcement
 

@@ -75,7 +75,7 @@ export function HeroChat({
           </button>
         ))}
       </div>
-      <div className="flex flex-col overflow-hidden rounded-xl border border-[#1f1e1d]/15 bg-[#faf9f5] font-[family-name:var(--font-sans)] text-[#141413] shadow-[0_24px_48px_-20px_rgba(20,20,19,0.28)] dark:border-white/10 dark:bg-[#262624] dark:text-[#faf9f5]">
+      <div className="flex flex-col overflow-hidden rounded-xl border border-[#1f1e1d]/15 bg-[#faf9f5] font-[family-name:var(--font-sans)] text-[#141413] dark:border-white/10 dark:bg-[#262624] dark:text-[#faf9f5]">
         {/* Window title bar */}
         <div className="relative flex h-10 shrink-0 items-center border-b border-[#1f1e1d]/10 px-4 dark:border-white/10">
           <div className="flex gap-2" aria-hidden="true">
@@ -121,7 +121,7 @@ export function HeroChat({
         </div>
 
         <div className="px-4 pb-4 sm:px-5" aria-hidden="true">
-          <div className="flex items-center justify-between rounded-2xl border border-[#1f1e1d]/15 bg-white py-2 pr-2 pl-4 text-sm text-[#73726c] shadow-[0_4px_16px_-8px_rgba(20,20,19,0.15)] dark:border-white/10 dark:bg-[#30302e] dark:text-[#a6a39a]">
+          <div className="flex items-center justify-between rounded-2xl border border-[#1f1e1d]/15 bg-white py-2 pr-2 pl-4 text-sm text-[#73726c] dark:border-white/10 dark:bg-[#30302e] dark:text-[#a6a39a]">
             <span>Reply…</span>
             <span className="flex size-8 items-center justify-center rounded-lg bg-[#c96442] text-base text-white">
               ↑

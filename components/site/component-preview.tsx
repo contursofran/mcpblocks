@@ -4,8 +4,9 @@ import * as React from "react"
 
 import { CodeBlock } from "@/components/site/code-block"
 import { demos } from "@/components/site/demos"
-import { HostPreview } from "@/components/site/host-preview"
-import { cn } from "@/lib/utils"
+import { Code2, Eye } from "lucide-react"
+
+import { HostPreview, Segmented } from "@/components/site/host-preview"
 
 export function ComponentPreview({
   slug,
@@ -22,48 +23,30 @@ export function ComponentPreview({
   const Demo = demos[slug]
   if (!Demo) return null
 
-  return (
-    <div className="flex flex-col gap-3">
-      {code ? (
-        <div className="flex items-center justify-end">
-          <div
-            role="tablist"
-            aria-label="Preview or code"
-            className="inline-flex gap-1 rounded-full bg-[#141413]/[0.06] p-1 backdrop-blur-sm"
-          >
-            {(
-              [
-                ["preview", "Preview"],
-                ["code", "Code"],
-              ] as const
-            ).map(([id, label]) => (
-              <button
-                key={id}
-                type="button"
-                role="tab"
-                aria-selected={tab === id}
-                onClick={() => setTab(id)}
-                className={cn(
-                  "rounded-full px-3 py-1 text-xs/4 font-semibold transition-colors",
-                  tab === id
-                    ? "bg-white text-[#141413] shadow-2xs"
-                    : "text-[#141413]/55 hover:text-[#141413]"
-                )}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : null}
+  const toggle = code ? (
+    <Segmented
+      label="Preview or code"
+      value={tab}
+      onChange={setTab}
+      options={[
+        { value: "preview", label: "Preview", icon: Eye },
+        { value: "code", label: "Code", icon: Code2 },
+      ]}
+    />
+  ) : null
 
-      {tab === "code" && code ? (
+  if (tab === "code" && code) {
+    return (
+      <div className="flex flex-col gap-3">
+        <div className="flex">{toggle}</div>
         <CodeBlock code={code} />
-      ) : (
-        <HostPreview checks={checks} variant={variant}>
-          <Demo />
-        </HostPreview>
-      )}
-    </div>
+      </div>
+    )
+  }
+
+  return (
+    <HostPreview checks={checks} variant={variant} leading={toggle}>
+      <Demo />
+    </HostPreview>
   )
 }

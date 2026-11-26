@@ -88,17 +88,6 @@ export function homeJsonLd() {
           url: `${SITE_URL}/components/${c.slug}`,
         })),
       },
-      {
-        "@type": "FAQPage",
-        mainEntity: homeFaqs.map((faq) => ({
-          "@type": "Question",
-          name: faq.question,
-          acceptedAnswer: {
-            "@type": "Answer",
-            text: faq.answer,
-          },
-        })),
-      },
     ],
   }
 }
