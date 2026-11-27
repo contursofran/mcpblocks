@@ -12,7 +12,7 @@ Copy-and-paste cards, approvals, charts, media players, carousels, and skeletons
 
 ## Quick start
 
-Requires React 18+, Tailwind CSS v4 (`@theme inline`), and a `components.json` (`npx shadcn@latest init`).
+Requires React 18+ and a shadcn `components.json` (`npx shadcn@latest init`). The default install targets Tailwind v4. See the [installation guide](https://mcpblocks.dev/docs/installation) for Tailwind 3.4 and standalone CSS.
 
 ```bash
 npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json

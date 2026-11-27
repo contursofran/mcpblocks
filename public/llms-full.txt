@@ -11,7 +11,8 @@
 
 ## Installation
 
-Prerequisites: React 18+, Tailwind CSS v4 (`@theme inline`), `components.json` (`npx shadcn@latest init`), and `@modelcontextprotocol/ext-apps`.
+Prerequisites: React 18+, `components.json` (`npx shadcn@latest init`), and `@modelcontextprotocol/ext-apps`.
+The [installation guide](https://mcpblocks.dev/docs/installation) covers Tailwind v4, the Tailwind 3.4 preset, and standalone CSS.
 
 Install any component (dependencies such as `host-tokens`, `host`, `host-button`, and `icons` are installed automatically):
 

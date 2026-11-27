@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "outcome-card",
+  "type": "registry:ui",
+  "title": "Outcome card",
+  "description": "A confirmed, refused, unknown or failed outcome with one optional follow-up action.",
+  "registryDependencies": [
+    "https://mcpblocks.dev/r/status-update.json"
+  ],
+  "files": [
+    {
+      "path": "registry/mcpblocks/ui/outcome-card.tsx",
+      "content": "import type { ReactNode } from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { StatusUpdate, type StatusTone, type StatusUpdateProps } from \"@/registry/mcpblocks/components/status-update\"\n\nconst outcomes = {\n  done: { title: \"Done\", tone: \"success\" },\n  refused: { title: \"Nothing was changed\", tone: \"info\" },\n  unknown: { title: \"We couldn't confirm this went through\", tone: \"warning\" },\n  error: { title: \"That didn't work\", tone: \"danger\", description: \"Nothing was changed.\" },\n} satisfies Record<string, { title: string; tone: StatusTone; description?: string }>\n\nexport type OutcomeCardStatus = keyof typeof outcomes\n\nexport function OutcomeCard({\n  status,\n  title,\n  description,\n  className,\n  ...props\n}: Omit<StatusUpdateProps, \"tone\" | \"title\"> & { status: OutcomeCardStatus; title?: ReactNode }) {\n  const outcome = outcomes[status]\n  return (\n    <StatusUpdate\n      data-outcome={status}\n      title={title === undefined ? outcome.title : title}\n      description={description === undefined && \"description\" in outcome ? outcome.description : description}\n      tone={outcome.tone}\n      className={cn((status === \"refused\" || status === \"unknown\") && \"[&_p]:whitespace-normal\", className)}\n      {...props}\n    />\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

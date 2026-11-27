@@ -222,6 +222,36 @@
       }
     },
     {
+      "name": "host-tokens-css",
+      "type": "registry:lib",
+      "title": "Plain CSS host tokens",
+      "description": "Light and dark host fallbacks and app token aliases as plain CSS custom properties.",
+      "files": [
+        { "path": "registry/styles/host-tokens.css", "type": "registry:file", "target": "~/mcpblocks-tokens.css" }
+      ]
+    },
+    {
+      "name": "tailwind-v3",
+      "type": "registry:lib",
+      "title": "Tailwind v3 preset",
+      "description": "Colors, radii, typography and container queries for MCP Blocks UI on Tailwind CSS 3.4.",
+      "dependencies": ["@tailwindcss/container-queries@^0.1.1"],
+      "registryDependencies": ["https://mcpblocks.dev/r/host-tokens-css.json"],
+      "files": [
+        { "path": "registry/styles/tailwind-v3.cjs", "type": "registry:file", "target": "~/tailwind.mcpblocks.cjs" }
+      ]
+    },
+    {
+      "name": "blocks-css",
+      "type": "registry:lib",
+      "title": "Compiled blocks stylesheet",
+      "description": "Ready-to-import CSS for all shipped UI blocks with host fallbacks. Runs without Tailwind in the consuming project.",
+      "files": [
+        { "path": "registry/styles/blocks.css", "type": "registry:file", "target": "~/mcpblocks.css" },
+        { "path": "registry/styles/TAILWIND-LICENSE.txt", "type": "registry:file", "target": "~/mcpblocks-tailwind-license.txt" }
+      ]
+    },
+    {
       "name": "host",
       "type": "registry:lib",
       "title": "Host helpers",
@@ -231,6 +261,38 @@
           "path": "registry/mcpblocks/lib/host.ts",
           "type": "registry:lib"
         }
+      ]
+    },
+    {
+      "name": "hooks",
+      "type": "registry:hook",
+      "title": "MCP Apps protocol hooks",
+      "description": "Connect a React view to its MCP host, read streaming tool results, call tools, and reconcile prepared writes.",
+      "dependencies": [
+        "@modelcontextprotocol/client@2.0.0",
+        "@modelcontextprotocol/ext-apps@^2.0.4"
+      ],
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host.json"
+      ],
+      "files": [
+        { "path": "registry/mcpblocks/hooks/use-host.tsx", "type": "registry:hook" },
+        { "path": "registry/mcpblocks/hooks/use-tool-result.ts", "type": "registry:hook" },
+        { "path": "registry/mcpblocks/hooks/use-tool-call.ts", "type": "registry:hook" },
+        { "path": "registry/mcpblocks/hooks/use-prepared-write.ts", "type": "registry:hook" }
+      ]
+    },
+    {
+      "name": "host-harness",
+      "type": "registry:hook",
+      "title": "MCP Apps fake host",
+      "description": "Connect views to a configurable MCP Apps bridge for Storybook and tests. Includes tool fixtures and a request recorder.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/hooks.json"
+      ],
+      "files": [
+        { "path": "registry/mcpblocks/hooks/fake-host.tsx", "type": "registry:hook" },
+        { "path": "registry/mcpblocks/lib/host-harness.ts", "type": "registry:lib" }
       ]
     },
     {
@@ -264,6 +326,112 @@
       ]
     },
     {
+      "name": "surface",
+      "type": "registry:ui",
+      "title": "Surface",
+      "description": "A card, borderless or subtle container styled with host app tokens.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host-tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/ui/surface.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "status-pill",
+      "type": "registry:ui",
+      "title": "Status pill",
+      "description": "A visible status label in one of five semantic tones.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host-tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/ui/status-pill.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "data-list",
+      "type": "registry:ui",
+      "title": "Data list",
+      "description": "Stacked or aligned label and value pairs using a description list.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host-tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/ui/data-list.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "change-preview",
+      "type": "registry:ui",
+      "title": "Change preview",
+      "description": "Review individual changes before confirming a prepared write.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/data-list.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/ui/change-preview.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "outcome-card",
+      "type": "registry:ui",
+      "title": "Outcome card",
+      "description": "A confirmed, refused, unknown or failed outcome with one optional follow-up action.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/status-update.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/ui/outcome-card.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "field",
+      "type": "registry:ui",
+      "title": "Field",
+      "description": "A labelled native text input or select with optional supporting text.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/host-tokens.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/ui/field.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
+      "name": "sheet",
+      "type": "registry:ui",
+      "title": "Sheet",
+      "description": "An in-view side or bottom sheet with safe area padding and close control.",
+      "registryDependencies": [
+        "https://mcpblocks.dev/r/surface.json",
+        "https://mcpblocks.dev/r/host-button.json"
+      ],
+      "files": [
+        {
+          "path": "registry/mcpblocks/ui/sheet.tsx",
+          "type": "registry:ui"
+        }
+      ]
+    },
+    {
       "name": "list-view",
       "type": "registry:component",
       "title": "List view",
@@ -286,7 +454,9 @@
       "title": "Confirm action",
       "description": "Confirmation for a prepared change, with a change preview, refusal reasons and a check action for unconfirmed writes. Based on the MCP Apps for Claude kit.",
       "registryDependencies": [
-        "https://mcpblocks.dev/r/status-update.json",
+        "https://mcpblocks.dev/r/outcome-card.json",
+        "https://mcpblocks.dev/r/change-preview.json",
+        "https://mcpblocks.dev/r/surface.json",
         "https://mcpblocks.dev/r/host-button.json",
         "https://mcpblocks.dev/r/icons.json"
       ],
@@ -345,7 +515,9 @@
       "title": "Document card",
       "description": "Document preview with properties, editable lists and tasks. Based on the MCP Apps for Claude kit.",
       "registryDependencies": [
-        "https://mcpblocks.dev/r/host-tokens.json"
+        "https://mcpblocks.dev/r/surface.json",
+        "https://mcpblocks.dev/r/status-pill.json",
+        "https://mcpblocks.dev/r/data-list.json"
       ],
       "files": [
         {
@@ -396,7 +568,10 @@
       "description": "Compact card with up to 5 data points and 2 actions. Auto-fits its height.",
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-button.json",
-        "https://mcpblocks.dev/r/host.json"
+        "https://mcpblocks.dev/r/host.json",
+        "https://mcpblocks.dev/r/surface.json",
+        "https://mcpblocks.dev/r/status-pill.json",
+        "https://mcpblocks.dev/r/data-list.json"
       ],
       "files": [
         {
@@ -412,7 +587,8 @@
       "description": "Success, info, warning and error confirmations using semantic host tokens.",
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-button.json",
-        "https://mcpblocks.dev/r/icons.json"
+        "https://mcpblocks.dev/r/icons.json",
+        "https://mcpblocks.dev/r/surface.json"
       ],
       "files": [
         {

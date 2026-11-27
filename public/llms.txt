@@ -4,21 +4,23 @@
 
 ## Quick Install
 
-Install any component directly into a React + Tailwind CSS v4 project:
+Install any component into a React project. The default setup uses Tailwind CSS v4:
 
 ```bash
 npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 ```
 
-- [Full registry manifest (JSON)](https://mcpblocks.dev/r/registry.json): Machine-readable shadcn v3 registry index of all 14 items.
+- [Full registry manifest (JSON)](https://mcpblocks.dev/r/registry.json): Machine-readable shadcn v3 registry index of all 26 items.
 - [Complete single-file LLM docs](https://mcpblocks.dev/llms-full.txt): Full documentation, usage snippets, props, tokens, and server setup in one file.
 - [Agent integration guide](https://mcpblocks.dev/agents.md): Decision matrix, hard Claude MCP Apps rules, and copy-paste wiring for coding agents.
 
 ## Documentation
 
-- [Installation](https://mcpblocks.dev/docs/installation): Prerequisites, shadcn CLI setup, and what files get added.
+- [Installation](https://mcpblocks.dev/docs/installation): shadcn setup for Tailwind v4, Tailwind 3.4 and standalone CSS.
 - [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server): Register tools + `ui://` resources with `@modelcontextprotocol/ext-apps` and wire `useApp` / `applyHostContext`.
 - [Prepared writes](https://mcpblocks.dev/docs/prepared-writes): Review proposed changes, reconcile unconfirmed writes, and report committed changes to the model.
+- [Protocol hooks](https://mcpblocks.dev/docs/protocol-hooks): Connect React views to the host, handle tool results, and manage prepared writes.
+- [Composable UI parts](https://mcpblocks.dev/docs/ui-parts): Build custom layouts, proposal reviews, outcomes, forms, and responsive sheets.
 - [Brand your blocks](https://mcpblocks.dev/docs/brand-your-blocks): Override brand accents and other app tokens while retaining the host defaults.
 - [Design tokens](https://mcpblocks.dev/tokens): Complete Claude MCP Apps light/dark CSS variables and Tailwind `host-*` utilities.
 
@@ -37,9 +39,21 @@ npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 ## Building Blocks
 
 - [Host tokens](https://mcpblocks.dev/r/host-tokens.json): All design tokens from the MCP Apps for Claude kit (colors light/dark, type scale, radii, border width) as fallbacks for the CSS variables the host sends, mapped to Tailwind utilities (bg-host-bg, text-host-fg, text-host-heading-lg, rounded-host-md…).
+- [Plain CSS host tokens](https://mcpblocks.dev/r/host-tokens-css.json): Light and dark host fallbacks and app token aliases as plain CSS custom properties.
+- [Tailwind v3 preset](https://mcpblocks.dev/r/tailwind-v3.json): Colors, radii, typography and container queries for MCP Blocks UI on Tailwind CSS 3.4.
+- [Compiled blocks stylesheet](https://mcpblocks.dev/r/blocks-css.json): Ready-to-import CSS for all shipped UI blocks with host fallbacks. Runs without Tailwind in the consuming project.
 - [Host helpers](https://mcpblocks.dev/r/host.json): Apply host theme, CSS variables, fonts, display mode and safe-area insets, with dev-only guideline warnings.
+- [MCP Apps protocol hooks](https://mcpblocks.dev/r/hooks.json): Connect a React view to its MCP host, read streaming tool results, call tools, and reconcile prepared writes.
+- [MCP Apps fake host](https://mcpblocks.dev/r/host-harness.json): Connect views to a configurable MCP Apps bridge for Storybook and tests. Includes tool fixtures and a request recorder.
 - [Host button](https://mcpblocks.dev/r/host-button.json): Button styled with host tokens, 44px tap target.
 - [Icons](https://mcpblocks.dev/r/icons.json): 38 icons from the MCP Apps for Claude kit (Anthropic, CC BY 4.0) as currentColor React components.
+- [Surface](https://mcpblocks.dev/r/surface.json): A card, borderless or subtle container styled with host app tokens.
+- [Status pill](https://mcpblocks.dev/r/status-pill.json): A visible status label in one of five semantic tones.
+- [Data list](https://mcpblocks.dev/r/data-list.json): Stacked or aligned label and value pairs using a description list.
+- [Change preview](https://mcpblocks.dev/r/change-preview.json): Review individual changes before confirming a prepared write.
+- [Outcome card](https://mcpblocks.dev/r/outcome-card.json): A confirmed, refused, unknown or failed outcome with one optional follow-up action.
+- [Field](https://mcpblocks.dev/r/field.json): A labelled native text input or select with optional supporting text.
+- [Sheet](https://mcpblocks.dev/r/sheet.json): An in-view side or bottom sheet with safe area padding and close control.
 - [Branded confirm action](https://mcpblocks.dev/r/branded-confirm-action.json): A confirm action with a teal accent and a display font on the host surface.
 
 ## Optional

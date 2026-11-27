@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { Surface } from "@/registry/mcpblocks/ui/surface"
 import { HostButton } from "@/registry/mcpblocks/ui/host-button"
 import { CheckCircleIcon, InfoIcon, ProhibitIcon, WarningIcon } from "@/registry/mcpblocks/ui/icons"
 
@@ -36,11 +37,11 @@ export function StatusUpdate({
   const t = tones[tone]
   const Icon = t.icon
   return (
-    <div
+    <Surface
       role="status"
       data-slot="status-update"
       className={cn(
-        "flex w-full flex-wrap items-center gap-3 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted bg-host-app-surface p-4 text-host-app-fg font-[family-name:var(--font-sans)]",
+        "flex flex-wrap items-center gap-3 p-4",
         className
       )}
       {...props}
@@ -61,6 +62,6 @@ export function StatusUpdate({
           {action.label}
         </HostButton>
       ) : null}
-    </div>
+    </Surface>
   )
 }

@@ -5,6 +5,7 @@ import { OG_IMAGE } from "@/lib/site"
 import { guideJsonLd } from "@/lib/schema"
 import { CodeBlock } from "@/components/site/code-block"
 import { Code, DocsShell, Step } from "@/components/site/docs-shell"
+import { InstallStyles } from "@/components/site/install-styles"
 import { JsonLd } from "@/components/site/json-ld"
 
 const description =
@@ -33,7 +34,7 @@ export default function InstallationPage() {
       />
       <Step n={1} title="Requirements">
         <p className="text-foreground/80">
-          A React 18+ project with Tailwind CSS v4 and a shadcn <Code>components.json</Code>. No project yet? Run{" "}
+          A React 18+ project and a shadcn <Code>components.json</Code>. No project yet? Run{" "}
           <Code>npx shadcn@latest init</Code> first.
         </p>
       </Step>
@@ -51,7 +52,11 @@ export default function InstallationPage() {
         </p>
       </Step>
 
-      <Step n={3} title="Use it">
+      <Step n={3} title="Set up styles">
+        <InstallStyles />
+      </Step>
+
+      <Step n={4} title="Use it">
         <CodeBlock
           code={`import { InlineCard } from "@/components/inline-card"
 
@@ -84,7 +89,7 @@ applyHostContext({
         />
       </Step>
 
-      <Step n={4} title="Connect it to Claude">
+      <Step n={5} title="Connect it to Claude">
         <p className="text-foreground/80">
           Your block needs an MCP server to render. To see one working first, add{" "}
           <Code>https://mcpblocks.dev/mcp</Code> in Claude under Customize, Connectors, Add custom connector. Choose{" "}

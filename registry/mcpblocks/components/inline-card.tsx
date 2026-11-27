@@ -2,10 +2,13 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 import { guideline } from "@/registry/mcpblocks/lib/host"
+import { DataList } from "@/registry/mcpblocks/ui/data-list"
 import {
   HostButton,
   type HostButtonProps,
 } from "@/registry/mcpblocks/ui/host-button"
+import { StatusPill, type StatusPillTone } from "@/registry/mcpblocks/ui/status-pill"
+import { Surface } from "@/registry/mcpblocks/ui/surface"
 
 export type InlineCardField = {
   label: string
@@ -19,7 +22,7 @@ export type InlineCardAction = {
   disabled?: boolean
 }
 
-export type InlineCardTone = "neutral" | "info" | "success" | "warning" | "danger"
+export type InlineCardTone = StatusPillTone
 
 export type InlineCardProps = Omit<React.ComponentProps<"section">, "title"> & {
   title: React.ReactNode
@@ -32,14 +35,6 @@ export type InlineCardProps = Omit<React.ComponentProps<"section">, "title"> & {
   actions?: InlineCardAction[]
   /** Number of columns for the field grid. */
   columns?: 1 | 2 | 3 | 4
-}
-
-const toneClass: Record<InlineCardTone, string> = {
-  neutral: "bg-host-app-surface-muted text-host-app-fg-muted",
-  info: "bg-host-app-info-bg text-host-app-fg border-[length:var(--border-width-regular,0.5px)] border-host-app-info-border/40",
-  success: "bg-host-app-success-bg text-host-app-success-fg",
-  warning: "bg-host-app-warning-bg text-host-app-warning-fg",
-  danger: "bg-host-app-danger-border/15 text-host-app-danger-fg",
 }
 
 const columnClass = {
@@ -68,10 +63,10 @@ export function InlineCard({
   guideline(actions.length > 2, "InlineCard: more than 2 actions. Claude allows at most 2.")
 
   return (
-    <section
+    <Surface as="section"
       data-slot="inline-card"
       className={cn(
-        "@container flex w-full flex-col gap-4 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted bg-host-app-surface p-5 text-host-app-fg font-[family-name:var(--font-sans)]",
+        "@container flex flex-col gap-4 p-5",
         className
       )}
       {...props}
@@ -84,27 +79,11 @@ export function InlineCard({
           ) : null}
         </div>
         {badge ? (
-          <span
-            className={cn(
-              "max-w-full rounded-full px-2 py-0.5 text-xs font-semibold [overflow-wrap:anywhere]",
-              toneClass[badge.tone ?? "neutral"]
-            )}
-          >
-            {badge.label}
-          </span>
+          <StatusPill tone={badge.tone}>{badge.label}</StatusPill>
         ) : null}
       </header>
 
-      {fields.length > 0 ? (
-        <dl className={cn("grid gap-3", columnClass[columns])}>
-          {fields.map((f, i) => (
-            <div key={i} className="min-w-0">
-              <dt className="text-xs text-host-app-fg-subtle">{f.label}</dt>
-              <dd className="text-sm font-medium [overflow-wrap:anywhere]">{f.value}</dd>
-            </div>
-          ))}
-        </dl>
-      ) : null}
+      {fields.length > 0 ? <DataList className={columnClass[columns]} items={fields} /> : null}
 
       {children}
 
@@ -124,6 +103,6 @@ export function InlineCard({
           ))}
         </footer>
       ) : null}
-    </section>
+    </Surface>
   )
 }

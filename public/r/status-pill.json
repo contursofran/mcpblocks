@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "status-pill",
+  "type": "registry:ui",
+  "title": "Status pill",
+  "description": "A visible status label in one of five semantic tones.",
+  "registryDependencies": [
+    "https://mcpblocks.dev/r/host-tokens.json"
+  ],
+  "files": [
+    {
+      "path": "registry/mcpblocks/ui/status-pill.tsx",
+      "content": "import type { ComponentProps } from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nconst tones = {\n  neutral: \"bg-host-app-surface-muted text-host-app-fg-muted\",\n  info: \"bg-host-app-info-bg text-host-app-fg border-[length:var(--border-width-regular,0.5px)] border-host-app-info-border/40\",\n  success: \"bg-host-app-success-bg text-host-app-success-fg\",\n  warning: \"bg-host-app-warning-bg text-host-app-warning-fg\",\n  danger: \"bg-host-app-danger-border/15 text-host-app-danger-fg\",\n} as const\n\nexport type StatusPillTone = keyof typeof tones\n\nexport function StatusPill({\n  tone = \"neutral\",\n  className,\n  ...props\n}: ComponentProps<\"span\"> & { tone?: StatusPillTone }) {\n  return (\n    <span\n      data-slot=\"status-pill\"\n      className={cn(\"inline-block max-w-full rounded-full px-2 py-0.5 text-xs font-semibold [overflow-wrap:anywhere]\", tones[tone], className)}\n      {...props}\n    />\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

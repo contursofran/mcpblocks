@@ -1,7 +1,5 @@
-import type { CallToolResult } from "@modelcontextprotocol/client"
-import { useApp } from "@modelcontextprotocol/ext-apps/react"
 import type { App } from "@modelcontextprotocol/ext-apps"
-import { StrictMode, useEffect, useState } from "react"
+import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 
 import "./styles.css"
@@ -10,15 +8,18 @@ import { InlineCard } from "@/components/inline-card"
 import { LineChart } from "@/components/line-chart"
 import { ListView } from "@/components/list-view"
 import { RowsSkeleton } from "@/components/skeleton"
-import { applyHostContext, tellModel } from "@/lib/host"
+import { McpHostProvider, useHost } from "@/hooks/use-host"
+import { usePreparedWrite, type WriteOutcome } from "@/hooks/use-prepared-write"
+import { useToolCall, type ToolCallOutcome } from "@/hooks/use-tool-call"
+import { useToolResult } from "@/hooks/use-tool-result"
 import type { DemoBlock } from "../shared/demo-blocks"
 import { BlockPanelDemo, RegistryBlockDemo } from "./demo-blocks"
 
-type Deal = { id: string; company: string; contact: string; email: string; stage: string; amount: number; closeDate: string; note: string }
+import type { Deal } from "../server/data"
 type Payload =
   | { view: "deals"; deals: Deal[]; total: number }
   | { view: "deal"; deal: Deal }
-  | { view: "confirm"; deal: Deal; next: string }
+  | { view: "confirm"; deal: Deal; next: Deal["stage"] }
   | { view: "refused"; deal: Deal; reason: string }
   | { view: "block"; block: DemoBlock }
   | { view: "block-panel"; block: DemoBlock }
@@ -28,99 +29,122 @@ const money = (n: number) => `$${n.toLocaleString("en-US")}`
 const COLORS = ["#6366E9", "#835EEE", "#DA5597", "#2C84DB"]
 const initials = (name: string) => name.split(" ").map((p) => p[0]).join("").slice(0, 2)
 
-function DealConfirmation({ app, deal, next }: { app: App; deal: Deal; next: string }) {
-  const [status, setStatus] = useState<ConfirmActionStatus>("pending")
-  const [checking, setChecking] = useState(false)
-  const [refusedDescription, setRefusedDescription] = useState<string>()
-  const [unknownDescription, setUnknownDescription] = useState("Check the current deal stage before taking another action.")
+type Proposal = { deal: Deal; next: Deal["stage"] }
 
-  function markDone() {
-    setStatus("done")
-    void tellModel(app, `${deal.company} is now in ${next}.`)
+const confirmationStatus = {
+  preview: "pending",
+  confirming: "working",
+  saved: "done",
+  blocked: "refused",
+  refused: "refused",
+  unknown: "unknown",
+  checking: "unknown",
+} satisfies Record<string, ConfirmActionStatus>
+
+function readReceipt(call: ToolCallOutcome, next: Deal["stage"]): WriteOutcome<Deal> {
+  const result = call.kind === "result" || call.kind === "error" ? call.result : undefined
+  const receipt = result?.structuredContent as { deal?: Deal; outcome?: "unchanged"; reason?: string } | undefined
+  if (receipt?.outcome === "unchanged" && receipt.reason) return { kind: "refused", reason: receipt.reason }
+  if (call.kind === "result" && receipt?.deal?.stage === next) {
+    return { kind: "saved", result: receipt.deal, summary: `${receipt.deal.company} is now in ${next}.` }
   }
+  return { kind: "unknown", reason: "This proposal has no confirmed receipt yet. You can check again." }
+}
 
-  async function confirm() {
-    setStatus("working")
-    try {
-      const result = await app.callServerTool({
-        name: "update_deal_stage", arguments: { id: deal.id, expectedStage: deal.stage, stage: next },
+function DealStageView({ app, deal, next }: { app: App; deal: Deal; next?: Deal["stage"] }) {
+  const propose = useToolCall("propose_stage_change")
+  const execute = useToolCall("update_deal_stage")
+  const reconcile = useToolCall("check_deal_stage_change")
+  const write = usePreparedWrite<string, Proposal, Deal>({
+    initialPreview: next ? { deal, next } : undefined,
+    async prepare(id) {
+      const outcome = await propose.call({ id })
+      if (outcome.kind === "result") {
+        const proposed = outcome.result.structuredContent as Payload | undefined
+        if (proposed?.view === "confirm") return { kind: "preview", preview: proposed }
+        if (proposed?.view === "refused") return { kind: "blocked", reason: proposed.reason }
+      }
+      return { kind: "blocked", reason: outcome.kind === "error" ? outcome.error.message : "Couldn't prepare the change." }
+    },
+    async execute({ preview, idempotencyKey }) {
+      const outcome = await execute.call({
+        id: preview.deal.id,
+        expectedStage: preview.deal.stage,
+        stage: preview.next,
+        idempotencyKey,
       })
-      const outcome = result.structuredContent as { outcome?: "unchanged"; reason?: string; deal?: Deal } | undefined
-      if (outcome?.outcome === "unchanged") {
-        setRefusedDescription(outcome.reason)
-        setStatus("refused")
-      } else if (!result.isError && outcome?.deal?.stage === next) {
-        markDone()
-      } else {
-        setStatus("unknown")
-      }
-    } catch {
-      setStatus("unknown")
-    }
+      return outcome.kind === "unavailable"
+        ? { kind: "refused", reason: "The host cannot call the write tool." }
+        : readReceipt(outcome, preview.next)
+    },
+    async reconcile({ preview, idempotencyKey }) {
+      const outcome = await reconcile.call({ id: preview.deal.id, idempotencyKey })
+      return readReceipt(outcome, preview.next)
+    },
+  })
+  const { state } = write
+
+  if (state.status === "idle" || state.status === "preparing") {
+    return (
+      <InlineCard
+        title={deal.company}
+        badge={{ label: deal.stage, tone: deal.stage === "Won" ? "success" : "info" }}
+        description={deal.note}
+        fields={[
+          { label: "Value", value: money(deal.amount) },
+          { label: "Close date", value: deal.closeDate },
+          { label: "Contact", value: deal.contact },
+          { label: "Email", value: deal.email },
+        ]}
+        actions={[
+          {
+            label: state.status === "preparing" ? "Preparing…" : "Move to next stage",
+            disabled: !write.canClose || !propose.available,
+            onClick: () => void write.prepare(deal.id),
+          },
+          {
+            label: "Draft follow-up",
+            variant: "secondary",
+            onClick: () => void app.sendMessage({
+              role: "user",
+              content: [{ type: "text", text: `Draft a follow-up email to ${deal.contact} at ${deal.company}.` }],
+            }),
+          },
+        ]}
+      />
+    )
   }
 
-  async function checkAgain() {
-    setChecking(true)
-    try {
-      const result = await app.callServerTool({ name: "show_deal", arguments: { id: deal.id } })
-      const current = result.structuredContent as Extract<Payload, { view: "deal" }> | undefined
-      if (!result.isError && current?.deal?.stage === next) {
-        markDone()
-      } else {
-        setUnknownDescription("The proposed stage is still unconfirmed.")
-      }
-    } catch {
-      setUnknownDescription("The deal could not be checked. You can check again.")
-    } finally {
-      setChecking(false)
-    }
-  }
-
+  const preview = "preview" in state ? state.preview : undefined
+  const current = preview?.deal ?? deal
+  const proposed = preview?.next
   return (
     <ConfirmAction
-      title={`Move ${deal.company} to ${next}`}
-      subject={{ name: deal.contact, detail: `${deal.company} · ${money(deal.amount)}` }}
-      confirmLabel={`Move to ${next}`}
-      changePreview={<p>Stage <strong>{deal.stage}</strong> → <strong>{next}</strong></p>}
-      details={{ heading: "This will", items: [`Keep the ${deal.closeDate} close date`] }}
-      doneTitle={`${deal.company} moved to ${next}`}
+      title={proposed ? `Move ${current.company} to ${proposed}` : `Move ${current.company}`}
+      subject={{ name: current.contact, detail: `${current.company} · ${money(current.amount)}` }}
+      confirmLabel={proposed ? `Move to ${proposed}` : undefined}
+      changePreview={proposed && <p>Stage <strong>{current.stage}</strong> → <strong>{proposed}</strong></p>}
+      details={{ heading: "This will", items: [`Keep the ${current.closeDate} close date`] }}
+      doneTitle={state.status === "saved" ? `${state.result.company} moved to ${state.result.stage}` : undefined}
       doneDescription="Deal stage · just now"
-      status={status}
-      refusedDescription={refusedDescription}
-      unknownDescription={checking ? "Checking the current stage…" : unknownDescription}
-      onCheckAgain={checking ? undefined : () => void checkAgain()}
-      onConfirm={confirm}
+      status={confirmationStatus[state.status]}
+      refusedDescription={state.status === "blocked" || state.status === "refused" ? state.reason : undefined}
+      unknownDescription={state.status === "checking" ? "Looking up the proposal receipt…" : state.status === "unknown" ? state.reason : undefined}
+      onCheckAgain={state.status === "unknown" ? () => void write.checkAgain() : undefined}
+      onConfirm={write.confirm}
     />
   )
 }
 
 function Root() {
-  const [payload, setPayload] = useState<Payload | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const { app, error } = useHost()
+  const { result } = useToolResult()
+  const payload = result?.structuredContent as Payload | undefined
 
-  const { app, error: connectError } = useApp({
-    appInfo: { name: "mcpblocks deal app", version: "0.1.0" },
-    capabilities: { availableDisplayModes: ["inline", "fullscreen"] },
-    onAppCreated: (app) => {
-      // Register handlers before connect(): the host may send the result immediately.
-      app.ontoolresult = async (result: CallToolResult) => {
-        if (result.isError) {
-          const text = result.content?.find((c) => c.type === "text")
-          setError(text && "text" in text ? text.text : "Something went wrong.")
-          return
-        }
-        setPayload(result.structuredContent as Payload)
-      }
-      app.onhostcontextchanged = () => applyHostContext(app.getHostContext())
-    },
-  })
-
-  useEffect(() => {
-    if (app) applyHostContext(app.getHostContext())
-  }, [app])
-
-  if (connectError) return <p className="p-4 text-sm">Couldn't connect: {connectError.message}</p>
-  if (error) return <p className="p-4 text-sm text-host-danger-fg">{error}</p>
+  if (error) return <p className="p-4 text-sm">Couldn't connect: {error.message}</p>
+  if (result?.isError) {
+    return <p className="p-4 text-sm text-host-danger-fg">{result.content?.find((block) => block.type === "text")?.text ?? "Something went wrong."}</p>
+  }
   if (!app || !payload) return <RowsSkeleton rows={3} columns={3} />
 
   const ask = (text: string) => app.sendMessage({ role: "user", content: [{ type: "text", text }] })
@@ -146,39 +170,10 @@ function Root() {
           summary={`Showing ${payload.deals.length} of ${payload.total} deals`}
         />
       )
-    case "deal": {
-      const d = payload.deal
-      return (
-        <InlineCard
-          title={d.company}
-          badge={{ label: d.stage, tone: d.stage === "Won" ? "success" : "info" }}
-          description={d.note}
-          fields={[
-            { label: "Value", value: money(d.amount) },
-            { label: "Close date", value: d.closeDate },
-            { label: "Contact", value: d.contact },
-            { label: "Email", value: d.email },
-          ]}
-          actions={[
-            {
-              label: "Move to next stage",
-              // Claude blocks mutating requests that arrive as app-sent chat messages, so go
-              // straight to the server and show the confirmation in this same view.
-              onClick: async () => {
-                const res = await app.callServerTool({ name: "propose_stage_change", arguments: { id: d.id } })
-                if (res.isError) return setError(res.content?.find((c) => c.type === "text" && "text" in c)?.text ?? "Couldn't propose the change.")
-                setPayload(res.structuredContent as Payload)
-              },
-            },
-            { label: "Draft follow-up", variant: "secondary", onClick: () => void ask(`Draft a follow-up email to ${d.contact} at ${d.company}.`) },
-          ]}
-        />
-      )
-    }
-    case "confirm": {
-      const { deal, next } = payload
-      return <DealConfirmation key={`${deal.id}:${next}`} app={app} deal={deal} next={next} />
-    }
+    case "deal":
+      return <DealStageView key={payload.deal.id} app={app} deal={payload.deal} />
+    case "confirm":
+      return <DealStageView key={`${payload.deal.id}:${payload.next}`} app={app} deal={payload.deal} next={payload.next} />
     case "refused":
       return (
         <ConfirmAction
@@ -203,6 +198,11 @@ function Root() {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Root />
+    <McpHostProvider
+      appInfo={{ name: "mcpblocks deal app", version: "0.1.0" }}
+      capabilities={{ availableDisplayModes: ["inline", "fullscreen"] }}
+    >
+      <Root />
+    </McpHostProvider>
   </StrictMode>,
 )

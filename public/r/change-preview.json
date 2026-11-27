@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "change-preview",
+  "type": "registry:ui",
+  "title": "Change preview",
+  "description": "Review individual changes before confirming a prepared write.",
+  "registryDependencies": [
+    "https://mcpblocks.dev/r/data-list.json"
+  ],
+  "files": [
+    {
+      "path": "registry/mcpblocks/ui/change-preview.tsx",
+      "content": "import type { ComponentProps, ReactNode } from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { DataList } from \"@/registry/mcpblocks/ui/data-list\"\n\nexport type ChangePreviewRow = { label: ReactNode; from?: ReactNode; to: ReactNode }\n\nexport function ChangePreview({\n  rows,\n  children,\n  className,\n  ...props\n}: ComponentProps<\"div\"> & { rows?: ChangePreviewRow[] }) {\n  return (\n    <div data-slot=\"change-preview\" className={cn(\"space-y-2 text-host-sm\", className)} {...props}>\n      {rows?.length ? (\n        <DataList\n          layout=\"aligned\"\n          items={rows.map(({ label, from, to }) => ({\n            label,\n            value: from == null ? <strong>{to}</strong> : (\n              <>\n                <span>{from}</span>{\" \"}<span aria-label=\"changes to\">→</span>{\" \"}<strong>{to}</strong>\n              </>\n            ),\n          }))}\n        />\n      ) : null}\n      {children}\n      <p className=\"text-host-app-fg-muted\">Nothing is saved until you confirm.</p>\n    </div>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

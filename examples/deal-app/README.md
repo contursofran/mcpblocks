@@ -18,15 +18,15 @@ While a tool result is on its way the view shows `RowsSkeleton`. Ask for the `sk
 ```
 server/server.ts   registers tools + the ui:// resource (@modelcontextprotocol/ext-apps/server)
 server/main.ts     Node: Streamable HTTP at /mcp (or --stdio)
-src/view.tsx       the View: useApp() + applyHostContext(), switches on structuredContent.view
+src/view.tsx       the View: McpHostProvider and protocol hooks, switches on structuredContent.view
 view.html          Vite entry, bundled to ONE file (dist/view.html) by vite-plugin-singlefile
 worker/index.ts    Cloudflare Worker entry: the same server at https://mcpblocks.dev/mcp
 src/components, src/lib/host.ts, src/styles.css   installed by `npx shadcn add` (see below)
 ```
 
 - The inline resource (`ui://deal-app/view.html`) and the side panel resource (`ui://deal-app/block-panel.html`) serve the same HTML. Each tool returns `content` (what the model reads) and `structuredContent` (what the view renders). The side panel resource sets `preferredDisplayMode: "fullscreen"` on `_meta.ui` in its `resources/read` result.
-- `applyHostContext` applies the CSS variables and font CSS that Claude sends, along with the theme, display mode and safe-area insets. The blocks read those values through the `host-*` Tailwind utilities.
-- `update_deal_stage` has `visibility: ["app"]`, so the model can't call it directly; only the confirm button can.
+- `McpHostProvider` applies the host CSS variables, fonts, theme, display mode and safe-area insets. The blocks read those values through the `host-*` Tailwind utilities.
+- `usePreparedWrite` drives `ConfirmAction`. Confirm sends the proposal key to `update_deal_stage`. Check again uses the same key with `check_deal_stage_change` to read the receipt. Both tools are app-only.
 
 ## Run it
 
