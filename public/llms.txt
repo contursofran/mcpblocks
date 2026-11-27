@@ -17,7 +17,7 @@ npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 ## Documentation
 
 - [Installation](https://mcpblocks.dev/docs/installation): Prerequisites, shadcn CLI setup, and what files get added.
-- [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server): Register tools + `ui://` resources with `@modelcontextprotocol/ext-apps` and wire `useApp` / `useHostStyles` / `applyHostContext`.
+- [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server): Register tools + `ui://` resources with `@modelcontextprotocol/ext-apps` and wire `useApp` / `applyHostContext`.
 - [Design tokens](https://mcpblocks.dev/tokens): Complete Claude MCP Apps light/dark CSS variables and Tailwind `host-*` utilities.
 
 ## Components
@@ -34,8 +34,8 @@ npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 
 ## Building Blocks
 
-- [Host tokens](https://mcpblocks.dev/r/host-tokens.json): All design tokens from the MCP Apps for Claude kit (colors light/dark, type scale, radii, border width) as fallbacks for the CSS variables the host injects, mapped to Tailwind utilities (bg-host-bg, text-host-fg, text-host-heading-lg, rounded-host-md…).
-- [Host helpers](https://mcpblocks.dev/r/host.json): Apply hostContext (theme, display mode, safe-area insets) and dev-only guideline warnings.
+- [Host tokens](https://mcpblocks.dev/r/host-tokens.json): All design tokens from the MCP Apps for Claude kit (colors light/dark, type scale, radii, border width) as fallbacks for the CSS variables the host sends, mapped to Tailwind utilities (bg-host-bg, text-host-fg, text-host-heading-lg, rounded-host-md…).
+- [Host helpers](https://mcpblocks.dev/r/host.json): Apply host theme, CSS variables, fonts, display mode and safe-area insets, with dev-only guideline warnings.
 - [Host button](https://mcpblocks.dev/r/host-button.json): Button styled with host tokens, 44px tap target.
 - [Icons](https://mcpblocks.dev/r/icons.json): 38 icons from the MCP Apps for Claude kit (Anthropic, CC BY 4.0) as currentColor React components.
 

@@ -51,13 +51,16 @@ export default function McpServerPage() {
           file.
         </p>
         <CodeBlock
-          code={`import fs from "node:fs/promises"
+          code={`import { createHash } from "node:crypto"
+import fs from "node:fs/promises"
 import { McpServer } from "@modelcontextprotocol/server"
 import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server"
 import { z } from "zod/v4"
 
 const server = new McpServer({ name: "deals", version: "1.0.0" })
-const viewUri = "ui://deals/summary.html"
+const viewHtml = await fs.readFile("dist/view.html", "utf-8")
+const viewHash = createHash("sha256").update(viewHtml).digest("hex").slice(0, 12)
+const viewUri = \`ui://deals/summary-\${viewHash}.html\`
 
 registerAppTool(
   server,
@@ -81,11 +84,16 @@ registerAppResource(server, "Deal summary", viewUri, { mimeType: RESOURCE_MIME_T
     {
       uri: viewUri,
       mimeType: RESOURCE_MIME_TYPE,
-      text: await fs.readFile("dist/view.html", "utf-8"),
+      text: viewHtml,
     },
   ],
 }))`}
         />
+        <p className="text-foreground/80">
+          Claude can cache a view by its <Code>ui://</Code> URI for the life of a chat. Include a hash of the bundled
+          HTML in both the resource URI and the tool metadata. After updating the connector server, start a new chat
+          to pick up its updated tool list and resource URIs.
+        </p>
         <p className="text-foreground/80">
           Serve it over Streamable HTTP. On Workers, Deno or Bun, <Code>createMcpHandler</Code> does it in one line; on
           Node use <Code>NodeStreamableHTTPServerTransport</Code>.
@@ -127,15 +135,17 @@ export default {
 
       <Step n={4} title="Connect the view to the host">
         <p className="text-foreground/80">
-          <Code>useApp</Code> performs the handshake. <Code>useHostStyles</Code> applies the CSS variables Claude sends
-          (colors, fonts, radii), and <Code>applyHostContext</Code> passes theme, display mode and safe-area insets on to
-          the components. Without <Code>useHostStyles</Code> the components fall back to the built-in token values.
+          <Code>useApp</Code> performs the handshake. <Code>applyHostContext</Code> applies the variables and font CSS
+          in <Code>hostContext.styles</Code> and sets the theme, native control color scheme, display mode and safe areas.
+          Add the <Code>skeleton</Code> registry item to show a placeholder while the first tool result arrives.
         </p>
+        <CodeBlock prompt code="npx shadcn@latest add https://mcpblocks.dev/r/skeleton.json" />
         <CodeBlock
-          code={`import { useApp, useHostStyles } from "@modelcontextprotocol/ext-apps/react"
+          code={`import { useApp } from "@modelcontextprotocol/ext-apps/react"
 import { useEffect, useState } from "react"
 
 import { InlineCard } from "@/components/inline-card"
+import { InlineCardSkeleton } from "@/components/skeleton"
 import { applyHostContext } from "@/lib/host"
 
 type Deal = { name: string; owner: string; stage: string }
@@ -148,18 +158,15 @@ export function DealView() {
     capabilities: {},
     onAppCreated: (app) => {
       app.ontoolresult = (result) => setDeal(result.structuredContent as Deal)
-      app.onhostcontextchanged = (ctx) => applyHostContext(ctx)
+      app.onhostcontextchanged = () => applyHostContext(app.getHostContext())
     },
   })
 
-  // Applies the colors, fonts and theme the host sends, which the host-* utilities read.
-  useHostStyles(app, app?.getHostContext())
-  // First paint: apply the initial context once connected.
   useEffect(() => {
     if (app) applyHostContext(app.getHostContext())
   }, [app])
 
-  if (!deal) return null
+  if (!deal) return <InlineCardSkeleton />
 
   return (
     <InlineCard
@@ -180,7 +187,27 @@ export function DealView() {
   )
 }`}
         />
-        </Step>
+        <p className="text-sm text-muted-foreground">
+          If the host font CSS references external URLs, the view&apos;s content security policy must allow those
+          origins. Declare them in the resource content&apos;s <Code>_meta.ui.csp.resourceDomains</Code>.
+        </p>
+        <p className="text-foreground/80">
+          In a fullscreen view, use the host safe areas to position fixed overlays and keep sticky footer controls
+          above the bottom inset.
+        </p>
+        <CodeBlock
+          code={`.fullscreen-overlay {
+  position: fixed;
+  inset: var(--mb-safe-top, 0px) var(--mb-safe-right, 0px)
+    var(--mb-safe-bottom, 0px) var(--mb-safe-left, 0px);
+}
+
+.fullscreen-footer {
+  position: sticky;
+  bottom: var(--mb-safe-bottom, 0px);
+}`}
+        />
+      </Step>
 
       <Step n={5} title="Test it in Claude">
         <p className="text-foreground/80">

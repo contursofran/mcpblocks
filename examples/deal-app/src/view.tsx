@@ -1,5 +1,5 @@
 import type { CallToolResult } from "@modelcontextprotocol/client"
-import { useApp, useHostStyles } from "@modelcontextprotocol/ext-apps/react"
+import { useApp } from "@modelcontextprotocol/ext-apps/react"
 import { StrictMode, useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 
@@ -39,13 +39,10 @@ function Root() {
         }
         setPayload(result.structuredContent as Payload)
       }
-      app.onhostcontextchanged = (ctx) => applyHostContext(ctx)
+      app.onhostcontextchanged = () => applyHostContext(app.getHostContext())
     },
   })
 
-  // Applies the host's CSS variables (--color-background-primary, fonts, …) and
-  // light/dark theme. The blocks' `host-*` utilities read these.
-  useHostStyles(app, app?.getHostContext())
   useEffect(() => {
     if (app) applyHostContext(app.getHostContext())
   }, [app])

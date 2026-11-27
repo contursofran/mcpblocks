@@ -16,14 +16,14 @@ While a tool result is on its way the view shows `RowsSkeleton` (skeleton, not a
 ```
 server/server.ts   registers tools + the ui:// resource (@modelcontextprotocol/ext-apps/server)
 server/main.ts     Node: Streamable HTTP at /mcp (or --stdio)
-src/view.tsx       the View: useApp() + useHostStyles(), switches on structuredContent.view
+src/view.tsx       the View: useApp() + applyHostContext(), switches on structuredContent.view
 view.html          Vite entry, bundled to ONE file (dist/view.html) by vite-plugin-singlefile
 worker/index.ts    Cloudflare Worker entry: the same server at https://mcpblocks.dev/mcp
 src/components, src/lib/host.ts, src/styles.css   installed by `npx shadcn add` (see below)
 ```
 
 - One resource (`ui://deal-app/view.html`) serves every tool. Each tool returns `content` (what the model reads) and `structuredContent` (what the view renders).
-- `useHostStyles` applies the CSS variables Claude injects (`--color-background-primary`, fonts, theme). The blocks' `host-*` Tailwind utilities read them, so the UI matches light/dark automatically. `applyHostContext` handles safe-area insets.
+- `applyHostContext` applies the CSS variables and font CSS that Claude sends, along with the theme, display mode and safe-area insets. The blocks read those values through the `host-*` Tailwind utilities.
 - `update_deal_stage` has `visibility: ["app"]`, so the model can't call it directly; only the confirm button can.
 
 ## Run it
@@ -37,7 +37,7 @@ npm run build        # type-checks and bundles dist/view.html
 npm start            # http://localhost:3001/mcp
 ```
 
-`npm run dev` does build + start. Re-run `npm run build` after editing `src/` (the server reads `dist/view.html` on each request, so no server restart is needed).
+`npm run dev` builds and starts the server. Re-run `npm run build` after editing `src/`. The Node server reads `dist/view.html` on each resource request. Claude can cache the example's fixed resource URI for the life of a chat, so start a fresh chat to see the updated HTML. The server guide shows how to [version your resource URI with a content hash](https://mcpblocks.dev/docs/mcp-server).
 
 > The blocks in `src/components` are exactly what `npx shadcn@latest add https://mcpblocks.dev/r/list-view.json` (and `inline-card`, `confirm-action`, `line-chart`, `skeleton`) writes into a project with the `components.json` in this folder, so this app doubles as an end-to-end test of the registry and the docs. To refresh them, re-run that command with `-o` to overwrite.
 

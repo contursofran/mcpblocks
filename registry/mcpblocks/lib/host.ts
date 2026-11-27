@@ -2,8 +2,8 @@
  * Small helpers for wiring mcpblocks components to an MCP Apps host.
  *
  * The host sends a `hostContext` during `ui/initialize` and on change.
- * Pass it here to expose safe-area insets as CSS variables that
- * the components read (`--mb-safe-top` … `--mb-safe-left`).
+ * Pass it here to apply host styles and expose safe-area insets as CSS
+ * variables that the components read (`--mb-safe-top` … `--mb-safe-left`).
  */
 
 export type SafeAreaInsets = {
@@ -17,6 +17,10 @@ export type HostContextLike = {
   theme?: "light" | "dark"
   displayMode?: "inline" | "fullscreen" | "pip"
   safeAreaInsets?: SafeAreaInsets
+  styles?: {
+    variables?: Record<string, string | undefined>
+    css?: { fonts?: string }
+  }
 }
 
 /** Writes safe-area insets to CSS variables on `el` (defaults to <html>). */
@@ -31,19 +35,45 @@ export function applySafeAreaInsets(
   el.style.setProperty("--mb-safe-left", `${left}px`)
 }
 
-/**
- * Applies the host context fields used by mcpblocks.
- * Theme tokens themselves are injected by the host; this only
- * toggles the `.dark` class so fallback values match outside a host.
- */
+const hostVariableName = /^--[\w-]+$/
+const hostFontsId = "mcpblocks-host-fonts"
+
+function applyHostFonts(fonts: string | undefined, doc: Document) {
+  if (!fonts?.trim()) return
+
+  const existing = doc.getElementById(hostFontsId)
+  if (existing) {
+    if (existing.textContent !== fonts) existing.textContent = fonts
+    return
+  }
+
+  const style = doc.createElement("style")
+  style.id = hostFontsId
+  style.textContent = fonts
+  doc.head.appendChild(style)
+}
+
+/** Applies the host's theme, display mode, safe areas, style variables, and fonts. */
 export function applyHostContext(
   ctx: HostContextLike | undefined,
   el: HTMLElement = document.documentElement
 ) {
   if (!ctx) return
-  if (ctx.theme) el.classList.toggle("dark", ctx.theme === "dark")
+  if (ctx.theme) {
+    el.classList.toggle("dark", ctx.theme === "dark")
+    el.style.colorScheme = ctx.theme
+  }
   if (ctx.displayMode) el.dataset.displayMode = ctx.displayMode
   applySafeAreaInsets(ctx.safeAreaInsets, el)
+
+  let hasHostVariables = false
+  for (const [name, value] of Object.entries(ctx.styles?.variables ?? {})) {
+    if (!hostVariableName.test(name) || typeof value !== "string" || !value.trim()) continue
+    el.style.setProperty(name, value)
+    hasHostVariables = true
+  }
+  if (hasHostVariables) el.dataset.hostStyles = ""
+  applyHostFonts(ctx.styles?.css?.fonts, el.ownerDocument)
 }
 
 // Bundlers (Vite, Next, webpack) replace `process.env.NODE_ENV` at build time. The

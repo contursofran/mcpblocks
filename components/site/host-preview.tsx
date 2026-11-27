@@ -133,7 +133,7 @@ export function Segmented<T extends string>({
 
 /**
  * Simulated MCP Apps host frame with live DOM guideline checks. Sets the same
- * CSS variables the host injects (theme tokens, safe-area insets) and mimics
+ * CSS variables an MCP App applies from host context (theme tokens, safe-area insets) and mimics
  * inline vs fullscreen layout. For a full sandboxed iframe running the real
  * MCP Apps JSON-RPC protocol (`AppBridge`).
  */

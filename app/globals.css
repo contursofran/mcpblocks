@@ -59,9 +59,9 @@
 
 /* ------------------------------------------------------------------
    mcpblocks host tokens
-   Fallback values for the CSS variables an MCP Apps host (Claude)
-   injects at runtime. Inside the host, the host's values win because
-   they are set inline on the document element.
+   Fallback values for the CSS variables an MCP Apps host sends at
+   runtime. applyHostContext sets the host's values inline on the
+   document element, where they take precedence over these fallbacks.
    The `host-tokens` registry item installs the same variables.
 ------------------------------------------------------------------- */
 @theme inline {

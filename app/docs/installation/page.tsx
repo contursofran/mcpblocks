@@ -66,9 +66,22 @@ export function App() {
 }`}
         />
         <p className="text-foreground/80">
-          Blocks read the host&apos;s colors and fonts through <Code>host-*</Code> utilities. Inside Claude the real values
-          are injected; elsewhere sensible fallbacks apply.
+          Blocks read colors and fonts through <Code>host-*</Code> utilities. Pass the MCP host context to
+          <Code>applyHostContext</Code> to apply the styles the host sends. The registry supplies fallbacks for values
+          the host leaves out.
         </p>
+        <CodeBlock
+          code={`import { applyHostContext } from "@/lib/host"
+
+// Example context. Once connected, pass app.getHostContext().
+applyHostContext({
+  theme: "dark",
+  styles: {
+    variables: { "--color-background-primary": "#262624" },
+    // css.fonts can also contain font CSS supplied by the host.
+  },
+})`}
+        />
       </Step>
 
       <Step n={4} title="Connect it to Claude">
