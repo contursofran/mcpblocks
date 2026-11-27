@@ -15,11 +15,11 @@
     "tunnel": "cloudflared tunnel --url http://127.0.0.1:3001 --http-host-header 127.0.0.1:3001"
   },
   "dependencies": {
-    "@modelcontextprotocol/client": "2.0.0",
-    "@modelcontextprotocol/express": "2.0.0",
+    "@modelcontextprotocol/client": "2.4.0",
+    "@modelcontextprotocol/express": "2.0.2",
     "@modelcontextprotocol/ext-apps": "^2.0.4",
-    "@modelcontextprotocol/node": "2.0.0",
-    "@modelcontextprotocol/server": "2.0.0",
+    "@modelcontextprotocol/node": "2.1.2",
+    "@modelcontextprotocol/server": "2.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "express": "^5.1.0",

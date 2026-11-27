@@ -4,6 +4,8 @@ import * as z from "zod/v4"
 import { DEMO_BLOCKS, type DemoBlock } from "../shared/demo-blocks.js"
 import { deals, nextStage, STAGES, trend, type Deal, type Stage } from "./data.js"
 
+export const maxRequestBodySize = 64 * 1024
+
 // The same bundle renders both resources. Their URIs keep the host's
 // placement preferences independent.
 const VIEW_URI = "ui://deal-app/view.html"
@@ -39,7 +41,7 @@ function blockPreview(block: DemoBlock, view: "block" | "block-panel"): CallTool
  * runs on Node (reads the file) and on Cloudflare Workers (the file is bundled into the Worker).
  */
 export function createServer(loadView: () => Promise<string>): McpServer {
-  const server = new McpServer({ name: "mcpblocks deal app", version: "0.1.0" })
+  const server = new McpServer({ name: "mcpblocks deal app", version: "0.1.0" }, { maxToolInputElements: 100 })
 
   registerAppTool(
     server,

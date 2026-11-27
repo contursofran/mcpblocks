@@ -2,9 +2,9 @@
 // static docs site (see wrangler.jsonc: assets.run_worker_first).
 import { createMcpHandler } from "@modelcontextprotocol/server"
 import viewHtml from "../dist/view.html"
-import { createServer } from "../server/server.js"
+import { createServer, maxRequestBodySize } from "../server/server.js"
 
-const handler = createMcpHandler(() => createServer(async () => viewHtml))
+const handler = createMcpHandler(() => createServer(async () => viewHtml), { maxRequestBodySize })
 
 const cors = {
   "access-control-allow-origin": "*",

@@ -269,7 +269,7 @@
       "title": "MCP Apps protocol hooks",
       "description": "Connect a React view to its MCP host, read streaming tool results, call tools, and reconcile prepared writes.",
       "dependencies": [
-        "@modelcontextprotocol/client@2.0.0",
+        "@modelcontextprotocol/client@2.4.0",
         "@modelcontextprotocol/ext-apps@^2.0.4"
       ],
       "registryDependencies": [

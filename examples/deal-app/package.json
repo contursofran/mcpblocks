@@ -14,11 +14,11 @@
     "dev": "npm run build && npm start"
   },
   "dependencies": {
-    "@modelcontextprotocol/client": "2.0.0",
-    "@modelcontextprotocol/express": "2.0.0",
+    "@modelcontextprotocol/client": "2.4.0",
+    "@modelcontextprotocol/express": "2.0.2",
     "@modelcontextprotocol/ext-apps": "^2.0.4",
-    "@modelcontextprotocol/node": "2.0.0",
-    "@modelcontextprotocol/server": "2.0.0",
+    "@modelcontextprotocol/node": "2.1.2",
+    "@modelcontextprotocol/server": "2.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cors": "^2.8.5",

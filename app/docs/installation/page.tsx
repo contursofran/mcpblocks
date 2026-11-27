@@ -89,18 +89,6 @@ applyHostContext({
         />
       </Step>
 
-      <Step n={5} title="Connect it to Claude">
-        <p className="text-foreground/80">
-          Your block needs an MCP server to render. To see one working first, add{" "}
-          <Code>https://mcpblocks.dev/mcp</Code> in Claude under Customize, Connectors, Add custom connector. Choose{" "}
-          <strong>No sign in</strong> under Authentication and ask for your open deals. Then follow{" "}
-          <Link className="underline underline-offset-2" href="/docs/mcp-server">
-            Using with an MCP server
-          </Link>{" "}
-          to build your own.
-        </p>
-      </Step>
-
     </DocsShell>
   )
 }
