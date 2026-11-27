@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "data-list",
+  "type": "registry:ui",
+  "title": "Data list",
+  "description": "Stacked or aligned label and value pairs using a description list.",
+  "registryDependencies": [
+    "https://mcpblocks.dev/r/host-tokens.json"
+  ],
+  "files": [
+    {
+      "path": "registry/mcpblocks/ui/data-list.tsx",
+      "content": "import type { ComponentProps, ReactNode } from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\nexport type DataListItem = { label: ReactNode; value: ReactNode }\n\nexport function KeyValue({\n  label,\n  value,\n  layout = \"stacked\",\n}: DataListItem & { layout?: \"stacked\" | \"aligned\" }) {\n  if (layout === \"aligned\") {\n    return (\n      <div className=\"grid grid-cols-[minmax(0,72px)_minmax(0,1fr)] items-baseline gap-3 text-sm leading-[1.4] [overflow-wrap:anywhere]\">\n        <dt className=\"text-host-app-fg-subtle\">{label}</dt>\n        <dd className=\"py-1 text-host-app-fg-muted\">{value}</dd>\n      </div>\n    )\n  }\n  return (\n    <div className=\"min-w-0\">\n      <dt className=\"text-xs text-host-app-fg-subtle\">{label}</dt>\n      <dd className=\"text-sm font-medium [overflow-wrap:anywhere]\">{value}</dd>\n    </div>\n  )\n}\n\nexport function DataList({\n  items,\n  layout = \"stacked\",\n  className,\n  ...props\n}: ComponentProps<\"dl\"> & { items: DataListItem[]; layout?: \"stacked\" | \"aligned\" }) {\n  return (\n    <dl data-slot=\"data-list\" className={cn(\"grid\", layout === \"aligned\" ? \"gap-2\" : \"gap-3\", className)} {...props}>\n      {items.map((item, index) => <KeyValue key={index} {...item} layout={layout} />)}\n    </dl>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

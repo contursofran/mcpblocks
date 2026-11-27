@@ -17,6 +17,10 @@ export const metadata: Metadata = {
 export default function PreparedWritesPage() {
   return (
     <DocsShell current="/docs/prepared-writes" title="Prepared writes" lead={description}>
+      <p>
+        The <Link className="underline underline-offset-2" href="/docs/protocol-hooks">protocol hooks</Link> manage
+        this flow in React, including the proposal key and the confirmation and reconciliation states.
+      </p>
       <Step n={1} title="Prepare">
         <p>
           Validate the proposal on the server before writing. Return the current value, proposed value and a

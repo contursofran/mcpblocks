@@ -2,12 +2,13 @@
 
 import * as React from "react"
 
-import { cn } from "@/lib/utils"
-import { StatusUpdate } from "@/components/status-update"
+import { ChangePreview } from "@/components/ui/change-preview"
+import { OutcomeCard, type OutcomeCardStatus } from "@/components/ui/outcome-card"
+import { Surface } from "@/components/ui/surface"
 import { HostButton } from "@/components/ui/host-button"
 import { CheckIcon } from "@/components/ui/icons"
 
-export type ConfirmActionStatus = "pending" | "working" | "done" | "error" | "refused" | "unknown"
+export type ConfirmActionStatus = "pending" | "working" | OutcomeCardStatus
 
 export type ConfirmActionProps = {
   /** What will happen, e.g. "Set lead assignment permission". */
@@ -72,19 +73,19 @@ export function ConfirmAction({
 
   async function confirm() {
     try {
-      setInternal("working")
+      if (controlled === undefined) setInternal("working")
       await onConfirm?.()
-      setInternal("done")
+      if (controlled === undefined) setInternal("done")
     } catch {
-      setInternal("error")
+      if (controlled === undefined) setInternal("error")
     }
   }
 
   if (status === "done") {
     return (
-      <StatusUpdate
+      <OutcomeCard
+        status={status}
         className={className}
-        tone="success"
         title={doneTitle}
         description={doneDescription}
         action={onUndo ? { label: "Undo", onClick: () => { onUndo(); setInternal("pending") } } : undefined}
@@ -92,22 +93,14 @@ export function ConfirmAction({
     )
   }
   if (status === "error") {
-    return (
-      <StatusUpdate
-        className={className}
-        tone="danger"
-        title={errorTitle}
-        description="Nothing was changed."
-        action={{ label: "Try again", onClick: confirm }}
-      />
-    )
+    return <OutcomeCard status={status} className={className} title={errorTitle} action={{ label: "Try again", onClick: confirm }} />
   }
   if (status === "refused" || status === "unknown") {
     const refused = status === "refused"
     return (
-      <StatusUpdate
-        className={cn("[&_p]:whitespace-normal", className)}
-        tone={refused ? "info" : "warning"}
+      <OutcomeCard
+        status={status}
+        className={className}
         title={refused ? refusedTitle : unknownTitle}
         description={refused ? refusedDescription : unknownDescription}
         action={!refused && onCheckAgain ? { label: "Check again", onClick: onCheckAgain } : undefined}
@@ -125,13 +118,13 @@ export function ConfirmAction({
       .toUpperCase()
 
   return (
-    <div
+    <Surface variant="borderless"
       data-slot="confirm-action"
-      className={cn("flex w-full flex-col gap-6 p-6 text-host-app-fg font-[family-name:var(--font-sans)]", className)}
+      className={`flex flex-col gap-6 p-6 ${className ?? ""}`}
     >
       <h3 className="text-xl leading-[25px] font-host-app-display font-semibold [overflow-wrap:anywhere]">{title}</h3>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted p-4">
+      <Surface className="flex flex-wrap items-center justify-between gap-3 p-4">
         <div className="flex min-w-0 max-w-full items-center gap-3">
           <span
             aria-hidden="true"
@@ -150,7 +143,7 @@ export function ConfirmAction({
         <HostButton className="max-w-full py-2 whitespace-normal [overflow-wrap:anywhere]" onClick={confirm} disabled={status === "working"}>
           {status === "working" ? "Working…" : confirmLabel}
         </HostButton>
-      </div>
+      </Surface>
 
       {details ? (
         <div className="flex flex-col gap-4">
@@ -165,12 +158,7 @@ export function ConfirmAction({
           </ul>
         </div>
       ) : null}
-      {changePreview != null ? (
-        <div className="space-y-2 text-host-sm">
-          {changePreview}
-          <p className="text-host-app-fg-muted">Nothing is saved until you confirm.</p>
-        </div>
-      ) : null}
-    </div>
+      {changePreview != null ? <ChangePreview>{changePreview}</ChangePreview> : null}
+    </Surface>
   )
 }

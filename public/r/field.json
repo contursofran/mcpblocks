@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "field",
+  "type": "registry:ui",
+  "title": "Field",
+  "description": "A labelled native text input or select with optional supporting text.",
+  "registryDependencies": [
+    "https://mcpblocks.dev/r/host-tokens.json"
+  ],
+  "files": [
+    {
+      "path": "registry/mcpblocks/ui/field.tsx",
+      "content": "import { useId, type ComponentProps, type ReactNode } from \"react\"\n\nimport { cn } from \"@/lib/utils\"\n\ntype FieldProps = {\n  label: ReactNode\n  description?: ReactNode\n  className?: string\n}\n\nconst controlClass = \"min-h-11 w-full min-w-0 rounded-host-md border-[length:var(--border-width-regular,0.5px)] border-host-app-border bg-host-app-surface px-3 py-2 text-base text-host-app-fg [color-scheme:inherit] focus-visible:outline-2 focus-visible:outline-host-ring disabled:bg-host-bg-disabled disabled:text-host-fg-disabled\"\n\nexport function Field({\n  label,\n  children,\n  description,\n  descriptionId,\n  className,\n}: FieldProps & { children: ReactNode; descriptionId?: string }) {\n  return (\n    <div data-slot=\"field\" className={cn(\"min-w-0 space-y-1 text-host-app-fg font-[family-name:var(--font-sans)]\", className)}>\n      <label className=\"flex flex-col gap-1.5 text-host-sm font-medium\">\n        <span className=\"[overflow-wrap:anywhere]\">{label}</span>\n        {children}\n      </label>\n      {description != null ? <p id={descriptionId} className=\"text-host-xs text-host-app-fg-muted\">{description}</p> : null}\n    </div>\n  )\n}\n\nexport function TextField({\n  label,\n  description,\n  className,\n  \"aria-describedby\": describedBy,\n  ...props\n}: ComponentProps<\"input\"> & FieldProps) {\n  const descriptionId = useId()\n  return (\n    <Field label={label} description={description} descriptionId={descriptionId}>\n      <input\n        className={cn(controlClass, \"placeholder:text-host-app-fg-subtle\", className)}\n        aria-describedby={[describedBy, description != null && descriptionId].filter(Boolean).join(\" \") || undefined}\n        {...props}\n      />\n    </Field>\n  )\n}\n\nexport function SelectField({\n  label,\n  description,\n  className,\n  \"aria-describedby\": describedBy,\n  ...props\n}: ComponentProps<\"select\"> & FieldProps) {\n  const descriptionId = useId()\n  return (\n    <Field label={label} description={description} descriptionId={descriptionId}>\n      <select\n        className={cn(controlClass, className)}\n        aria-describedby={[describedBy, description != null && descriptionId].filter(Boolean).join(\" \") || undefined}\n        {...props}\n      />\n    </Field>\n  )\n}\n",
+      "type": "registry:ui"
+    }
+  ]
+}

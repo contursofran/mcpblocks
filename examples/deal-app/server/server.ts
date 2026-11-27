@@ -2,7 +2,7 @@ import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from "@model
 import { McpServer, type CallToolResult } from "@modelcontextprotocol/server"
 import * as z from "zod/v4"
 import { DEMO_BLOCKS, type DemoBlock } from "../shared/demo-blocks.js"
-import { deals, nextStage, STAGES, trend } from "./data.js"
+import { deals, nextStage, STAGES, trend, type Deal, type Stage } from "./data.js"
 
 // The same bundle renders both resources. Their URIs keep the host's
 // placement preferences independent.
@@ -19,6 +19,13 @@ const unchanged = (reason: string): CallToolResult => ({ ...fail(reason), struct
 const money = (n: number) => `$${n.toLocaleString("en-US")}`
 const blockInput = z.object({ block: z.enum(DEMO_BLOCKS) })
 const readOnlySample = { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+
+// The demo's deals and receipts share the same process-local lifetime.
+const stageReceipts = new Map<string, { deal: Deal; expectedStage?: Stage }>()
+const stageReceiptResult = (deal: Deal): CallToolResult => ({
+  content: [{ type: "text", text: `${deal.company} moved to ${deal.stage}.` }],
+  structuredContent: { deal },
+})
 
 function blockPreview(block: DemoBlock, view: "block" | "block-panel"): CallToolResult {
   return {
@@ -132,18 +139,49 @@ export function createServer(loadView: () => Promise<string>): McpServer {
     {
       title: "Update deal stage",
       description: "Set a deal's stage. Called by the confirmation view.",
-      inputSchema: z.object({ id: z.string(), stage: z.enum(STAGES), expectedStage: z.enum(STAGES).optional() }),
+      inputSchema: z.object({
+        id: z.string(),
+        stage: z.enum(STAGES),
+        expectedStage: z.enum(STAGES).optional(),
+        idempotencyKey: z.uuid().optional(),
+      }),
       _meta: { ui: { ...ui, visibility: ["app"] } },
     },
-    async ({ id, stage, expectedStage }): Promise<CallToolResult> => {
+    async ({ id, stage, expectedStage, idempotencyKey }): Promise<CallToolResult> => {
+      const receipt = idempotencyKey && stageReceipts.get(idempotencyKey)
+      if (receipt) {
+        if (receipt.deal.id !== id || receipt.deal.stage !== stage || receipt.expectedStage !== expectedStage) {
+          return unchanged("This key belongs to a different proposal.")
+        }
+        return stageReceiptResult(receipt.deal)
+      }
       const deal = deals.find((d) => d.id === id)
       if (!deal) return unchanged(`No deal with id ${id}`)
+      if (idempotencyKey && !expectedStage) return unchanged("A confirmed proposal must specify the original deal stage.")
       if (expectedStage && nextStage(expectedStage) !== stage) return unchanged("This proposal is no longer valid.")
-      if (expectedStage && ![expectedStage, stage].includes(deal.stage)) {
+      if (expectedStage && deal.stage !== expectedStage && (idempotencyKey || deal.stage !== stage)) {
         return unchanged("The deal stage changed after this proposal was prepared.")
       }
       deal.stage = stage
-      return { content: [{ type: "text", text: `${deal.company} moved to ${stage}.` }], structuredContent: { deal } }
+      if (idempotencyKey) stageReceipts.set(idempotencyKey, { deal: { ...deal }, expectedStage })
+      return stageReceiptResult(deal)
+    },
+  )
+
+  registerAppTool(
+    server,
+    "check_deal_stage_change",
+    {
+      title: "Check deal stage change",
+      description: "Look up the receipt for a confirmed proposal without writing again.",
+      inputSchema: z.object({ id: z.string(), idempotencyKey: z.uuid() }),
+      annotations: readOnlySample,
+      _meta: { ui: { ...ui, visibility: ["app"] } },
+    },
+    async ({ id, idempotencyKey }): Promise<CallToolResult> => {
+      const receipt = stageReceipts.get(idempotencyKey)
+      if (receipt?.deal.id === id) return stageReceiptResult(receipt.deal)
+      return { content: [{ type: "text", text: "The proposal has no confirmed receipt." }], structuredContent: { outcome: "unknown" } }
     },
   )
 
