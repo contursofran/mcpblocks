@@ -40,7 +40,7 @@ export function StatusUpdate({
       role="status"
       data-slot="status-update"
       className={cn(
-        "flex w-full items-center gap-3 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted bg-host-app-surface p-4 text-host-app-fg font-[family-name:var(--font-sans)]",
+        "flex w-full flex-wrap items-center gap-3 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted bg-host-app-surface p-4 text-host-app-fg font-[family-name:var(--font-sans)]",
         className
       )}
       {...props}
@@ -50,14 +50,14 @@ export function StatusUpdate({
       >
         <Icon className="size-[18px]" aria-label={t.label} />
       </span>
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 basis-28 flex-col [overflow-wrap:anywhere]">
         <p className="text-sm font-semibold">{title}</p>
         {description ? (
-          <p className="truncate text-sm text-host-app-fg-subtle">{description}</p>
+          <p className="text-sm text-host-app-fg-subtle">{description}</p>
         ) : null}
       </div>
       {action ? (
-        <HostButton variant="secondary" onClick={action.onClick}>
+        <HostButton variant="secondary" className="max-w-full py-2 whitespace-normal [overflow-wrap:anywhere]" onClick={action.onClick}>
           {action.label}
         </HostButton>
       ) : null}

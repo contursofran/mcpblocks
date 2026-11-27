@@ -129,10 +129,10 @@ export function ConfirmAction({
       data-slot="confirm-action"
       className={cn("flex w-full flex-col gap-6 p-6 text-host-app-fg font-[family-name:var(--font-sans)]", className)}
     >
-      <h3 className="text-xl leading-[25px] font-host-app-display font-semibold">{title}</h3>
+      <h3 className="text-xl leading-[25px] font-host-app-display font-semibold [overflow-wrap:anywhere]">{title}</h3>
 
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted p-4">
-        <div className="flex min-w-0 items-center gap-3">
+        <div className="flex min-w-0 max-w-full items-center gap-3">
           <span
             aria-hidden="true"
             className="flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-semibold text-white"
@@ -147,7 +147,7 @@ export function ConfirmAction({
             ) : null}
           </span>
         </div>
-        <HostButton onClick={confirm} disabled={status === "working"}>
+        <HostButton className="max-w-full py-2 whitespace-normal [overflow-wrap:anywhere]" onClick={confirm} disabled={status === "working"}>
           {status === "working" ? "Working…" : confirmLabel}
         </HostButton>
       </div>

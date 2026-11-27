@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { AlertTriangle, CheckCircle2, Maximize2, Monitor, Moon, Smartphone, Sun } from "lucide-react"
+import { AlertTriangle, CheckCircle2, Maximize2, Monitor, Moon, PanelRight, Smartphone, Sun } from "lucide-react"
 
 import { insetsFor, type PreviewDevice, type PreviewMode, type PreviewTheme } from "@/lib/host-context"
 import { cn } from "@/lib/utils"
@@ -10,6 +10,7 @@ import { CodeIcon, XIcon } from "@/registry/mcpblocks/ui/icons"
 /** Approximate inline height cap used to flag widgets that would get clipped. */
 const INLINE_HEIGHT_CAP = 520
 const MIN_TAP_TARGET = 43.5
+const PANEL_WIDTHS = { narrow: 360, wide: 480 }
 
 type DomLintResult = {
   nestedScrollCount: number
@@ -23,7 +24,6 @@ function lintWidgetDom(root: HTMLElement): DomLintResult {
   let nestedScrollCount = 0
   let floatingControlCount = 0
   let smallTapTargets = 0
-  let horizontalOverflow = false
   let inlineButtons = 0
 
   const descendants = root.querySelectorAll<HTMLElement>("*")
@@ -68,19 +68,11 @@ function lintWidgetDom(root: HTMLElement): DomLintResult {
     }
   }
 
-  // 4. Horizontal overflow at current frame width (ignoring intentional horizontal scrollers)
-  if (root.scrollWidth > root.clientWidth + 2) {
-    const hasIntentionalScroller = root.querySelector('[class*="overflow-x-auto"]') !== null
-    if (!hasIntentionalScroller) {
-      horizontalOverflow = true
-    }
-  }
-
   return {
     nestedScrollCount,
     floatingControlCount,
     smallTapTargets,
-    horizontalOverflow,
+    horizontalOverflow: root.scrollWidth > root.clientWidth + 2,
     inlineButtons,
   }
 }
@@ -102,7 +94,7 @@ export function Segmented<T extends string>({
     <div
       role="radiogroup"
       aria-label={label}
-      className="inline-flex gap-0.5 rounded-md bg-[#141413]/[0.05] p-0.5"
+      className="inline-flex max-w-full flex-wrap gap-0.5 rounded-md bg-[#141413]/[0.05] p-0.5"
     >
       {options.map((o) => {
         const Icon = o.icon
@@ -133,9 +125,8 @@ export function Segmented<T extends string>({
 
 /**
  * Simulated MCP Apps host frame with live DOM guideline checks. Sets the same
- * CSS variables an MCP App applies from host context (theme tokens, safe-area insets) and mimics
- * inline vs fullscreen layout. For a full sandboxed iframe running the real
- * MCP Apps JSON-RPC protocol (`AppBridge`).
+ * CSS variables an MCP App applies from host context and simulates inline,
+ * fullscreen and docked panel layouts.
  */
 export function HostPreview({
   children,
@@ -154,6 +145,7 @@ export function HostPreview({
   const [theme, setTheme] = React.useState<PreviewTheme>("light")
   const [mode, setMode] = React.useState<PreviewMode>("inline")
   const [device, setDevice] = React.useState<PreviewDevice>("web")
+  const [panelWidth, setPanelWidth] = React.useState<keyof typeof PANEL_WIDTHS>("narrow")
   const [height, setHeight] = React.useState(0)
   const [lint, setLint] = React.useState<DomLintResult | null>(null)
   const widgetRef = React.useRef<HTMLDivElement>(null)
@@ -184,6 +176,7 @@ export function HostPreview({
     "--mb-safe-right": `${insets.right}px`,
     "--mb-safe-bottom": `${insets.bottom}px`,
     "--mb-safe-left": `${insets.left}px`,
+    "--preview-panel-width": `${PANEL_WIDTHS[panelWidth]}px`,
   } as React.CSSProperties
 
   const tooTall = mode === "inline" && height > INLINE_HEIGHT_CAP
@@ -195,14 +188,16 @@ export function HostPreview({
       label:
         mode === "inline"
           ? `Inline height ${height}px ${tooTall ? `exceeds ~${INLINE_HEIGHT_CAP}px, may be clipped` : "fits"}`
-          : "Fullscreen: content clears the composer",
+          : mode === "side-panel"
+            ? "Side panel: content scrolls in the panel"
+            : "Fullscreen: content clears the composer",
     },
     ...(lint
       ? [
           {
-            ok: mode === "fullscreen" || lint.nestedScrollCount === 0,
+            ok: mode !== "inline" || lint.nestedScrollCount === 0,
             label:
-              mode === "fullscreen" || lint.nestedScrollCount === 0
+              lint.nestedScrollCount === 0
                 ? "DOM check: no nested vertical scroll"
                 : `DOM check: ${lint.nestedScrollCount} nested vertical scroll container(s)`,
           },
@@ -223,8 +218,8 @@ export function HostPreview({
           {
             ok: !lint.horizontalOverflow,
             label: lint.horizontalOverflow
-              ? `DOM check: horizontal overflow at ${device} width`
-              : `DOM check: fits ${device === "mobile" ? "375px mobile" : "desktop"} width`,
+              ? "DOM check: content overflows the preview width"
+              : "DOM check: content fits the preview width",
           },
           ...(tooManyActions
             ? [{ ok: false, label: `DOM check: ${lint.inlineButtons} inline actions (max 2)` }]
@@ -249,15 +244,28 @@ export function HostPreview({
             ]}
           />
           <Segmented
-            iconOnly
             label="Display mode"
             value={mode}
             onChange={setMode}
             options={[
               { value: "inline", label: "Inline", icon: Monitor },
               { value: "fullscreen", label: "Fullscreen", icon: Maximize2 },
+              { value: "side-panel", label: "Side panel", icon: PanelRight },
             ]}
           />
+          {mode === "side-panel" && device === "web" ? (
+            <label className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground">
+              Panel width
+              <select
+                className="min-h-8 rounded-md border border-border bg-white px-2 text-foreground"
+                value={panelWidth}
+                onChange={(event) => setPanelWidth(event.target.value as keyof typeof PANEL_WIDTHS)}
+              >
+                <option value="narrow">Narrow (360 px)</option>
+                <option value="wide">Wide (480 px)</option>
+              </select>
+            </label>
+          ) : null}
           <Segmented
             iconOnly
             label="Device"
@@ -272,17 +280,49 @@ export function HostPreview({
       </div>
 
       {/* Host frame */}
-      <div className="flex justify-center rounded-xl bg-[#141413]/[0.03] p-4 sm:p-8">
+      <div className={cn("flex justify-center rounded-xl bg-[#141413]/[0.03]", mode === "side-panel" ? "p-3 sm:p-6" : "p-4 sm:p-8")}>
         <div
           data-host-theme={theme}
+          data-preview-mode={mode}
           style={hostVars}
           className={cn(
-            "relative flex w-full flex-col overflow-hidden bg-host-bg-secondary text-host-fg transition-[max-width]",
+            "@container/host relative flex w-full flex-col overflow-hidden bg-host-bg-secondary text-host-fg transition-[max-width]",
             device === "mobile" ? "max-w-[375px] rounded-[28px] border-[6px] border-[#141413]" : "max-w-[760px] rounded-xl border border-host-border-tertiary",
-            mode === "fullscreen" ? (device === "mobile" ? "h-[720px]" : "h-[620px]") : "min-h-[360px]"
+            mode === "inline" && "min-h-[360px]",
+            mode === "fullscreen" && (device === "mobile" ? "h-[720px]" : "h-[620px]"),
+            mode === "side-panel" && "h-[min(560px,85svh)]"
           )}
         >
-          {mode === "fullscreen" ? (
+          {mode === "side-panel" ? (
+            <div className="flex min-h-0 flex-1">
+              <div className="hidden min-w-0 flex-1 flex-col gap-4 p-4 @[34rem]/host:flex" aria-hidden="true">
+                <p className="ml-auto max-w-full rounded-xl bg-host-bg-tertiary px-3 py-2.5 text-sm">Open this in a side panel.</p>
+                <p className="text-sm text-host-fg-secondary">I’ve opened it for you.</p>
+                <div className="mt-auto"><Composer /></div>
+              </div>
+              <section
+                aria-label={`${appName} side panel preview`}
+                className="mx-auto flex w-full min-w-0 max-w-[var(--preview-panel-width)] flex-col bg-host-bg @[34rem]/host:mx-0 @[34rem]/host:shrink-0 @[34rem]/host:border-l @[34rem]/host:border-host-border-tertiary"
+              >
+                <header className="flex min-h-12 shrink-0 items-center justify-between gap-2 border-b border-host-border-tertiary px-3 pl-4">
+                  <span className="truncate text-sm font-semibold">{appName}</span>
+                  <button
+                    type="button"
+                    aria-label="Close side panel"
+                    onClick={() => setMode("inline")}
+                    className="inline-flex size-11 shrink-0 items-center justify-center rounded-md text-host-fg-secondary hover:bg-host-bg-secondary focus-visible:outline-2 focus-visible:outline-host-ring"
+                  >
+                    <XIcon className="size-4" aria-hidden="true" />
+                  </button>
+                </header>
+                <div className="min-h-0 flex-1 overflow-y-auto">
+                  <div ref={widgetRef} className="min-w-0 pt-2 pb-[max(0.75rem,var(--mb-safe-bottom))]">
+                    {children}
+                  </div>
+                </div>
+              </section>
+            </div>
+          ) : mode === "fullscreen" ? (
             <>
               <div className="flex h-12 shrink-0 items-center justify-between border-b border-host-border-tertiary bg-host-bg px-4 text-sm">
                 <span className="font-medium">Your app</span>

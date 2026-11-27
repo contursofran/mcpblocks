@@ -93,6 +93,8 @@ export function LineChart({
   const x = (i: number) => (labels.length <= 1 ? 0 : (i / (labels.length - 1)) * W)
   const y = (v: number) => H - (v / top) * (H - 8) - 4
   const every = labelEvery ?? Math.max(1, Math.round(labels.length / 4))
+  const labelWidth = `${Math.min(100, (every * 94) / Math.max(1, labels.length - 1))}%`
+  const hoverPercent = hover === null ? 0 : (x(hover) / W) * 100
 
   function onMove(e: React.PointerEvent<SVGSVGElement>) {
     const rect = e.currentTarget.getBoundingClientRect()
@@ -122,12 +124,13 @@ export function LineChart({
           <svg
             viewBox={`0 0 ${W} ${H}`}
             preserveAspectRatio="none"
-            className="block w-full touch-none overflow-visible"
+            className="block w-full touch-pan-y overflow-visible"
             style={{ height: H }}
             role="img"
             aria-label={`${title ?? "Line chart"}: ${series.map((s) => s.name).join(", ")}`}
             onPointerMove={onMove}
             onPointerLeave={() => setHover(null)}
+            onPointerCancel={() => setHover(null)}
           >
             <defs>
               {series.map((s, si) => (
@@ -188,12 +191,8 @@ export function LineChart({
           {hover !== null ? (
             <div
               role="status"
-              className="pointer-events-none absolute top-1/2 flex w-[120px] flex-col gap-[7px] rounded-host-md border-[length:var(--border-width-regular,0.5px)] border-host-app-border-subtle bg-host-app-surface/90 p-2 backdrop-blur-[2px]"
-              style={
-                x(hover) / W > 0.7
-                  ? { right: `calc(${100 - (x(hover) / W) * 100}% + 10px)` }
-                  : { left: `calc(${(x(hover) / W) * 100}% + 10px)` }
-              }
+              className="pointer-events-none absolute top-1/2 flex w-[120px] max-w-full flex-col gap-[7px] rounded-host-md border-[length:var(--border-width-regular,0.5px)] border-host-app-border-subtle bg-host-app-surface/90 p-2 backdrop-blur-[2px]"
+              style={{ left: `clamp(0px, calc(${hoverPercent}% + ${hoverPercent > 70 ? -130 : 10}px), max(0px, calc(100% - 120px)))` }}
             >
               {series.map((s, si) => (
                 <span key={s.name} className="flex items-center gap-[7px] text-sm leading-[1.4] font-medium">
@@ -208,7 +207,7 @@ export function LineChart({
           <div aria-hidden="true" className="relative mt-2 h-[17px] text-xs leading-[1.4] text-host-app-fg-subtle">
             {labels.map((l, i) =>
               i % every === 0 && i > 0 && i < labels.length - 1 ? (
-                <span key={i} className="absolute -translate-x-1/2 whitespace-nowrap" style={{ left: `${(x(i) / W) * 100}%` }}>
+                <span key={i} className="absolute -translate-x-1/2 truncate" style={{ left: `${(x(i) / W) * 100}%`, maxWidth: labelWidth }}>
                   {l}
                 </span>
               ) : null
@@ -219,7 +218,7 @@ export function LineChart({
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         {ranges?.length ? (
-          <div role="tablist" aria-label="Range" className="flex items-center gap-2 rounded-3xl bg-host-app-surface-muted p-1">
+          <div role="tablist" aria-label="Range" className="flex max-w-full flex-wrap items-center gap-2 rounded-3xl bg-host-app-surface-muted p-1">
             {ranges.map((r) => (
               <button
                 key={r}
@@ -231,7 +230,7 @@ export function LineChart({
                   onRangeChange?.(r)
                 }}
                 className={cn(
-                  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-xs leading-[1.4]",
+                  "inline-flex min-h-11 min-w-11 max-w-full items-center justify-center rounded-full px-3 text-xs leading-[1.4] [overflow-wrap:anywhere]",
                   r === current ? "bg-host-app-surface text-host-app-fg-muted" : "text-host-app-fg-subtle hover:text-host-app-fg"
                 )}
               >
@@ -242,7 +241,7 @@ export function LineChart({
         ) : (
           <span />
         )}
-        <div className="flex items-center gap-4">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-2">
           {series.map((s, si) => (
             <span key={s.name} className="flex items-center gap-1.5 text-[10px] leading-[1.4] text-host-app-fg-muted">
               <span aria-hidden="true" className="h-[3px] w-2 rounded-full" style={{ backgroundColor: s.color ?? PALETTE[si % PALETTE.length] }} />

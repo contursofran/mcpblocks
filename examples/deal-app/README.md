@@ -9,6 +9,7 @@ A small MCP server that renders mcpblocks components as **MCP App views** inside
 | `propose_stage_change` | `ConfirmAction` | Confirm moving a deal to the next stage; Confirm calls the app-only `update_deal_stage` tool (`app.callServerTool`) |
 | `pipeline_trend` | `LineChart` | Pipeline vs. closed-won over six months |
 | `show_block` | Any registry block | Read-only sample selected by registry name, including a branded confirmation |
+| `open_block_panel` | Any registry block | Read-only samples with a component picker in Claude’s side panel and an inline fallback |
 
 While a tool result is on its way the view shows `RowsSkeleton`. Ask for the `skeleton` block to keep it on screen for inspection.
 
@@ -23,7 +24,7 @@ worker/index.ts    Cloudflare Worker entry: the same server at https://mcpblocks
 src/components, src/lib/host.ts, src/styles.css   installed by `npx shadcn add` (see below)
 ```
 
-- One resource (`ui://deal-app/view.html`) serves every tool. Each tool returns `content` (what the model reads) and `structuredContent` (what the view renders).
+- The inline resource (`ui://deal-app/view.html`) and the side panel resource (`ui://deal-app/block-panel.html`) serve the same HTML. Each tool returns `content` (what the model reads) and `structuredContent` (what the view renders). The side panel resource sets `preferredDisplayMode: "fullscreen"` on `_meta.ui` in its `resources/read` result.
 - `applyHostContext` applies the CSS variables and font CSS that Claude sends, along with the theme, display mode and safe-area insets. The blocks read those values through the `host-*` Tailwind utilities.
 - `update_deal_stage` has `visibility: ["app"]`, so the model can't call it directly; only the confirm button can.
 
@@ -65,6 +66,7 @@ Claude connects to remote servers over HTTPS, so expose your local port first.
    - "Move Northwind Traders to the next stage." (shows the confirm block)
    - "Chart our pipeline trend."
    - "Use MCP Blocks to show the media-player block." The same prompt works with `list-view`, `inline-card`, `confirm-action`, `line-chart`, `document-card`, `carousel`, `skeleton`, `status-update`, and `branded-confirm-action`.
+   - "Use MCP Blocks to open the line-chart block in a side panel." Call `open_block_panel` to request Claude’s panel placement.
 
 The server has **no authentication**, which is fine for a throwaway tunnel but not for anything public. Keep the tunnel short-lived, and add auth before deploying it.
 

@@ -12,11 +12,13 @@ export function ComponentPreview({
   slug,
   checks,
   variant,
+  title,
   code,
 }: {
   slug: string
   checks: string[]
   variant: "card" | "borderless"
+  title: string
   code?: string
 }) {
   const [tab, setTab] = React.useState<"preview" | "code">("preview")
@@ -45,7 +47,7 @@ export function ComponentPreview({
   }
 
   return (
-    <HostPreview checks={checks} variant={variant} leading={toggle}>
+    <HostPreview checks={checks} variant={variant} appName={title} leading={toggle}>
       <Demo />
     </HostPreview>
   )
