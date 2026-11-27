@@ -19,9 +19,9 @@ Automatically installs `host-tokens` (Claude CSS variables + Tailwind v4 `host-*
 
 ## Guidelines
 
-- One confirm action; edits stay in the chat
-- Working, done and error states in place
-- Undo offered after success
+- One confirm action
+- Refusals show the reason
+- Unconfirmed writes offer a check
 
 ## Usage
 
@@ -32,7 +32,10 @@ import { ConfirmAction } from "@/components/confirm-action"
   title="Set lead assignment permission"
   subject={{ name: "Sarah Johnson", detail: "sarah.johnson@company.com" }}
   confirmLabel="Confirm assignment"
-  onConfirm={() => app.callServerTool({ name: "assign_permission", arguments: { userId } })}
+  changePreview={<p>Permission: Read only → Manage leads</p>}
+  status={status}
+  onConfirm={executePreparedAssignment}
+  onCheckAgain={checkAssignment}
   details={{ heading: "Lead assignment permissions", items: permissions }}
   doneTitle="Permission assigned"
 />
@@ -46,4 +49,8 @@ import { ConfirmAction } from "@/components/confirm-action"
 | `subject` | `{ name, detail?, initials?, avatarColor? }` | The person or record it applies to. |
 | `onConfirm` | `() => unknown` | Return a promise to show the working state; a rejection shows the error state. |
 | `details` | `{ heading, items[] }` | What the change includes, as a checklist. |
-| `status` | `pending \| working \| done \| error` | Control the state from outside. |
+| `changePreview` | `ReactNode` | Shows the proposed change and the confirmation reminder. |
+| `status` | `pending \| working \| done \| error \| refused \| unknown` | Control the state from outside. |
+| `refusedTitle / refusedDescription` | `ReactNode` | Explain why the server refused the proposal without a write. |
+| `unknownTitle / unknownDescription` | `ReactNode` | Explain a write whose outcome could not be verified. |
+| `onCheckAgain` | `() => void` | Reconcile the original write in the unknown state. |

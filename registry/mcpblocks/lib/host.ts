@@ -76,6 +76,41 @@ export function applyHostContext(
   applyHostFonts(ctx.styles?.css?.fonts, el.ownerDocument)
 }
 
+type ModelContextSummary = { content: { type: "text"; text: string }[] }
+
+type ModelContextApp = {
+  getHostCapabilities(): { updateModelContext?: { text?: object }; message?: { text?: object } } | undefined
+  updateModelContext(params: ModelContextSummary): Promise<unknown>
+  sendMessage(params: ModelContextSummary & { role: "user" }): Promise<{ isError?: boolean }>
+}
+
+/** Reports a short summary of a completed change the user already saw. */
+export async function tellModel(
+  app: ModelContextApp,
+  summary: string,
+  { fallbackToMessage = false }: { fallbackToMessage?: boolean } = {},
+): Promise<boolean> {
+  const characters = Array.from(summary.trim())
+  if (characters.length === 0) return false
+
+  const text = characters.length > 500 ? `${characters.slice(0, 499).join("")}…` : characters.join("")
+  const result: ModelContextSummary = { content: [{ type: "text", text }] }
+  const capabilities = app.getHostCapabilities()
+
+  try {
+    if (capabilities?.updateModelContext?.text) {
+      await app.updateModelContext(result)
+      return true
+    }
+    if (fallbackToMessage && (!capabilities?.message || capabilities.message.text)) {
+      return !(await app.sendMessage({ role: "user", ...result })).isError
+    }
+  } catch {
+    // The write already completed. A transport error here cannot undo it.
+  }
+  return false
+}
+
 // Bundlers (Vite, Next, webpack) replace `process.env.NODE_ENV` at build time. The
 // declaration keeps this file compiling in projects without @types/node.
 declare const process: { env: { NODE_ENV?: string } }

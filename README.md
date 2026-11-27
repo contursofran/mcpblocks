@@ -62,7 +62,7 @@ Full guides: **[Installation](https://mcpblocks.dev/docs/installation)** · **[U
 ### Building blocks
 
 - **`host-tokens`**: Light and dark fallbacks for host colors, typography, and radii, mapped to Tailwind utilities (`bg-host-bg`, `text-host-fg`, `text-host-heading-lg`, `rounded-host-md`, …).
-- **`host`** (`lib/host.ts`): `applyHostContext()`, `applySafeAreaInsets()`, and dev-only `guideline()` warnings.
+- **`host`** (`lib/host.ts`): `applyHostContext()`, `applySafeAreaInsets()`, `tellModel()`, and dev-only `guideline()` warnings.
 - **`host-button`**: Button styled with host tokens and a 44px minimum tap target.
 - **`icons`**: 38 `currentColor` icons adapted from Anthropic's *MCP Apps for Claude* kit.
 
@@ -96,6 +96,7 @@ Contributions are welcome! Open an issue or pull request against `master`.
 ```bash
 pnpm install
 pnpm dev               # docs site at http://localhost:3000
+pnpm storybook         # component stories at http://localhost:6006
 pnpm registry:build    # regenerate public/r/*.json after editing registry/
 pnpm llms:build        # regenerate public/llms*.txt, public/agents.md, and component .md docs
 pnpm check:conformance # verify MCP Apps guidelines, token parity, and registry freshness

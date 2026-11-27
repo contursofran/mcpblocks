@@ -13,6 +13,7 @@ const SHOWN =
   "The user can already see this in an interactive view above. Do not repeat or tabulate it; reply with at most one short sentence, or answer their question."
 
 const fail = (text: string): CallToolResult => ({ isError: true, content: [{ type: "text", text }] })
+const unchanged = (reason: string): CallToolResult => ({ ...fail(reason), structuredContent: { outcome: "unchanged", reason } })
 const money = (n: number) => `$${n.toLocaleString("en-US")}`
 
 /**
@@ -73,7 +74,13 @@ export function createServer(loadView: () => Promise<string>): McpServer {
       const deal = deals.find((d) => d.id === id)
       if (!deal) return fail(`No deal with id ${id}`)
       const next = nextStage(deal.stage)
-      if (!next) return fail(`${deal.company} is already in the last stage.`)
+      if (!next) {
+        const reason = `${deal.company} is already in the last stage.`
+        return {
+          content: [{ type: "text", text: `${reason} Nothing was changed.` }],
+          structuredContent: { view: "refused", deal, reason },
+        }
+      }
       return {
         content: [{ type: "text", text: `Showing a confirmation to move ${deal.company} from ${deal.stage} to ${next}; nothing changes until the user presses the button. ${SHOWN}` }],
         structuredContent: { view: "confirm", deal, next },
@@ -88,12 +95,16 @@ export function createServer(loadView: () => Promise<string>): McpServer {
     {
       title: "Update deal stage",
       description: "Set a deal's stage. Called by the confirmation view.",
-      inputSchema: z.object({ id: z.string(), stage: z.enum(STAGES) }),
+      inputSchema: z.object({ id: z.string(), stage: z.enum(STAGES), expectedStage: z.enum(STAGES).optional() }),
       _meta: { ui: { ...ui, visibility: ["app"] } },
     },
-    async ({ id, stage }): Promise<CallToolResult> => {
+    async ({ id, stage, expectedStage }): Promise<CallToolResult> => {
       const deal = deals.find((d) => d.id === id)
-      if (!deal) return fail(`No deal with id ${id}`)
+      if (!deal) return unchanged(`No deal with id ${id}`)
+      if (expectedStage && nextStage(expectedStage) !== stage) return unchanged("This proposal is no longer valid.")
+      if (expectedStage && ![expectedStage, stage].includes(deal.stage)) {
+        return unchanged("The deal stage changed after this proposal was prepared.")
+      }
       deal.stage = stage
       return { content: [{ type: "text", text: `${deal.company} moved to ${stage}.` }], structuredContent: { deal } }
     },
