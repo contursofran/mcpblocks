@@ -1,6 +1,7 @@
 import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server"
 import { McpServer, type CallToolResult } from "@modelcontextprotocol/server"
 import * as z from "zod/v4"
+import { DEMO_BLOCKS } from "../shared/demo-blocks.js"
 import { deals, nextStage, STAGES, trend } from "./data.js"
 
 // One View serves every tool: it reads `structuredContent.view` and renders the
@@ -22,6 +23,22 @@ const money = (n: number) => `$${n.toLocaleString("en-US")}`
  */
 export function createServer(loadView: () => Promise<string>): McpServer {
   const server = new McpServer({ name: "mcpblocks deal app", version: "0.1.0" })
+
+  registerAppTool(
+    server,
+    "show_block",
+    {
+      title: "Show a registry block",
+      description: "Preview one MCP Blocks UI component by registry name using fixed sample data. Use skeleton to hold a loading example on screen.",
+      inputSchema: z.object({ block: z.enum(DEMO_BLOCKS) }),
+      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+      _meta: { ui },
+    },
+    async ({ block }): Promise<CallToolResult> => ({
+      content: [{ type: "text", text: `Showing the ${block} sample. ${SHOWN}` }],
+      structuredContent: { view: "block", block },
+    }),
+  )
 
   registerAppTool(
     server,

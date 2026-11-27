@@ -8,7 +8,7 @@ export function HostSkeleton({ className, ...props }: React.ComponentProps<"div"
     <div
       aria-hidden="true"
       data-slot="host-skeleton"
-      className={cn("animate-pulse rounded-host-sm bg-host-bg-secondary", className)}
+      className={cn("animate-pulse rounded-host-sm bg-host-app-surface-muted", className)}
       {...props}
     />
   )
@@ -26,7 +26,7 @@ export function InlineCardSkeleton({
       role="status"
       aria-label="Loading"
       className={cn(
-        "flex w-full flex-col gap-4 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-border-secondary bg-host-bg p-5",
+        "flex w-full flex-col gap-4 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted bg-host-app-surface p-5",
         className
       )}
       {...props}
@@ -61,7 +61,7 @@ export function CarouselSkeleton({ count = 3, cardWidth = 210 }: { count?: numbe
       {Array.from({ length: count }).map((_, i) => (
         <div
           key={i}
-          className="flex shrink-0 flex-col overflow-hidden rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-border-secondary bg-host-bg"
+          className="flex shrink-0 flex-col overflow-hidden rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted bg-host-app-surface"
           style={{ width: cardWidth }}
         >
           <HostSkeleton className="aspect-[16/10] w-full rounded-none" />

@@ -80,12 +80,12 @@ export function MediaPlayer({
   return (
     <div
       data-slot="media-player"
-      className={cn("flex w-full flex-col gap-6 p-6 text-host-fg font-[family-name:var(--font-sans)]", className)}
+      className={cn("flex w-full flex-col gap-6 p-6 text-host-app-fg font-[family-name:var(--font-sans)]", className)}
     >
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 flex-col text-base leading-[1.4]">
-          <span className="truncate font-semibold">{title}</span>
-          {subtitle ? <span className="truncate text-host-fg-tertiary">{subtitle}</span> : null}
+          <span className="truncate font-host-app-display font-semibold">{title}</span>
+          {subtitle ? <span className="truncate text-host-app-fg-subtle">{subtitle}</span> : null}
         </div>
         <div className="flex shrink-0 items-center gap-3">
           {onRegenerate ? (
@@ -93,7 +93,7 @@ export function MediaPlayer({
               type="button"
               onClick={onRegenerate}
               aria-label="Regenerate"
-              className="inline-flex size-11 items-center justify-center rounded-host-md border-[length:var(--border-width-regular,0.5px)] border-host-border text-host-fg hover:bg-host-bg-secondary"
+              className="inline-flex size-11 items-center justify-center rounded-host-md border-[length:var(--border-width-regular,0.5px)] border-host-app-border text-host-app-fg hover:bg-host-app-surface-muted"
             >
               <ReloadIcon className="size-5" />
             </button>
@@ -103,7 +103,7 @@ export function MediaPlayer({
               type="button"
               onClick={onDownload}
               aria-label="Download"
-              className="inline-flex size-11 items-center justify-center rounded-host-md bg-host-bg-inverse text-host-fg-inverse hover:opacity-90"
+              className="inline-flex size-11 items-center justify-center rounded-host-md bg-host-app-accent text-host-app-accent-fg hover:opacity-90"
             >
               <DownloadIcon className="size-5" />
             </button>
@@ -117,7 +117,7 @@ export function MediaPlayer({
           onClick={toggle}
           disabled={!src}
           aria-label={playing ? "Pause" : "Play"}
-          className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-host-bg-inverse text-host-fg-inverse disabled:cursor-default"
+          className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-host-app-accent text-host-app-accent-fg disabled:cursor-default"
         >
           {playing ? <PauseIcon className="size-5" /> : <PlayIcon className="size-5 translate-x-px" />}
         </button>
@@ -151,7 +151,7 @@ export function MediaPlayer({
           ))}
         </div>
 
-        <span className="min-w-9 shrink-0 text-center text-sm leading-[1.4] text-host-fg-tertiary tabular-nums">
+        <span className="min-w-9 shrink-0 text-center text-sm leading-[1.4] text-host-app-fg-subtle tabular-nums">
           {formatTime(playing || time > 0 ? time : duration)}
         </span>
       </div>

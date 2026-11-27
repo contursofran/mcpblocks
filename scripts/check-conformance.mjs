@@ -52,8 +52,9 @@ const sourceRules = [
     pattern: /#[0-9a-fA-F]{3,8}\b(?![-\w])|\brgba?\(|\bhsla?\(/,
     // LineChart's PALETTE array is an intentional categorical series palette.
     ignoreLine: (rel, line) =>
-      rel === "registry/mcpblocks/components/line-chart.tsx" &&
-      line.includes("const PALETTE ="),
+      (rel === "registry/mcpblocks/components/line-chart.tsx" && line.includes("const PALETTE =")) ||
+      // The example supplies brand values through the public app tokens.
+      (rel === "registry/mcpblocks/examples/branded-confirm-action.css" && /^\s*--mb-accent(?:-fg)?:/.test(line)),
   },
   {
     name: "sandbox-blocked storage / ChatGPT bridge",
@@ -180,7 +181,9 @@ if (!hostTokens?.css) {
     }
 
     for (const blockName of ["@theme inline", ":root", ".dark"]) {
-      const expected = hostTokens.css[blockName] ?? {}
+      const expected = blockName === "@theme inline"
+        ? Object.fromEntries(Object.entries(hostTokens.cssVars?.theme ?? {}).map(([name, value]) => [`--${name}`, value]))
+        : hostTokens.css[blockName] ?? {}
       const actual = cssBlocks.get(blockName) ?? {}
       for (const [varName, value] of Object.entries(expected)) {
         if (actual[varName] !== value) {

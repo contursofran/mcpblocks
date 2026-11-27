@@ -37,20 +37,20 @@ export function ListView({ items, summary, viewAll, className, ...props }: ListV
   return (
     <div
       data-slot="list-view"
-      className={cn("flex w-full flex-col text-host-fg font-[family-name:var(--font-sans)]", className)}
+      className={cn("flex w-full flex-col text-host-app-fg font-[family-name:var(--font-sans)]", className)}
       {...props}
     >
       <ul className="flex flex-col">
         {items.map((item) => {
           const Row = item.onClick ? "button" : "div"
           return (
-            <li key={item.id} className="border-b-[length:var(--border-width-regular,0.5px)] border-host-border-secondary">
+            <li key={item.id} className="border-b-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted">
               <Row
                 type={item.onClick ? "button" : undefined}
                 onClick={item.onClick}
                 className={cn(
                   "flex w-full items-start gap-3 px-6 py-4 text-left",
-                  item.onClick && "transition-colors hover:bg-host-bg-tertiary focus-visible:outline-2 focus-visible:outline-host-ring"
+                  item.onClick && "transition-colors hover:bg-host-app-surface-subtle focus-visible:outline-2 focus-visible:outline-host-ring"
                 )}
               >
                 <span
@@ -65,15 +65,15 @@ export function ListView({ items, summary, viewAll, className, ...props }: ListV
                     <span className="flex min-w-0 items-center gap-2">
                       <span className="truncate text-sm leading-[19.6px] font-semibold">{item.title}</span>
                       {item.meta ? (
-                        <span className="truncate text-xs leading-[16.8px] text-host-fg-tertiary opacity-75">{item.meta}</span>
+                        <span className="truncate text-xs leading-[16.8px] text-host-app-fg-subtle opacity-75">{item.meta}</span>
                       ) : null}
                     </span>
                     {item.timestamp ? (
-                      <span className="shrink-0 text-xs leading-[16.8px] text-host-fg-tertiary opacity-75">{item.timestamp}</span>
+                      <span className="shrink-0 text-xs leading-[16.8px] text-host-app-fg-subtle opacity-75">{item.timestamp}</span>
                     ) : null}
                   </span>
                   {item.body ? (
-                    <span className="line-clamp-2 text-sm leading-[19.6px] text-host-fg-secondary">{item.body}</span>
+                    <span className="line-clamp-2 text-sm leading-[19.6px] text-host-app-fg-muted">{item.body}</span>
                   ) : null}
                 </span>
               </Row>
@@ -84,7 +84,7 @@ export function ListView({ items, summary, viewAll, className, ...props }: ListV
 
       {summary || viewAll ? (
         <div className="flex items-center justify-between gap-3 px-4 py-3">
-          <span className="text-xs leading-[16.8px] text-host-fg-tertiary">{summary}</span>
+          <span className="text-xs leading-[16.8px] text-host-app-fg-subtle">{summary}</span>
           {viewAll ? (
             <a
               href={viewAll.href ?? "#"}
@@ -94,7 +94,7 @@ export function ListView({ items, summary, viewAll, className, ...props }: ListV
                   viewAll.onClick()
                 }
               }}
-              className="inline-flex items-center gap-1 text-xs leading-[16.8px] text-host-info-fg hover:underline"
+              className="inline-flex items-center gap-1 text-xs leading-[16.8px] text-host-app-info-fg hover:underline"
             >
               {viewAll.label}
               <ArrowRightIcon className="size-4" />

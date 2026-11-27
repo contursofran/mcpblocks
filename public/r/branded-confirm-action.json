@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "branded-confirm-action",
+  "type": "registry:example",
+  "title": "Branded confirm action",
+  "description": "A confirm action with a teal accent and a display font on the host surface.",
+  "registryDependencies": [
+    "https://mcpblocks.dev/r/confirm-action.json"
+  ],
+  "files": [
+    {
+      "path": "registry/mcpblocks/examples/branded-confirm-action.tsx",
+      "content": "import { ConfirmAction, type ConfirmActionProps } from \"@/registry/mcpblocks/components/confirm-action\"\n\nimport \"./branded-confirm-action.css\"\n\nexport function BrandedConfirmAction(props: ConfirmActionProps) {\n  return (\n    <div className=\"mcpblocks-brand-example rounded-host-xl bg-host-app-surface\">\n      <ConfirmAction {...props} />\n    </div>\n  )\n}\n",
+      "type": "registry:component"
+    },
+    {
+      "path": "registry/mcpblocks/examples/branded-confirm-action.css",
+      "content": ".mcpblocks-brand-example {\n  --mb-accent: #09e1cd;\n  --mb-accent-fg: #141413;\n  --mb-font-display: Georgia, serif;\n}\n",
+      "type": "registry:file",
+      "target": "@components/branded-confirm-action.css"
+    }
+  ]
+}

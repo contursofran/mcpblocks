@@ -117,6 +117,7 @@ const llmsTxt = [
   `- [Installation](${SITE_URL}/docs/installation): Prerequisites, shadcn CLI setup, and what files get added.`,
   `- [Using with an MCP server](${SITE_URL}/docs/mcp-server): Register tools + \`ui://\` resources with \`@modelcontextprotocol/ext-apps\` and wire \`useApp\` / \`applyHostContext\`.`,
   `- [Prepared writes](${SITE_URL}/docs/prepared-writes): Review proposed changes, reconcile unconfirmed writes, and report committed changes to the model.`,
+  `- [Brand your blocks](${SITE_URL}/docs/brand-your-blocks): Override brand accents and other app tokens while retaining the host defaults.`,
   `- [Design tokens](${SITE_URL}/tokens): Complete Claude MCP Apps light/dark CSS variables and Tailwind \`host-*\` utilities.`,
   "",
   "## Components",

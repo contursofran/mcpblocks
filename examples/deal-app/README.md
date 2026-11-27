@@ -8,8 +8,9 @@ A small MCP server that renders mcpblocks components as **MCP App views** inside
 | `show_deal` | `InlineCard` | One deal with two actions (max 2, per Claude's guidelines) |
 | `propose_stage_change` | `ConfirmAction` | Confirm moving a deal to the next stage; Confirm calls the app-only `update_deal_stage` tool (`app.callServerTool`) |
 | `pipeline_trend` | `LineChart` | Pipeline vs. closed-won over six months |
+| `show_block` | Any registry block | Read-only sample selected by registry name, including a branded confirmation |
 
-While a tool result is on its way the view shows `RowsSkeleton` (skeleton, not a spinner).
+While a tool result is on its way the view shows `RowsSkeleton`. Ask for the `skeleton` block to keep it on screen for inspection.
 
 ## How it fits together
 
@@ -63,6 +64,7 @@ Claude connects to remote servers over HTTPS, so expose your local port first.
    - "Show the Northwind Traders deal."
    - "Move Northwind Traders to the next stage." (shows the confirm block)
    - "Chart our pipeline trend."
+   - "Use MCP Blocks to show the media-player block." The same prompt works with `list-view`, `inline-card`, `confirm-action`, `line-chart`, `document-card`, `carousel`, `skeleton`, `status-update`, and `branded-confirm-action`.
 
 The server has **no authentication**, which is fine for a throwaway tunnel but not for anything public. Keep the tunnel short-lived, and add auth before deploying it.
 

@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -101,14 +103,14 @@ export function LineChart({
   return (
     <div
       data-slot="line-chart"
-      className={cn("flex w-full flex-col gap-3 p-4 text-host-fg font-[family-name:var(--font-sans)]", className)}
+      className={cn("flex w-full flex-col gap-3 p-4 text-host-app-fg font-[family-name:var(--font-sans)]", className)}
     >
       {title ? <p className="text-sm leading-[1.4]">{title}</p> : null}
 
       <div className="flex gap-3 pt-3 pb-2">
         <div
           aria-hidden="true"
-          className="flex flex-col-reverse justify-between text-right text-xs leading-[1.4] text-host-fg-tertiary tabular-nums"
+          className="flex flex-col-reverse justify-between text-right text-xs leading-[1.4] text-host-app-fg-subtle tabular-nums"
           style={{ height: H }}
         >
           {ticks.map((t) => (
@@ -142,14 +144,14 @@ export function LineChart({
                 x2={W}
                 y1={y(t)}
                 y2={y(t)}
-                stroke="var(--color-border-tertiary)"
+                stroke="var(--mb-border,var(--color-border-tertiary))"
                 strokeDasharray="4 4"
                 vectorEffect="non-scaling-stroke"
               />
             ))}
             {labels.map((_, i) =>
               i % every === 0 ? (
-                <line key={i} x1={x(i)} x2={x(i)} y1="0" y2={H} stroke="var(--color-border-tertiary)" vectorEffect="non-scaling-stroke" />
+                <line key={i} x1={x(i)} x2={x(i)} y1="0" y2={H} stroke="var(--mb-border,var(--color-border-tertiary))" vectorEffect="non-scaling-stroke" />
               ) : null
             )}
             {series.map((s, si) => {
@@ -164,7 +166,7 @@ export function LineChart({
               )
             })}
             {hover !== null ? (
-              <line x1={x(hover)} x2={x(hover)} y1="0" y2={H} stroke="var(--color-border-primary)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+              <line x1={x(hover)} x2={x(hover)} y1="0" y2={H} stroke="var(--mb-border,var(--color-border-primary))" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
             ) : null}
           </svg>
 
@@ -186,7 +188,7 @@ export function LineChart({
           {hover !== null ? (
             <div
               role="status"
-              className="pointer-events-none absolute top-1/2 flex w-[120px] flex-col gap-[7px] rounded-host-md border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg/90 p-2 backdrop-blur-[2px]"
+              className="pointer-events-none absolute top-1/2 flex w-[120px] flex-col gap-[7px] rounded-host-md border-[length:var(--border-width-regular,0.5px)] border-host-app-border-subtle bg-host-app-surface/90 p-2 backdrop-blur-[2px]"
               style={
                 x(hover) / W > 0.7
                   ? { right: `calc(${100 - (x(hover) / W) * 100}% + 10px)` }
@@ -199,11 +201,11 @@ export function LineChart({
                   {formatValue(s.values[hover] ?? 0)}
                 </span>
               ))}
-              <span className="text-xs leading-[1.4] text-host-fg-tertiary">{labels[hover]}</span>
+              <span className="text-xs leading-[1.4] text-host-app-fg-subtle">{labels[hover]}</span>
             </div>
           ) : null}
 
-          <div aria-hidden="true" className="relative mt-2 h-[17px] text-xs leading-[1.4] text-host-fg-tertiary">
+          <div aria-hidden="true" className="relative mt-2 h-[17px] text-xs leading-[1.4] text-host-app-fg-subtle">
             {labels.map((l, i) =>
               i % every === 0 && i > 0 && i < labels.length - 1 ? (
                 <span key={i} className="absolute -translate-x-1/2 whitespace-nowrap" style={{ left: `${(x(i) / W) * 100}%` }}>
@@ -217,7 +219,7 @@ export function LineChart({
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         {ranges?.length ? (
-          <div role="tablist" aria-label="Range" className="flex items-center gap-2 rounded-3xl bg-host-bg-secondary p-1">
+          <div role="tablist" aria-label="Range" className="flex items-center gap-2 rounded-3xl bg-host-app-surface-muted p-1">
             {ranges.map((r) => (
               <button
                 key={r}
@@ -229,8 +231,8 @@ export function LineChart({
                   onRangeChange?.(r)
                 }}
                 className={cn(
-                  "rounded-full px-3 py-[5px] text-xs leading-[1.4]",
-                  r === current ? "bg-host-bg text-host-fg-secondary" : "text-host-fg-tertiary hover:text-host-fg"
+                  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full px-3 text-xs leading-[1.4]",
+                  r === current ? "bg-host-app-surface text-host-app-fg-muted" : "text-host-app-fg-subtle hover:text-host-app-fg"
                 )}
               >
                 {r}
@@ -242,7 +244,7 @@ export function LineChart({
         )}
         <div className="flex items-center gap-4">
           {series.map((s, si) => (
-            <span key={s.name} className="flex items-center gap-1.5 text-[10px] leading-[1.4] text-host-fg-secondary">
+            <span key={s.name} className="flex items-center gap-1.5 text-[10px] leading-[1.4] text-host-app-fg-muted">
               <span aria-hidden="true" className="h-[3px] w-2 rounded-full" style={{ backgroundColor: s.color ?? PALETTE[si % PALETTE.length] }} />
               {s.name}
             </span>
