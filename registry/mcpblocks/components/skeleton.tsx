@@ -87,11 +87,11 @@ export function RowsSkeleton({
   ...props
 }: React.ComponentProps<"div"> & { rows?: number; columns?: number; avatar?: boolean }) {
   return (
-    <div role="status" aria-label="Loading" className={cn("flex w-full flex-col gap-6 p-6", className)} {...props}>
+    <div role="status" aria-label="Loading" className={cn("@container flex w-full flex-col gap-6 p-6", className)} {...props}>
       {Array.from({ length: rows }).map((_, r) => (
-        <div key={r} className="flex h-8 items-center gap-5">
+        <div key={r} className="flex h-8 items-center gap-3 @[24rem]:gap-5">
           {avatar ? <HostSkeleton className="size-8 shrink-0" style={{ borderRadius: 9999 }} /> : null}
-          <div className="grid h-full flex-1 gap-5" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
+          <div className="grid h-full flex-1 gap-2 @[24rem]:gap-5" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
             {Array.from({ length: columns }).map((_, c) => (
               <HostSkeleton key={c} className="h-full" style={{ borderRadius: "var(--border-radius-md)" }} />
             ))}

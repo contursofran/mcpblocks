@@ -184,6 +184,7 @@ export default async function ComponentPage({
                   slug={doc.slug}
                   checks={doc.checks}
                   variant={doc.variant}
+                  title={doc.title}
                   code={doc.usage}
                 />
               </section>

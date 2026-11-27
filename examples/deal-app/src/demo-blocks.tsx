@@ -1,3 +1,5 @@
+import { useState } from "react"
+
 import { BrandedConfirmAction } from "@/components/branded-confirm-action"
 import { Carousel } from "@/components/carousel"
 import { ConfirmAction } from "@/components/confirm-action"
@@ -14,7 +16,43 @@ import forest from "../../../public/demo/forest.jpg?inline"
 import ridge from "../../../public/demo/ridge.jpg?inline"
 import sampleChime from "./assets/sample-chime.wav?inline"
 import { trend } from "../server/data"
-import type { DemoBlock } from "../shared/demo-blocks"
+import { DEMO_BLOCKS, type DemoBlock } from "../shared/demo-blocks"
+
+const blockLabels: Record<DemoBlock, string> = {
+  "list-view": "List view",
+  "inline-card": "Inline card",
+  "confirm-action": "Confirm action",
+  "line-chart": "Line chart",
+  "media-player": "Media player",
+  "document-card": "Document card",
+  carousel: "Carousel",
+  skeleton: "Skeleton",
+  "status-update": "Status update",
+  "branded-confirm-action": "Branded confirm action",
+}
+
+export function BlockPanelDemo({ initialBlock }: { initialBlock: DemoBlock }) {
+  const [block, setBlock] = useState(initialBlock)
+
+  return (
+    <section className="block-panel min-w-0">
+      <header className="block-panel-controls hidden flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-host-app-border-muted px-4 py-3 text-host-app-fg">
+        <h2 className="min-w-0 text-host-heading-sm font-semibold">MCP Blocks</h2>
+        <label className="flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 text-host-sm text-host-app-fg-muted">
+          <span>Component</span>
+          <select
+            className="min-h-11 min-w-0 max-w-full rounded-host-md border border-host-app-border-muted bg-host-app-surface px-2.5 text-host-app-fg focus-visible:outline-2 focus-visible:outline-host-ring"
+            value={block}
+            onChange={(event) => setBlock(event.target.value as DemoBlock)}
+          >
+            {DEMO_BLOCKS.map((name) => <option key={name} value={name}>{blockLabels[name]}</option>)}
+          </select>
+        </label>
+      </header>
+      <RegistryBlockDemo key={block} block={block} />
+    </section>
+  )
+}
 
 export function RegistryBlockDemo({ block }: { block: DemoBlock }) {
   switch (block) {

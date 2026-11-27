@@ -61,15 +61,15 @@ export function ListView({ items, summary, viewAll, className, ...props }: ListV
                   {item.initials}
                 </span>
                 <span className="flex min-w-0 flex-1 flex-col gap-1.5">
-                  <span className="flex items-center justify-between gap-3">
-                    <span className="flex min-w-0 items-center gap-2">
-                      <span className="truncate text-sm leading-[19.6px] font-semibold">{item.title}</span>
+                  <span className="flex min-w-0 flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
+                    <span className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                      <span className="text-sm leading-[19.6px] font-semibold [overflow-wrap:anywhere]">{item.title}</span>
                       {item.meta ? (
                         <span className="truncate text-xs leading-[16.8px] text-host-app-fg-subtle opacity-75">{item.meta}</span>
                       ) : null}
                     </span>
                     {item.timestamp ? (
-                      <span className="shrink-0 text-xs leading-[16.8px] text-host-app-fg-subtle opacity-75">{item.timestamp}</span>
+                      <span className="min-w-0 text-xs leading-[16.8px] text-host-app-fg-subtle opacity-75 [overflow-wrap:anywhere]">{item.timestamp}</span>
                     ) : null}
                   </span>
                   {item.body ? (
@@ -83,7 +83,7 @@ export function ListView({ items, summary, viewAll, className, ...props }: ListV
       </ul>
 
       {summary || viewAll ? (
-        <div className="flex items-center justify-between gap-3 px-4 py-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
           <span className="text-xs leading-[16.8px] text-host-app-fg-subtle">{summary}</span>
           {viewAll ? (
             <a

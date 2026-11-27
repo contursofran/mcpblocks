@@ -10,6 +10,14 @@ body {
   font-family: var(--font-sans, ui-sans-serif, system-ui, sans-serif);
 }
 
+html[data-display-mode="fullscreen"] .block-panel {
+  padding: var(--mb-safe-top, 0px) var(--mb-safe-right, 0px) var(--mb-safe-bottom, 0px) var(--mb-safe-left, 0px);
+}
+
+html[data-display-mode="fullscreen"] .block-panel-controls {
+  display: flex;
+}
+
 @theme inline {
   /* App tokens are scoped overrides with per-theme host fallbacks. */
   --color-host-app-surface: var(--mb-surface, var(--color-background-primary));

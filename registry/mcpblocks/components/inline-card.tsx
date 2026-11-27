@@ -45,7 +45,7 @@ const toneClass: Record<InlineCardTone, string> = {
 const columnClass = {
   1: "grid-cols-1",
   2: "grid-cols-2",
-  3: "grid-cols-3",
+  3: "grid-cols-2 @[20rem]:grid-cols-3",
   4: "grid-cols-2 @md:grid-cols-4",
 } as const
 
@@ -76,9 +76,9 @@ export function InlineCard({
       )}
       {...props}
     >
-      <header className="flex items-start justify-between gap-3">
+      <header className="flex flex-wrap items-start justify-between gap-3">
         <div className="flex min-w-0 flex-col gap-1">
-          <h3 className="text-base leading-snug font-host-app-display font-semibold">{title}</h3>
+          <h3 className="text-base leading-snug font-host-app-display font-semibold [overflow-wrap:anywhere]">{title}</h3>
           {description ? (
             <p className="text-sm text-host-app-fg-muted">{description}</p>
           ) : null}
@@ -86,7 +86,7 @@ export function InlineCard({
         {badge ? (
           <span
             className={cn(
-              "shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold",
+              "max-w-full rounded-full px-2 py-0.5 text-xs font-semibold [overflow-wrap:anywhere]",
               toneClass[badge.tone ?? "neutral"]
             )}
           >
@@ -100,7 +100,7 @@ export function InlineCard({
           {fields.map((f, i) => (
             <div key={i} className="min-w-0">
               <dt className="text-xs text-host-app-fg-subtle">{f.label}</dt>
-              <dd className="truncate text-sm font-medium">{f.value}</dd>
+              <dd className="text-sm font-medium [overflow-wrap:anywhere]">{f.value}</dd>
             </div>
           ))}
         </dl>
@@ -109,11 +109,12 @@ export function InlineCard({
       {children}
 
       {actions.length > 0 ? (
-        <footer className="flex gap-2">
+        <footer className="grid gap-2 @[20rem]:auto-cols-fr @[20rem]:grid-flow-col">
           {actions.slice(0, 2).map((a, i) => (
             <HostButton
               key={a.label}
               block
+              className="min-w-0 py-2 text-center whitespace-normal [overflow-wrap:anywhere]"
               variant={a.variant ?? (i === 0 ? "primary" : "secondary")}
               onClick={a.onClick}
               disabled={a.disabled}

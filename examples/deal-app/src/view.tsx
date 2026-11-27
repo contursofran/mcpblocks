@@ -12,7 +12,7 @@ import { ListView } from "@/components/list-view"
 import { RowsSkeleton } from "@/components/skeleton"
 import { applyHostContext, tellModel } from "@/lib/host"
 import type { DemoBlock } from "../shared/demo-blocks"
-import { RegistryBlockDemo } from "./demo-blocks"
+import { BlockPanelDemo, RegistryBlockDemo } from "./demo-blocks"
 
 type Deal = { id: string; company: string; contact: string; email: string; stage: string; amount: number; closeDate: string; note: string }
 type Payload =
@@ -21,6 +21,7 @@ type Payload =
   | { view: "confirm"; deal: Deal; next: string }
   | { view: "refused"; deal: Deal; reason: string }
   | { view: "block"; block: DemoBlock }
+  | { view: "block-panel"; block: DemoBlock }
   | { view: "trend"; labels: string[]; series: { name: string; values: number[] }[] }
 
 const money = (n: number) => `$${n.toLocaleString("en-US")}`
@@ -99,7 +100,7 @@ function Root() {
 
   const { app, error: connectError } = useApp({
     appInfo: { name: "mcpblocks deal app", version: "0.1.0" },
-    capabilities: {},
+    capabilities: { availableDisplayModes: ["inline", "fullscreen"] },
     onAppCreated: (app) => {
       // Register handlers before connect(): the host may send the result immediately.
       app.ontoolresult = async (result: CallToolResult) => {
@@ -127,6 +128,8 @@ function Root() {
   switch (payload.view) {
     case "block":
       return <RegistryBlockDemo key={payload.block} block={payload.block} />
+    case "block-panel":
+      return <BlockPanelDemo key={payload.block} initialBlock={payload.block} />
     case "deals":
       return (
         <ListView

@@ -221,6 +221,39 @@ export function DealView() {
           message (better than in-widget forms), and <Code>app.requestDisplayMode</Code> asks for fullscreen or pip.
         </p>
       </Step>
+
+      <Step n={6} title="Open a side panel in Claude">
+        <p className="text-foreground/80">
+          For a view that needs more room, set <Code>preferredDisplayMode</Code> to <Code>fullscreen</Code> on
+          <Code>_meta.ui</Code> in the resource returned by <Code>resources/read</Code>. Claude can open the view
+          alongside the conversation. Hosts that ignore this Claude-specific preference can render the same view inline.
+        </p>
+        <CodeBlock
+          code={`const panelUri = \`ui://deals/summary-panel-\${viewHash}.html\`
+const panelMeta = { ui: { preferredDisplayMode: "fullscreen" as const } }
+
+registerAppResource(server, "Deal summary panel", panelUri, {
+  mimeType: RESOURCE_MIME_TYPE,
+  _meta: panelMeta,
+}, async () => ({
+  contents: [{
+    uri: panelUri,
+    mimeType: RESOURCE_MIME_TYPE,
+    text: viewHtml,
+    _meta: panelMeta,
+  }],
+}))
+
+// In the panel tool's registerAppTool options:
+// _meta: { ui: { resourceUri: panelUri } }`}
+        />
+        <p className="text-foreground/80">
+          Declare <Code>availableDisplayModes: [&quot;inline&quot;, &quot;fullscreen&quot;]</Code> in the view’s app
+          capabilities. Use distinct resource URIs for inline and panel tools, even if both serve the same HTML, so the
+          host can cache them independently. The deal app’s <Code>open_block_panel</Code> tool adds a component picker
+          in the expanded view. The component pages let you switch between Inline, Fullscreen, and Side panel previews.
+        </p>
+      </Step>
     </DocsShell>
   )
 }

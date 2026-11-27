@@ -1,12 +1,13 @@
 import { registerAppResource, registerAppTool, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server"
 import { McpServer, type CallToolResult } from "@modelcontextprotocol/server"
 import * as z from "zod/v4"
-import { DEMO_BLOCKS } from "../shared/demo-blocks.js"
+import { DEMO_BLOCKS, type DemoBlock } from "../shared/demo-blocks.js"
 import { deals, nextStage, STAGES, trend } from "./data.js"
 
-// One View serves every tool: it reads `structuredContent.view` and renders the
-// matching block. Tools can also point at separate resources if you prefer.
+// The same bundle renders both resources. Their URIs keep the host's
+// placement preferences independent.
 const VIEW_URI = "ui://deal-app/view.html"
+const PANEL_URI = "ui://deal-app/block-panel.html"
 const ui = { resourceUri: VIEW_URI }
 
 // The View already shows the data, so tell the model not to repeat it as text or a table.
@@ -16,6 +17,15 @@ const SHOWN =
 const fail = (text: string): CallToolResult => ({ isError: true, content: [{ type: "text", text }] })
 const unchanged = (reason: string): CallToolResult => ({ ...fail(reason), structuredContent: { outcome: "unchanged", reason } })
 const money = (n: number) => `$${n.toLocaleString("en-US")}`
+const blockInput = z.object({ block: z.enum(DEMO_BLOCKS) })
+const readOnlySample = { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+
+function blockPreview(block: DemoBlock, view: "block" | "block-panel"): CallToolResult {
+  return {
+    content: [{ type: "text", text: `Showing the ${block} sample. ${SHOWN}` }],
+    structuredContent: { view, block },
+  }
+}
 
 /**
  * `loadView` returns the bundled View (dist/view.html). It is injected so the same server
@@ -30,14 +40,24 @@ export function createServer(loadView: () => Promise<string>): McpServer {
     {
       title: "Show a registry block",
       description: "Preview one MCP Blocks UI component by registry name using fixed sample data. Use skeleton to hold a loading example on screen.",
-      inputSchema: z.object({ block: z.enum(DEMO_BLOCKS) }),
-      annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+      inputSchema: blockInput,
+      annotations: readOnlySample,
       _meta: { ui },
     },
-    async ({ block }): Promise<CallToolResult> => ({
-      content: [{ type: "text", text: `Showing the ${block} sample. ${SHOWN}` }],
-      structuredContent: { view: "block", block },
-    }),
+    async ({ block }) => blockPreview(block, "block"),
+  )
+
+  registerAppTool(
+    server,
+    "open_block_panel",
+    {
+      title: "Open a registry block in a side panel",
+      description: "Preview an MCP Blocks UI component by registry name in a side panel when the host supports it. Uses fixed sample data.",
+      inputSchema: blockInput,
+      annotations: readOnlySample,
+      _meta: { ui: { resourceUri: PANEL_URI } },
+    },
+    async ({ block }) => blockPreview(block, "block-panel"),
   )
 
   registerAppTool(
@@ -142,17 +162,21 @@ export function createServer(loadView: () => Promise<string>): McpServer {
     }),
   )
 
-  registerAppResource(server, "Deal app view", VIEW_URI, { mimeType: RESOURCE_MIME_TYPE }, async () => ({
-    contents: [
-      {
-        uri: VIEW_URI,
-        mimeType: RESOURCE_MIME_TYPE,
-        text: await loadView(),
-        // Blocks draw their own borders, so ask the host not to add another.
-        _meta: { ui: { prefersBorder: false } },
+  function registerView(name: string, uri: string, preferredDisplayMode?: "fullscreen") {
+    const _meta = {
+      ui: {
+        prefersBorder: false,
+        // Claude reads this preference from resources/read and decides where to open the view.
+        ...(preferredDisplayMode ? { preferredDisplayMode } : {}),
       },
-    ],
-  }))
+    }
+    registerAppResource(server, name, uri, { mimeType: RESOURCE_MIME_TYPE, _meta }, async () => ({
+      contents: [{ uri, mimeType: RESOURCE_MIME_TYPE, text: await loadView(), _meta }],
+    }))
+  }
+
+  registerView("Deal app view", VIEW_URI)
+  registerView("Registry block side panel", PANEL_URI, "fullscreen")
 
   return server
 }

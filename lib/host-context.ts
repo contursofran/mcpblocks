@@ -7,11 +7,12 @@ import type {
 import { colorGroups, radii, typeScale } from "@/lib/tokens"
 
 export type PreviewTheme = "light" | "dark"
-export type PreviewMode = "inline" | "fullscreen"
+export type PreviewMode = "inline" | "fullscreen" | "side-panel"
 export type PreviewDevice = "web" | "mobile"
 
 /** Safe-area insets reported by the simulated host per device and display mode. */
 export function insetsFor(device: PreviewDevice, mode: PreviewMode) {
+  if (mode === "side-panel") return { top: 0, right: 0, bottom: device === "mobile" ? 16 : 0, left: 0 }
   if (device === "mobile") {
     return mode === "fullscreen"
       ? { top: 56, right: 0, bottom: 96, left: 0 }
@@ -93,10 +94,10 @@ export function buildHostContext({
   mode: PreviewMode
   device: PreviewDevice
 }): McpUiHostContext {
-  const width = device === "mobile" ? 351 : 712
+  const width = device === "mobile" ? 351 : mode === "side-panel" ? 360 : 712
   return {
     theme,
-    displayMode: mode,
+    displayMode: mode === "inline" ? "inline" : "fullscreen",
     availableDisplayModes: ["inline", "fullscreen"],
     platform: device === "mobile" ? "mobile" : "web",
     deviceCapabilities: {
@@ -105,7 +106,7 @@ export function buildHostContext({
     },
     safeAreaInsets: insetsFor(device, mode),
     containerDimensions:
-      mode === "fullscreen"
+      mode !== "inline"
         ? { width, height: device === "mobile" ? 600 : 520 }
         : { width, maxHeight: 520 },
     locale: "en-US",

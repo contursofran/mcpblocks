@@ -70,11 +70,13 @@ export function Carousel({
   }, [updateEdges])
 
   function page(dir: 1 | -1) {
-    scroller.current?.scrollBy({ left: dir * (cardWidth + 12) * 2, behavior: "smooth" })
+    const el = scroller.current
+    const visibleCardWidth = el?.firstElementChild?.getBoundingClientRect().width ?? cardWidth
+    el?.scrollBy({ left: dir * (visibleCardWidth + 12) * 2, behavior: "smooth" })
   }
 
   const fade = !edges.end
-    ? "linear-gradient(to right, black calc(100% - 172px), transparent)"
+    ? "linear-gradient(to right, black calc(100% - min(72px, 14%)), transparent)"
     : undefined
 
   return (
@@ -95,7 +97,7 @@ export function Carousel({
         {items.map((item) => {
           const isSaved = saved[item.id]
           return (
-            <article key={item.id} className="flex shrink-0 snap-start flex-col gap-5" style={{ width: cardWidth }}>
+            <article key={item.id} className="flex max-w-full shrink-0 snap-start flex-col gap-5" style={{ width: cardWidth }}>
               <div className="relative overflow-hidden rounded-host-xl bg-host-app-surface-muted" style={{ height: imageHeight }}>
                 {item.image ? (
                   // eslint-disable-next-line @next/next/no-img-element

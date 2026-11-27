@@ -51,7 +51,7 @@ export function DocumentCard({
   return (
     <div
       data-slot="document-card"
-      className={cn("flex w-full flex-col gap-6 px-4 pt-4 pb-6 text-host-app-fg font-[family-name:var(--font-sans)]", className)}
+      className={cn("flex w-full flex-col gap-6 px-4 pt-4 pb-6 text-host-app-fg font-[family-name:var(--font-sans)] [overflow-wrap:anywhere]", className)}
     >
       <h3 className="flex items-center gap-2 text-xl leading-[1.4] font-host-app-display font-semibold">
         {icon ? <span aria-hidden="true">{icon}</span> : null}
@@ -62,10 +62,10 @@ export function DocumentCard({
         <dl className="flex flex-col gap-2 rounded-host-xl bg-host-app-surface-subtle px-4 py-2">
           {properties.map((p) => (
             <div key={p.label} className="flex items-center gap-3 text-sm leading-[1.4]">
-              <dt className="w-[72px] shrink-0 text-host-app-fg-subtle">{p.label}</dt>
+              <dt className="w-[72px] max-w-[40%] shrink-0 text-host-app-fg-subtle">{p.label}</dt>
               <dd className="min-w-0 py-1 text-host-app-fg-muted">
                 {p.tag ? (
-                  <span className="rounded-host-sm border-[length:var(--border-width-regular,0.5px)] border-host-app-info-border/40 bg-host-app-info-bg px-2 py-1 text-host-app-fg">{p.value}</span>
+                  <span className="inline-block max-w-full rounded-host-sm border-[length:var(--border-width-regular,0.5px)] border-host-app-info-border/40 bg-host-app-info-bg px-2 py-1 text-host-app-fg">{p.value}</span>
                 ) : (
                   p.value
                 )}

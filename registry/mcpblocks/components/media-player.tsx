@@ -80,9 +80,9 @@ export function MediaPlayer({
   return (
     <div
       data-slot="media-player"
-      className={cn("flex w-full flex-col gap-6 p-6 text-host-app-fg font-[family-name:var(--font-sans)]", className)}
+      className={cn("@container flex w-full flex-col gap-6 p-6 text-host-app-fg font-[family-name:var(--font-sans)]", className)}
     >
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 flex-col text-base leading-[1.4]">
           <span className="truncate font-host-app-display font-semibold">{title}</span>
           {subtitle ? <span className="truncate text-host-app-fg-subtle">{subtitle}</span> : null}
@@ -111,7 +111,7 @@ export function MediaPlayer({
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 @[24rem]:gap-4">
         <button
           type="button"
           onClick={toggle}
@@ -136,14 +136,14 @@ export function MediaPlayer({
             if (e.key === "ArrowRight") a.currentTime = Math.min(duration, a.currentTime + 5)
             if (e.key === "ArrowLeft") a.currentTime = Math.max(0, a.currentTime - 5)
           }}
-          className="flex h-11 min-w-0 flex-1 cursor-pointer items-center gap-[3px] [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
+          className="flex h-11 min-w-0 flex-1 cursor-pointer items-center gap-px [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)] @[26rem]:gap-[3px]"
         >
           {bars.map((p, i) => (
             <span
               key={i}
               aria-hidden="true"
               className={cn(
-                "w-[3px] min-w-[2px] flex-1 rounded-full transition-colors",
+                "min-w-0 flex-1 rounded-full transition-colors",
                 i / bars.length <= progress ? "bg-host-fg" : "bg-host-fg-tertiary/60"
               )}
               style={{ height: `${Math.round(p * 100)}%` }}
