@@ -1,26 +1,94 @@
 import type { CallToolResult } from "@modelcontextprotocol/client"
 import { useApp } from "@modelcontextprotocol/ext-apps/react"
+import type { App } from "@modelcontextprotocol/ext-apps"
 import { StrictMode, useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 
 import "./styles.css"
-import { ConfirmAction } from "@/components/confirm-action"
+import { ConfirmAction, type ConfirmActionStatus } from "@/components/confirm-action"
 import { InlineCard } from "@/components/inline-card"
 import { LineChart } from "@/components/line-chart"
 import { ListView } from "@/components/list-view"
 import { RowsSkeleton } from "@/components/skeleton"
-import { applyHostContext } from "@/lib/host"
+import { applyHostContext, tellModel } from "@/lib/host"
 
 type Deal = { id: string; company: string; contact: string; email: string; stage: string; amount: number; closeDate: string; note: string }
 type Payload =
   | { view: "deals"; deals: Deal[]; total: number }
   | { view: "deal"; deal: Deal }
   | { view: "confirm"; deal: Deal; next: string }
+  | { view: "refused"; deal: Deal; reason: string }
   | { view: "trend"; labels: string[]; series: { name: string; values: number[] }[] }
 
 const money = (n: number) => `$${n.toLocaleString("en-US")}`
 const COLORS = ["#6366E9", "#835EEE", "#DA5597", "#2C84DB"]
 const initials = (name: string) => name.split(" ").map((p) => p[0]).join("").slice(0, 2)
+
+function DealConfirmation({ app, deal, next }: { app: App; deal: Deal; next: string }) {
+  const [status, setStatus] = useState<ConfirmActionStatus>("pending")
+  const [checking, setChecking] = useState(false)
+  const [refusedDescription, setRefusedDescription] = useState<string>()
+  const [unknownDescription, setUnknownDescription] = useState("Check the current deal stage before taking another action.")
+
+  function markDone() {
+    setStatus("done")
+    void tellModel(app, `${deal.company} is now in ${next}.`)
+  }
+
+  async function confirm() {
+    setStatus("working")
+    try {
+      const result = await app.callServerTool({
+        name: "update_deal_stage", arguments: { id: deal.id, expectedStage: deal.stage, stage: next },
+      })
+      const outcome = result.structuredContent as { outcome?: "unchanged"; reason?: string; deal?: Deal } | undefined
+      if (outcome?.outcome === "unchanged") {
+        setRefusedDescription(outcome.reason)
+        setStatus("refused")
+      } else if (!result.isError && outcome?.deal?.stage === next) {
+        markDone()
+      } else {
+        setStatus("unknown")
+      }
+    } catch {
+      setStatus("unknown")
+    }
+  }
+
+  async function checkAgain() {
+    setChecking(true)
+    try {
+      const result = await app.callServerTool({ name: "show_deal", arguments: { id: deal.id } })
+      const current = result.structuredContent as Extract<Payload, { view: "deal" }> | undefined
+      if (!result.isError && current?.deal?.stage === next) {
+        markDone()
+      } else {
+        setUnknownDescription("The proposed stage is still unconfirmed.")
+      }
+    } catch {
+      setUnknownDescription("The deal could not be checked. You can check again.")
+    } finally {
+      setChecking(false)
+    }
+  }
+
+  return (
+    <ConfirmAction
+      title={`Move ${deal.company} to ${next}`}
+      subject={{ name: deal.contact, detail: `${deal.company} · ${money(deal.amount)}` }}
+      confirmLabel={`Move to ${next}`}
+      changePreview={<p>Stage <strong>{deal.stage}</strong> → <strong>{next}</strong></p>}
+      details={{ heading: "This will", items: [`Keep the ${deal.closeDate} close date`] }}
+      doneTitle={`${deal.company} moved to ${next}`}
+      doneDescription="Deal stage · just now"
+      status={status}
+      refusedDescription={refusedDescription}
+      unknownDescription={checking ? "Checking the current stage…" : unknownDescription}
+      onCheckAgain={checking ? undefined : () => void checkAgain()}
+      onConfirm={confirm}
+    />
+  )
+}
 
 function Root() {
   const [payload, setPayload] = useState<Payload | null>(null)
@@ -101,24 +169,17 @@ function Root() {
     }
     case "confirm": {
       const { deal, next } = payload
+      return <DealConfirmation key={`${deal.id}:${next}`} app={app} deal={deal} next={next} />
+    }
+    case "refused":
       return (
         <ConfirmAction
-          title={`Move ${deal.company} to ${next}`}
-          subject={{ name: deal.contact, detail: `${deal.company} · ${money(deal.amount)}` }}
-          confirmLabel={`Move to ${next}`}
-          details={{ heading: "This will", items: [`Change the stage from ${deal.stage} to ${next}`, `Keep the ${deal.closeDate} close date`] }}
-          doneTitle={`${deal.company} moved to ${next}`}
-          doneDescription="Deal stage · just now"
-          onConfirm={async () => {
-            // Calls the app-only `update_deal_stage` tool through the host.
-            const res = await app.callServerTool({ name: "update_deal_stage", arguments: { id: deal.id, stage: next } })
-            if (res.isError) throw new Error("update failed")
-            // Tell the model what happened so the conversation stays in sync.
-            void app.updateModelContext({ content: [{ type: "text", text: `User confirmed: ${deal.company} is now in ${next}.` }] })
-          }}
+          title={`Move ${payload.deal.company}`}
+          subject={{ name: payload.deal.company }}
+          status="refused"
+          refusedDescription={payload.reason}
         />
       )
-    }
     case "trend":
       return (
         <LineChart

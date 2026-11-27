@@ -7,6 +7,7 @@ export const SITE_DESCRIPTION =
 export const docsPages = [
   { href: "/docs/installation", title: "Installation" },
   { href: "/docs/mcp-server", title: "Using with an MCP server" },
+  { href: "/docs/prepared-writes", title: "Prepared writes" },
 ] as const
 
 /** Pages that set their own `openGraph` replace the parent's, so repeat the image. */

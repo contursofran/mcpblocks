@@ -7,7 +7,7 @@ import { StatusUpdate } from "@/components/status-update"
 import { HostButton } from "@/components/ui/host-button"
 import { CheckIcon } from "@/components/ui/icons"
 
-export type ConfirmActionStatus = "pending" | "working" | "done" | "error"
+export type ConfirmActionStatus = "pending" | "working" | "done" | "error" | "refused" | "unknown"
 
 export type ConfirmActionProps = {
   /** What will happen, e.g. "Set lead assignment permission". */
@@ -25,10 +25,18 @@ export type ConfirmActionProps = {
   onConfirm?: () => unknown
   /** Optional list of what the change includes. */
   details?: { heading: string; items: string[] }
+  /** Summary of the proposed change, shown with a confirmation reminder. */
+  changePreview?: React.ReactNode
   doneTitle?: React.ReactNode
   doneDescription?: React.ReactNode
   onUndo?: () => void
   errorTitle?: React.ReactNode
+  refusedTitle?: React.ReactNode
+  refusedDescription?: React.ReactNode
+  unknownTitle?: React.ReactNode
+  unknownDescription?: React.ReactNode
+  /** Reconcile the original request without blindly sending another write. */
+  onCheckAgain?: () => void
   /** Control the status from outside (e.g. after a tool result arrives). */
   status?: ConfirmActionStatus
   className?: string
@@ -46,10 +54,16 @@ export function ConfirmAction({
   confirmLabel = "Confirm",
   onConfirm,
   details,
+  changePreview,
   doneTitle = "Done",
   doneDescription,
   onUndo,
   errorTitle = "That didn't work",
+  refusedTitle = "Nothing was changed",
+  refusedDescription,
+  unknownTitle = "We couldn't confirm this went through",
+  unknownDescription,
+  onCheckAgain,
   status: controlled,
   className,
 }: ConfirmActionProps) {
@@ -88,6 +102,18 @@ export function ConfirmAction({
       />
     )
   }
+  if (status === "refused" || status === "unknown") {
+    const refused = status === "refused"
+    return (
+      <StatusUpdate
+        className={cn("[&_p]:whitespace-normal", className)}
+        tone={refused ? "info" : "warning"}
+        title={refused ? refusedTitle : unknownTitle}
+        description={refused ? refusedDescription : unknownDescription}
+        action={!refused && onCheckAgain ? { label: "Check again", onClick: onCheckAgain } : undefined}
+      />
+    )
+  }
 
   const initials =
     subject.initials ??
@@ -121,7 +147,7 @@ export function ConfirmAction({
             ) : null}
           </span>
         </div>
-        <HostButton onClick={confirm} disabled={status === "working"} className="min-h-9 h-9">
+        <HostButton onClick={confirm} disabled={status === "working"}>
           {status === "working" ? "Working…" : confirmLabel}
         </HostButton>
       </div>
@@ -137,6 +163,12 @@ export function ConfirmAction({
               </li>
             ))}
           </ul>
+        </div>
+      ) : null}
+      {changePreview != null ? (
+        <div className="space-y-2 text-host-sm">
+          {changePreview}
+          <p className="text-host-fg-secondary">Nothing is saved until you confirm.</p>
         </div>
       ) : null}
     </div>

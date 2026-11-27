@@ -258,7 +258,7 @@
       "name": "confirm-action",
       "type": "registry:component",
       "title": "Confirm action",
-      "description": "Confirmation for a change Claude prepared: subject row with one confirm button and a checklist of what the change includes. Based on the MCP Apps for Claude kit.",
+      "description": "Confirmation for a prepared change, with a change preview, refusal reasons and a check action for unconfirmed writes. Based on the MCP Apps for Claude kit.",
       "registryDependencies": [
         "https://mcpblocks.dev/r/status-update.json",
         "https://mcpblocks.dev/r/host-button.json",

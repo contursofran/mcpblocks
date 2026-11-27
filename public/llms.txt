@@ -18,6 +18,7 @@ npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 
 - [Installation](https://mcpblocks.dev/docs/installation): Prerequisites, shadcn CLI setup, and what files get added.
 - [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server): Register tools + `ui://` resources with `@modelcontextprotocol/ext-apps` and wire `useApp` / `applyHostContext`.
+- [Prepared writes](https://mcpblocks.dev/docs/prepared-writes): Review proposed changes, reconcile unconfirmed writes, and report committed changes to the model.
 - [Design tokens](https://mcpblocks.dev/tokens): Complete Claude MCP Apps light/dark CSS variables and Tailwind `host-*` utilities.
 
 ## Components

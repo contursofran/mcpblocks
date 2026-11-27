@@ -63,14 +63,17 @@ export const components: ComponentDoc[] = [
     displayModes: "inline",
     variant: "card",
     source: `${KIT} · Inline card / Confirmation actions`,
-    checks: ["One confirm action; edits stay in the chat", "Working, done and error states in place", "Undo offered after success"],
+    checks: ["One confirm action", "Refusals show the reason", "Unconfirmed writes offer a check"],
     usage: `import { ConfirmAction } from "@/components/confirm-action"
 
 <ConfirmAction
   title="Set lead assignment permission"
   subject={{ name: "Sarah Johnson", detail: "sarah.johnson@company.com" }}
   confirmLabel="Confirm assignment"
-  onConfirm={() => app.callServerTool({ name: "assign_permission", arguments: { userId } })}
+  changePreview={<p>Permission: Read only → Manage leads</p>}
+  status={status}
+  onConfirm={executePreparedAssignment}
+  onCheckAgain={checkAssignment}
   details={{ heading: "Lead assignment permissions", items: permissions }}
   doneTitle="Permission assigned"
 />`,
@@ -79,7 +82,11 @@ export const components: ComponentDoc[] = [
       { name: "subject", type: "{ name, detail?, initials?, avatarColor? }", description: "The person or record it applies to." },
       { name: "onConfirm", type: "() => unknown", description: "Return a promise to show the working state; a rejection shows the error state." },
       { name: "details", type: "{ heading, items[] }", description: "What the change includes, as a checklist." },
-      { name: "status", type: "pending | working | done | error", description: "Control the state from outside." },
+      { name: "changePreview", type: "ReactNode", description: "Shows the proposed change and the confirmation reminder." },
+      { name: "status", type: "pending | working | done | error | refused | unknown", description: "Control the state from outside." },
+      { name: "refusedTitle / refusedDescription", type: "ReactNode", description: "Explain why the server refused the proposal without a write." },
+      { name: "unknownTitle / unknownDescription", type: "ReactNode", description: "Explain a write whose outcome could not be verified." },
+      { name: "onCheckAgain", type: "() => void", description: "Reconcile the original write in the unknown state." },
     ],
   },
   {

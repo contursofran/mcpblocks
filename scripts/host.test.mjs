@@ -8,7 +8,7 @@ const source = readFileSync(new URL("../registry/mcpblocks/lib/host.ts", import.
 const { outputText } = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 })
-const { applyHostContext } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`)
+const { applyHostContext, tellModel } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`)
 
 function createRoot() {
   const properties = new Map()
@@ -109,4 +109,51 @@ test("leaves host styles alone when the context omits styles", () => {
   assert.equal(properties.get("--font-sans"), "Host Sans")
   assert.equal(styles[0].textContent, fonts)
   assert.equal(el.dataset.hostStyles, "")
+})
+
+function modelContextApp(capabilities, { rejectContext = false, rejectMessage = false } = {}) {
+  const calls = []
+  const app = {
+    getHostCapabilities: () => capabilities,
+    updateModelContext: async (params) => {
+      calls.push(["context", params])
+      if (rejectContext) throw new Error("Host disconnected")
+      return {}
+    },
+    sendMessage: async (params) => {
+      calls.push(["message", params])
+      return { isError: rejectMessage }
+    },
+  }
+  return { app, calls }
+}
+
+test("prefers host model context, trims text and caps the summary at 500 characters", async () => {
+  const { app, calls } = modelContextApp({ updateModelContext: { text: {} } })
+
+  assert.equal(await tellModel(app, `  ${"🌱".repeat(510)}  `, { fallbackToMessage: true }), true)
+  assert.deepEqual(calls, [["context", { content: [{ type: "text", text: `${"🌱".repeat(499)}…` }] }]])
+})
+
+test("sends chat text only with opt-in when context updates are unavailable", async () => {
+  const { app, calls } = modelContextApp({ updateModelContext: { image: {} }, message: { text: {} } })
+
+  assert.equal(await tellModel(app, "  ", { fallbackToMessage: true }), false)
+  assert.equal(await tellModel(app, "Stage updated"), false)
+  assert.deepEqual(calls, [])
+  assert.equal(await tellModel(app, " Stage updated ", { fallbackToMessage: true }), true)
+  assert.deepEqual(calls, [["message", { role: "user", content: [{ type: "text", text: "Stage updated" }] }]])
+})
+
+test("a failed model-context update does not turn into a chat message", async () => {
+  const { app, calls } = modelContextApp({ updateModelContext: { text: {} } }, { rejectContext: true })
+
+  assert.equal(await tellModel(app, "Stage updated", { fallbackToMessage: true }), false)
+  assert.deepEqual(calls.map(([kind]) => kind), ["context"])
+})
+
+test("reports a rejected chat fallback as undelivered", async () => {
+  const { app } = modelContextApp(undefined, { rejectMessage: true })
+
+  assert.equal(await tellModel(app, "Stage updated", { fallbackToMessage: true }), false)
 })

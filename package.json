@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "test:host": "node --test scripts/host.test.mjs",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
     "check:conformance": "node scripts/check-conformance.mjs",
     "llms:build": "node scripts/generate-llms.mjs",
     "registry:build": "shadcn build",
@@ -34,14 +36,17 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
+    "@storybook/react-vite": "^10.6.9",
     "@tailwindcss/postcss": "^4.1.11",
     "@types/node": "^20.19.9",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
     "eslint": "^9.32.0",
     "eslint-config-next": "15.3.1",
+    "storybook": "^10.6.9",
     "tailwindcss": "^4.1.11",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vite": "^7.3.8"
   },
   "pnpm": {
     "overrides": {
