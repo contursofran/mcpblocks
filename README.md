@@ -5,7 +5,7 @@
 Copy-and-paste cards, approvals, charts, media players, carousels, and skeletons built on Claude's host CSS tokens, display-mode rules, and mobile safe areas — degrading cleanly in ChatGPT, VS Code, Goose, and Vercel AI SDK hosts. Distributed as a free, open-source [shadcn/ui registry](https://ui.shadcn.com/docs/registry).
 
 - **Docs & live previews:** <https://mcpblocks.dev>
-- **Live demo MCP server:** `https://mcpblocks.dev/mcp` (add as a custom connector in Claude)
+- **Live demo MCP server:** `https://mcpblocks.dev/mcp` (add as a custom connector in Claude and select **No sign in**)
 - **LLM / Agent docs:** [`llms.txt`](https://mcpblocks.dev/llms.txt) · [`llms-full.txt`](https://mcpblocks.dev/llms-full.txt) · [`agents.md`](https://mcpblocks.dev/agents.md) · [`r/registry.json`](https://mcpblocks.dev/r/registry.json)
 
 ---

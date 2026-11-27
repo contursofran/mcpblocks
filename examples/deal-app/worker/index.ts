@@ -15,6 +15,12 @@ const cors = {
 
 export default {
   async fetch(request: Request): Promise<Response> {
+    // Cloudflare calls the Worker when no static asset matches the URL.
+    const { pathname } = new URL(request.url)
+    if (pathname !== "/mcp" && !pathname.startsWith("/mcp/")) {
+      return new Response(null, { status: 404 })
+    }
+
     if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors })
     const res = await handler.fetch(request)
     const out = new Response(res.body, res)
