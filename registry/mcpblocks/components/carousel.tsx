@@ -78,7 +78,7 @@ export function Carousel({
     : undefined
 
   return (
-    <div data-slot="carousel" className={cn("relative w-full pt-4 pb-6 text-host-fg font-[family-name:var(--font-sans)]", className)}>
+    <div data-slot="carousel" className={cn("relative w-full pt-4 pb-6 text-host-app-fg font-[family-name:var(--font-sans)]", className)}>
       <div
         ref={scroller}
         role="region"
@@ -96,7 +96,7 @@ export function Carousel({
           const isSaved = saved[item.id]
           return (
             <article key={item.id} className="flex shrink-0 snap-start flex-col gap-5" style={{ width: cardWidth }}>
-              <div className="relative overflow-hidden rounded-host-xl bg-host-bg-secondary" style={{ height: imageHeight }}>
+              <div className="relative overflow-hidden rounded-host-xl bg-host-app-surface-muted" style={{ height: imageHeight }}>
                 {item.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={item.image} alt={item.imageAlt ?? ""} className="size-full object-cover" />
@@ -111,7 +111,7 @@ export function Carousel({
                       setSaved((s) => ({ ...s, [item.id]: next }))
                       item.onSave?.(next)
                     }}
-                    className="absolute top-3 right-3 inline-flex size-11 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg/90 text-host-fg backdrop-blur-[9px]"
+                    className="absolute top-3 right-3 inline-flex size-11 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-app-border-subtle bg-host-app-surface/90 text-host-app-fg backdrop-blur-[9px]"
                   >
                     <Bookmark className="size-5" fill={isSaved ? "currentColor" : "none"} aria-hidden="true" />
                   </button>
@@ -120,15 +120,15 @@ export function Carousel({
 
               <div className="flex flex-col gap-2.5">
                 {item.onClick ? (
-                  <button type="button" onClick={item.onClick} className="truncate text-left text-xs leading-[1.4] font-semibold text-host-fg-secondary hover:underline">
+                  <button type="button" onClick={item.onClick} className="truncate text-left text-xs leading-[1.4] font-semibold text-host-app-fg-muted hover:underline">
                     {item.title}
                   </button>
                 ) : (
-                  <h3 className="truncate text-xs leading-[1.4] font-semibold text-host-fg-secondary">{item.title}</h3>
+                  <h3 className="truncate text-xs leading-[1.4] font-semibold text-host-app-fg-muted">{item.title}</h3>
                 )}
-                {item.subtitle ? <p className="truncate text-xs leading-[1.4] text-host-fg-secondary">{item.subtitle}</p> : null}
+                {item.subtitle ? <p className="truncate text-xs leading-[1.4] text-host-app-fg-muted">{item.subtitle}</p> : null}
                 {item.rating !== undefined || item.meta?.length ? (
-                  <p className="flex items-center gap-1 text-xs leading-[1.4] text-host-fg-tertiary opacity-75">
+                  <p className="flex items-center gap-1 text-xs leading-[1.4] text-host-app-fg-subtle opacity-75">
                     {item.rating !== undefined ? (
                       <span className="flex items-center gap-0.5">
                         <StarFilledIcon className="size-4" aria-label="Rating" />
@@ -157,7 +157,7 @@ export function Carousel({
           type="button"
           aria-label="Previous"
           onClick={() => page(-1)}
-          className="absolute top-[calc(16px+var(--img-h)/2)] left-2 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg text-host-fg shadow-md"
+          className="absolute top-[calc(16px+var(--img-h)/2)] left-2 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-app-border-subtle bg-host-app-surface text-host-app-fg shadow-md"
           style={{ ["--img-h" as string]: `${imageHeight}px` }}
         >
           <CaretLeftIcon className="size-5" />
@@ -168,7 +168,7 @@ export function Carousel({
           type="button"
           aria-label="Next"
           onClick={() => page(1)}
-          className="absolute top-[calc(16px+var(--img-h)/2)] right-2 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-border-tertiary bg-host-bg text-host-fg shadow-md"
+          className="absolute top-[calc(16px+var(--img-h)/2)] right-2 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border-[length:var(--border-width-regular,0.5px)] border-host-app-border-subtle bg-host-app-surface text-host-app-fg shadow-md"
           style={{ ["--img-h" as string]: `${imageHeight}px` }}
         >
           <CaretRightIcon className="size-5" />

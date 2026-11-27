@@ -18,10 +18,10 @@ const tones: Record<
   StatusTone,
   { icon: React.ElementType; chip: string; label: string }
 > = {
-  success: { icon: CheckCircleIcon, chip: "bg-host-success-bg text-host-success-fg", label: "Success" },
-  info: { icon: InfoIcon, chip: "bg-host-info-bg text-host-info-fg", label: "Info" },
-  warning: { icon: WarningIcon, chip: "bg-host-warning-bg text-host-warning-fg", label: "Warning" },
-  danger: { icon: ProhibitIcon, chip: "bg-host-danger-border/15 text-host-danger-fg", label: "Error" },
+  success: { icon: CheckCircleIcon, chip: "bg-host-app-success-bg text-host-app-success-fg", label: "Success" },
+  info: { icon: InfoIcon, chip: "bg-host-app-info-bg text-host-app-info-fg", label: "Info" },
+  warning: { icon: WarningIcon, chip: "bg-host-app-warning-bg text-host-app-warning-fg", label: "Warning" },
+  danger: { icon: ProhibitIcon, chip: "bg-host-app-danger-border/15 text-host-app-danger-fg", label: "Error" },
 }
 
 /** Confirms the result of an action, using the host's semantic colors. */
@@ -40,7 +40,7 @@ export function StatusUpdate({
       role="status"
       data-slot="status-update"
       className={cn(
-        "flex w-full items-center gap-3 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-border-secondary bg-host-bg p-4 text-host-fg font-[family-name:var(--font-sans)]",
+        "flex w-full items-center gap-3 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted bg-host-app-surface p-4 text-host-app-fg font-[family-name:var(--font-sans)]",
         className
       )}
       {...props}
@@ -53,7 +53,7 @@ export function StatusUpdate({
       <div className="flex min-w-0 flex-1 flex-col">
         <p className="text-sm font-semibold">{title}</p>
         {description ? (
-          <p className="truncate text-sm text-host-fg-tertiary">{description}</p>
+          <p className="truncate text-sm text-host-app-fg-subtle">{description}</p>
         ) : null}
       </div>
       {action ? (

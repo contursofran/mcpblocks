@@ -43,9 +43,9 @@ Current state: `pnpm build`, `pnpm lint` and `pnpm registry:build` all pass. Pag
 
 ## Key design decisions (keep these)
 
-1. **Host tokens via Tailwind utilities.** Claude injects CSS variables like `--color-background-primary`, `--color-text-primary`, `--color-border-secondary`, `--border-radius-md`, `--font-sans` on the document. We define light/dark *fallbacks* in `:root` / `.dark` / `[data-host-theme="dark"]`, and map them in `@theme inline` to utilities: `bg-host-bg`, `bg-host-bg-secondary`, `text-host-fg`, `text-host-fg-tertiary`, `border-host-border-secondary`, `bg-host-success-bg`, `text-host-danger-fg`, `rounded-host-md`, etc. Inside the host, the host's inline values win. **Components must only use `host-*` utilities, never hardcoded colors.**
+1. **Host tokens via Tailwind utilities.** Claude sends CSS variables such as `--color-background-primary`, `--color-text-primary`, `--border-radius-md`, and `--font-sans` in host context. `applyHostContext` writes them to the document. Light and dark fallbacks live in `:root` / `.dark` / `[data-host-theme="dark"]`. Reference utilities such as `bg-host-bg` read the host values. Components use `host-app-*` utilities for brandable values, with scoped `--mb-*` overrides and host fallbacks. Components use host utilities for shared colors and never hardcode a brand palette.
    - Do not define `--color-background-primary` etc. inside `@theme` (Tailwind v4 namespace collision / circular var). Keep fallbacks in `:root`, mapping in `@theme inline`.
-   - The `host-tokens` registry item ships the same mapping via `cssVars` (theme/light/dark) in `registry.json`. If you change tokens, update **both** `app/globals.css` and `registry.json`.
+   - The `host-tokens` registry item ships utility mappings in `cssVars.theme` and fallback declarations in `css`. If you change tokens, update **both** `app/globals.css` and `registry.json`, then verify a shadcn install.
    - Tokens now cover the kit's full variable set (Colors collection, 37 tokens light/dark; Typography; Border): extra colors `host-bg-ghost/disabled`, `host-fg-disabled/ghost`, `host-border-inverse/ghost/disabled`, `host-ring-*`; type scale `text-host-{xs,sm,md,lg}` and `text-host-heading-{xs..3xl}`; `rounded-host-full`. `lib/tokens.ts` (feeds the /tokens page) is generated from `registry.json`.
    - Kit's `Background/Danger` is a solid red (`#B53333` / `#DD5353`) for destructive buttons. Soft danger chips use `bg-host-danger-border/15` instead.
 2. **Safe areas** are CSS vars `--mb-safe-top|right|bottom|left` set by `applySafeAreaInsets()` from `hostContext.safeAreaInsets`.
@@ -110,6 +110,7 @@ Cloudflare Pages, static export (domain is already in the same Cloudflare accoun
 
 ## Conventions
 
+- **Merging (2026-11-27):** `master` requires zero approving reviews so maintainers can merge their own pull requests. Check Cloudflare Builds before merging.
 - Add a component: create `registry/mcpblocks/components/<name>.tsx`, add an item to `registry.json`, add a demo to `components/site/demos.tsx` (+ `demos` map), add docs to `lib/docs.ts`, run `pnpm registry:build && pnpm build`.
 - Accessibility: real `<button>`/`<a>`, `aria-label` on icon-only buttons, text contrast ≥ 4.5:1, status icons with labels.
 - Keep components presentational (props + callbacks); host wiring stays in the consumer's app.

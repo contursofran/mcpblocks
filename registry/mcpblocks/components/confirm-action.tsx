@@ -127,11 +127,11 @@ export function ConfirmAction({
   return (
     <div
       data-slot="confirm-action"
-      className={cn("flex w-full flex-col gap-6 p-6 text-host-fg font-[family-name:var(--font-sans)]", className)}
+      className={cn("flex w-full flex-col gap-6 p-6 text-host-app-fg font-[family-name:var(--font-sans)]", className)}
     >
-      <h3 className="text-xl leading-[25px] font-semibold">{title}</h3>
+      <h3 className="text-xl leading-[25px] font-host-app-display font-semibold">{title}</h3>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-border-secondary p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-host-xl border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted p-4">
         <div className="flex min-w-0 items-center gap-3">
           <span
             aria-hidden="true"
@@ -143,7 +143,7 @@ export function ConfirmAction({
           <span className="flex min-w-0 flex-col">
             <span className="truncate text-sm leading-[19.6px] font-semibold">{subject.name}</span>
             {subject.detail ? (
-              <span className="truncate text-sm leading-[19.6px] text-host-fg-tertiary opacity-75">{subject.detail}</span>
+              <span className="truncate text-sm leading-[19.6px] text-host-app-fg-subtle opacity-75">{subject.detail}</span>
             ) : null}
           </span>
         </div>
@@ -157,7 +157,7 @@ export function ConfirmAction({
           <h4 className="text-sm leading-[19.6px] font-semibold">{details.heading}</h4>
           <ul className="flex flex-col gap-3">
             {details.items.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm leading-[19.6px] text-host-fg-tertiary">
+              <li key={item} className="flex items-start gap-2 text-sm leading-[19.6px] text-host-app-fg-subtle">
                 <CheckIcon className="size-5 shrink-0" />
                 {item}
               </li>
@@ -168,7 +168,7 @@ export function ConfirmAction({
       {changePreview != null ? (
         <div className="space-y-2 text-host-sm">
           {changePreview}
-          <p className="text-host-fg-secondary">Nothing is saved until you confirm.</p>
+          <p className="text-host-app-fg-muted">Nothing is saved until you confirm.</p>
         </div>
       ) : null}
     </div>

@@ -11,6 +11,32 @@ body {
 }
 
 @theme inline {
+  /* App tokens are scoped overrides with per-theme host fallbacks. */
+  --color-host-app-surface: var(--mb-surface, var(--color-background-primary));
+  --color-host-app-surface-muted: var(--mb-surface-muted, var(--color-background-secondary));
+  --color-host-app-surface-subtle: var(--mb-surface-muted, var(--color-background-tertiary));
+  --color-host-app-fg: var(--mb-fg, var(--color-text-primary));
+  --color-host-app-fg-muted: var(--mb-fg-muted, var(--color-text-secondary));
+  --color-host-app-fg-subtle: var(--mb-fg-muted, var(--color-text-tertiary));
+  --color-host-app-border: var(--mb-border, var(--color-border-primary));
+  --color-host-app-border-muted: var(--mb-border, var(--color-border-secondary));
+  --color-host-app-border-subtle: var(--mb-border, var(--color-border-tertiary));
+  --color-host-app-accent: var(--mb-accent, var(--color-background-inverse));
+  --color-host-app-accent-fg: var(--mb-accent-fg, var(--color-text-inverse));
+  --color-host-app-info-bg: var(--mb-info-bg, var(--color-background-info));
+  --color-host-app-info-fg: var(--mb-info-fg, var(--color-text-info));
+  --color-host-app-info-border: var(--mb-info-border, var(--color-border-info));
+  --color-host-app-success-bg: var(--mb-success-bg, var(--color-background-success));
+  --color-host-app-success-fg: var(--mb-success-fg, var(--color-text-success));
+  --color-host-app-success-border: var(--mb-success-border, var(--color-border-success));
+  --color-host-app-warning-bg: var(--mb-warning-bg, var(--color-background-warning));
+  --color-host-app-warning-fg: var(--mb-warning-fg, var(--color-text-warning));
+  --color-host-app-warning-border: var(--mb-warning-border, var(--color-border-warning));
+  --color-host-app-danger-bg: var(--mb-danger-bg, var(--color-background-danger));
+  --color-host-app-danger-fg: var(--mb-danger-fg, var(--color-text-danger));
+  --color-host-app-danger-border: var(--mb-danger-border, var(--color-border-danger));
+  --font-host-app-display: var(--mb-font-display, var(--font-sans));
+
   --color-host-bg: var(--color-background-primary);
   --color-host-bg-secondary: var(--color-background-secondary);
   --color-host-bg-tertiary: var(--color-background-tertiary);

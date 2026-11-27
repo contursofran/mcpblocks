@@ -11,6 +11,8 @@ import { LineChart } from "@/components/line-chart"
 import { ListView } from "@/components/list-view"
 import { RowsSkeleton } from "@/components/skeleton"
 import { applyHostContext, tellModel } from "@/lib/host"
+import type { DemoBlock } from "../shared/demo-blocks"
+import { RegistryBlockDemo } from "./demo-blocks"
 
 type Deal = { id: string; company: string; contact: string; email: string; stage: string; amount: number; closeDate: string; note: string }
 type Payload =
@@ -18,6 +20,7 @@ type Payload =
   | { view: "deal"; deal: Deal }
   | { view: "confirm"; deal: Deal; next: string }
   | { view: "refused"; deal: Deal; reason: string }
+  | { view: "block"; block: DemoBlock }
   | { view: "trend"; labels: string[]; series: { name: string; values: number[] }[] }
 
 const money = (n: number) => `$${n.toLocaleString("en-US")}`
@@ -122,6 +125,8 @@ function Root() {
   const ask = (text: string) => app.sendMessage({ role: "user", content: [{ type: "text", text }] })
 
   switch (payload.view) {
+    case "block":
+      return <RegistryBlockDemo key={payload.block} block={payload.block} />
     case "deals":
       return (
         <ListView

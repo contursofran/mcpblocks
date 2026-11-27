@@ -51,21 +51,21 @@ export function DocumentCard({
   return (
     <div
       data-slot="document-card"
-      className={cn("flex w-full flex-col gap-6 px-4 pt-4 pb-6 text-host-fg font-[family-name:var(--font-sans)]", className)}
+      className={cn("flex w-full flex-col gap-6 px-4 pt-4 pb-6 text-host-app-fg font-[family-name:var(--font-sans)]", className)}
     >
-      <h3 className="flex items-center gap-2 text-xl leading-[1.4] font-semibold">
+      <h3 className="flex items-center gap-2 text-xl leading-[1.4] font-host-app-display font-semibold">
         {icon ? <span aria-hidden="true">{icon}</span> : null}
         <span className="min-w-0 truncate">{title}</span>
       </h3>
 
       {properties?.length ? (
-        <dl className="flex flex-col gap-2 rounded-host-xl bg-host-bg-tertiary px-4 py-2">
+        <dl className="flex flex-col gap-2 rounded-host-xl bg-host-app-surface-subtle px-4 py-2">
           {properties.map((p) => (
             <div key={p.label} className="flex items-center gap-3 text-sm leading-[1.4]">
-              <dt className="w-[72px] shrink-0 text-host-fg-tertiary">{p.label}</dt>
-              <dd className="min-w-0 py-1 text-host-fg-secondary">
+              <dt className="w-[72px] shrink-0 text-host-app-fg-subtle">{p.label}</dt>
+              <dd className="min-w-0 py-1 text-host-app-fg-muted">
                 {p.tag ? (
-                  <span className="rounded-host-sm border-[length:var(--border-width-regular,0.5px)] border-host-info-border/40 bg-host-info-bg px-2 py-1 text-host-fg">{p.value}</span>
+                  <span className="rounded-host-sm border-[length:var(--border-width-regular,0.5px)] border-host-app-info-border/40 bg-host-app-info-bg px-2 py-1 text-host-app-fg">{p.value}</span>
                 ) : (
                   p.value
                 )}
@@ -97,8 +97,8 @@ export function DocumentCard({
                       update(next)
                     }}
                     className={cn(
-                      "rounded-host-sm border-[length:var(--border-width-regular,0.5px)] border-transparent px-1.5 py-1 text-sm leading-[1.4] text-host-fg-secondary outline-none",
-                      editable && "focus:border-host-border-tertiary hover:bg-host-bg-tertiary"
+                      "rounded-host-sm border-[length:var(--border-width-regular,0.5px)] border-transparent px-1.5 py-1 text-sm leading-[1.4] text-host-app-fg-muted outline-none",
+                      editable && "focus:border-host-app-border-subtle hover:bg-host-app-surface-subtle"
                     )}
                   >
                     {item}
@@ -109,14 +109,14 @@ export function DocumentCard({
           ) : (
             <ul className="flex flex-col gap-2">
               {section.items.length === 0 && section.placeholder ? (
-                <li className="flex items-center gap-3 text-sm leading-[1.4] text-host-fg-tertiary opacity-75">
-                  <span aria-hidden="true" className="size-4 shrink-0 rounded-host-xs border-[length:var(--border-width-regular,0.5px)] border-host-border-secondary bg-host-bg" />
+                <li className="flex items-center gap-3 text-sm leading-[1.4] text-host-app-fg-subtle opacity-75">
+                  <span aria-hidden="true" className="size-4 shrink-0 rounded-host-xs border-[length:var(--border-width-regular,0.5px)] border-host-app-border-muted bg-host-app-surface" />
                   {section.placeholder}
                 </li>
               ) : null}
               {section.items.map((task, ti) => (
                 <li key={ti}>
-                  <label className="flex cursor-pointer items-center gap-3 text-sm leading-[1.4] text-host-fg-secondary">
+                  <label className="flex cursor-pointer items-center gap-3 text-sm leading-[1.4] text-host-app-fg-muted">
                     <input
                       type="checkbox"
                       checked={!!task.done}
@@ -129,9 +129,9 @@ export function DocumentCard({
                         )
                         update(next)
                       }}
-                      className="size-4 shrink-0 rounded-host-xs accent-[var(--color-text-primary)]"
+                      className="size-4 shrink-0 rounded-host-xs accent-[var(--mb-accent,var(--color-text-primary))]"
                     />
-                    <span className={cn(task.done && "text-host-fg-tertiary line-through")}>{task.text}</span>
+                    <span className={cn(task.done && "text-host-app-fg-subtle line-through")}>{task.text}</span>
                   </label>
                 </li>
               ))}

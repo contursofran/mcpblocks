@@ -10,7 +10,7 @@ Install any component directly into a React + Tailwind CSS v4 project:
 npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 ```
 
-- [Full registry manifest (JSON)](https://mcpblocks.dev/r/registry.json): Machine-readable shadcn v3 registry index of all 13 items.
+- [Full registry manifest (JSON)](https://mcpblocks.dev/r/registry.json): Machine-readable shadcn v3 registry index of all 14 items.
 - [Complete single-file LLM docs](https://mcpblocks.dev/llms-full.txt): Full documentation, usage snippets, props, tokens, and server setup in one file.
 - [Agent integration guide](https://mcpblocks.dev/agents.md): Decision matrix, hard Claude MCP Apps rules, and copy-paste wiring for coding agents.
 
@@ -19,6 +19,7 @@ npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 - [Installation](https://mcpblocks.dev/docs/installation): Prerequisites, shadcn CLI setup, and what files get added.
 - [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server): Register tools + `ui://` resources with `@modelcontextprotocol/ext-apps` and wire `useApp` / `applyHostContext`.
 - [Prepared writes](https://mcpblocks.dev/docs/prepared-writes): Review proposed changes, reconcile unconfirmed writes, and report committed changes to the model.
+- [Brand your blocks](https://mcpblocks.dev/docs/brand-your-blocks): Override brand accents and other app tokens while retaining the host defaults.
 - [Design tokens](https://mcpblocks.dev/tokens): Complete Claude MCP Apps light/dark CSS variables and Tailwind `host-*` utilities.
 
 ## Components
@@ -39,6 +40,7 @@ npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 - [Host helpers](https://mcpblocks.dev/r/host.json): Apply host theme, CSS variables, fonts, display mode and safe-area insets, with dev-only guideline warnings.
 - [Host button](https://mcpblocks.dev/r/host-button.json): Button styled with host tokens, 44px tap target.
 - [Icons](https://mcpblocks.dev/r/icons.json): 38 icons from the MCP Apps for Claude kit (Anthropic, CC BY 4.0) as currentColor React components.
+- [Branded confirm action](https://mcpblocks.dev/r/branded-confirm-action.json): A confirm action with a teal accent and a display font on the host surface.
 
 ## Optional
 

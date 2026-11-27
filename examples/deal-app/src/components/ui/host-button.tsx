@@ -12,12 +12,12 @@ const hostButtonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-host-bg-inverse text-host-fg-inverse hover:opacity-90",
+        primary: "bg-host-app-accent text-host-app-accent-fg hover:opacity-90",
         secondary:
-          "border-[length:var(--border-width-regular,0.5px)] border-host-border bg-transparent text-host-fg hover:bg-host-bg-secondary",
-        ghost: "bg-transparent text-host-fg hover:bg-host-bg-secondary",
+          "border-[length:var(--border-width-regular,0.5px)] border-host-app-border bg-transparent text-host-app-fg hover:bg-host-app-surface-muted",
+        ghost: "bg-transparent text-host-app-fg hover:bg-host-app-surface-muted",
         danger:
-          "bg-host-danger-bg text-white hover:opacity-90",
+          "bg-host-app-danger-bg text-white hover:opacity-90",
       },
       block: {
         true: "w-full flex-1",
