@@ -11,9 +11,10 @@ const view = await readFile(new URL("../dist/view.html", import.meta.url), "utf8
 const revision = createHash("sha256").update(view).digest("hex").slice(0, 12)
 const uri = `ui://record-summary/view-${revision}.html`
 const csp = { resourceDomains: ["https://assets.claude.ai"], connectDomains: [] }
+const maxRequestBodySize = 64 * 1024
 
 function createServer() {
-  const server = new McpServer({ name: "Record summary", version: "0.1.0" })
+  const server = new McpServer({ name: "Record summary", version: "0.1.0" }, { maxToolInputElements: 100 })
   registerAppTool(server, "show_record", {
     title: "Show record",
     description: "Show a read-only sample record.",
@@ -31,10 +32,10 @@ function createServer() {
 }
 
 const host = "127.0.0.1"
-const app = createMcpExpressApp({ host })
+const app = createMcpExpressApp({ host, jsonLimit: `${maxRequestBodySize}b` })
 app.all("/mcp", async (req, res) => {
   const server = createServer()
-  const transport = new NodeStreamableHTTPServerTransport({ sessionIdGenerator: undefined })
+  const transport = new NodeStreamableHTTPServerTransport({ sessionIdGenerator: undefined, maxRequestBodySize })
   res.on("close", () => {
     void transport.close().catch(() => {})
     void server.close().catch(() => {})
