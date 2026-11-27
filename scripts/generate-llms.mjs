@@ -41,6 +41,7 @@ const GITHUB_URL = "https://github.com/contursofran/mcpblocks"
 const MCP_DEMO_URL = `${SITE_URL}/mcp`
 
 function renderComponentMarkdown(c) {
+  const release = registry.items.find((item) => item.name === c.slug)?.meta?.mcpblocks
   const propsTable = [
     "| Prop | Type | Description |",
     "| --- | --- | --- |",
@@ -84,6 +85,19 @@ function renderComponentMarkdown(c) {
     "",
     propsTable,
     "",
+    ...(release ? [
+      "## Changelog",
+      "",
+      `See the version stamp near the top of your copied source. Compare your copy with \`npx shadcn@latest add ${SITE_URL}/r/${c.slug}.json --diff components/${c.slug}.tsx\`. Adjust the path to match your installation.`,
+      "",
+      ...release.changelog.flatMap(({ version, date, changes, compatibility }) => [
+        `### ${version} · ${date}`,
+        "",
+        ...changes.map((change) => `- ${change}`),
+        ...(compatibility ? ["", compatibility] : []),
+        "",
+      ]),
+    ] : []),
   ].join("\n")
 }
 
@@ -116,8 +130,10 @@ const llmsTxt = [
   "",
   `- [Installation](${SITE_URL}/docs/installation): shadcn setup for Tailwind v4, Tailwind 3.4 and standalone CSS.`,
   `- [Using with an MCP server](${SITE_URL}/docs/mcp-server): Register tools + \`ui://\` resources with \`@modelcontextprotocol/ext-apps\` and wire \`useApp\` / \`applyHostContext\`.`,
+  `- [Ship a view](${SITE_URL}/docs/ship-a-view): Starter app, single-file bundle, CSP, content hashes, and Claude connector testing.`,
   `- [Prepared writes](${SITE_URL}/docs/prepared-writes): Review proposed changes, reconcile unconfirmed writes, and report committed changes to the model.`,
   `- [Protocol hooks](${SITE_URL}/docs/protocol-hooks): Connect React views to the host, handle tool results, and manage prepared writes.`,
+  `- [Host compatibility](${SITE_URL}/docs/host-compatibility): Host capabilities, verification dates, and fallbacks.`,
   `- [Composable UI parts](${SITE_URL}/docs/ui-parts): Build custom layouts, proposal reviews, outcomes, forms, and responsive sheets.`,
   `- [Brand your blocks](${SITE_URL}/docs/brand-your-blocks): Override brand accents and other app tokens while retaining the host defaults.`,
   `- [Design tokens](${SITE_URL}/tokens): Complete Claude MCP Apps light/dark CSS variables and Tailwind \`host-*\` utilities.`,

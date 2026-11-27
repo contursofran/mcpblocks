@@ -436,6 +436,28 @@
       "type": "registry:component",
       "title": "List view",
       "description": "Rich rows with avatar, title, meta, timestamp and body, plus a footer link. Based on the MCP Apps for Claude kit.",
+      "meta": {
+        "mcpblocks": {
+          "version": "0.1.1",
+          "changelog": [
+            {
+              "version": "0.1.1",
+              "date": "2026-11-27",
+              "changes": [
+                "Wrapped list metadata and actions at narrow widths.",
+                "Adopted host app tokens for brand overrides."
+              ]
+            },
+            {
+              "version": "0.1.0",
+              "date": "2026-11-24",
+              "changes": [
+                "Initial registry release."
+              ]
+            }
+          ]
+        }
+      },
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-tokens.json",
         "https://mcpblocks.dev/r/host.json",
@@ -453,6 +475,38 @@
       "type": "registry:component",
       "title": "Confirm action",
       "description": "Confirmation for a prepared change, with a change preview, refusal reasons and a check action for unconfirmed writes. Based on the MCP Apps for Claude kit.",
+      "meta": {
+        "mcpblocks": {
+          "version": "0.1.2",
+          "changelog": [
+            {
+              "version": "0.1.2",
+              "date": "2026-11-27",
+              "changes": [
+                "Composed the proposal and outcomes from shared UI parts and kept the controlled status API."
+              ],
+              "compatibility": "Public props are unchanged. Reinstall the block and its new registry dependencies together."
+            },
+            {
+              "version": "0.1.1",
+              "date": "2026-11-27",
+              "changes": [
+                "Wrapped the confirm control and long status text at narrow widths.",
+                "Adopted host app tokens for brand overrides.",
+                "Added refused and unknown states for prepared writes."
+              ],
+              "compatibility": "Apps with an uncertain write should display the unknown status and supply a receipt check."
+            },
+            {
+              "version": "0.1.0",
+              "date": "2026-11-24",
+              "changes": [
+                "Initial registry release."
+              ]
+            }
+          ]
+        }
+      },
       "registryDependencies": [
         "https://mcpblocks.dev/r/outcome-card.json",
         "https://mcpblocks.dev/r/change-preview.json",
@@ -483,6 +537,28 @@
       "type": "registry:component",
       "title": "Media player",
       "description": "Inline audio card with play/pause, seekable waveform and regenerate/download actions. Based on the MCP Apps for Claude kit.",
+      "meta": {
+        "mcpblocks": {
+          "version": "0.1.1",
+          "changelog": [
+            {
+              "version": "0.1.1",
+              "date": "2026-11-27",
+              "changes": [
+                "Allowed playback and secondary actions to wrap at narrow widths.",
+                "Adopted host app tokens for brand overrides."
+              ]
+            },
+            {
+              "version": "0.1.0",
+              "date": "2026-11-24",
+              "changes": [
+                "Initial registry release."
+              ]
+            }
+          ]
+        }
+      },
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-tokens.json",
         "https://mcpblocks.dev/r/icons.json"
@@ -499,6 +575,28 @@
       "type": "registry:component",
       "title": "Line chart",
       "description": "Borderless SVG line chart with area fills, hover tooltip, range tabs and legend. Based on the MCP Apps for Claude kit.",
+      "meta": {
+        "mcpblocks": {
+          "version": "0.1.1",
+          "changelog": [
+            {
+              "version": "0.1.1",
+              "date": "2026-11-27",
+              "changes": [
+                "Truncated long axis labels and kept tooltips within narrow charts.",
+                "Adopted host app tokens for brand overrides."
+              ]
+            },
+            {
+              "version": "0.1.0",
+              "date": "2026-11-24",
+              "changes": [
+                "Initial registry release."
+              ]
+            }
+          ]
+        }
+      },
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-tokens.json"
       ],
@@ -514,6 +612,36 @@
       "type": "registry:component",
       "title": "Document card",
       "description": "Document preview with properties, editable lists and tasks. Based on the MCP Apps for Claude kit.",
+      "meta": {
+        "mcpblocks": {
+          "version": "0.1.2",
+          "changelog": [
+            {
+              "version": "0.1.2",
+              "date": "2026-11-27",
+              "changes": [
+                "Composed the property list and tags from shared UI parts."
+              ],
+              "compatibility": "Public props are unchanged. Reinstall the block and its new registry dependencies together."
+            },
+            {
+              "version": "0.1.1",
+              "date": "2026-11-27",
+              "changes": [
+                "Adjusted property rows and text wrapping for narrow panels.",
+                "Adopted host app tokens for brand overrides."
+              ]
+            },
+            {
+              "version": "0.1.0",
+              "date": "2026-11-24",
+              "changes": [
+                "Initial registry release."
+              ]
+            }
+          ]
+        }
+      },
       "registryDependencies": [
         "https://mcpblocks.dev/r/surface.json",
         "https://mcpblocks.dev/r/status-pill.json",
@@ -534,6 +662,28 @@
       "dependencies": [
         "lucide-react"
       ],
+      "meta": {
+        "mcpblocks": {
+          "version": "0.1.1",
+          "changelog": [
+            {
+              "version": "0.1.1",
+              "date": "2026-11-27",
+              "changes": [
+                "Adjusted card widths and controls for narrow panels.",
+                "Adopted host app tokens for brand overrides."
+              ]
+            },
+            {
+              "version": "0.1.0",
+              "date": "2026-11-24",
+              "changes": [
+                "Initial registry release."
+              ]
+            }
+          ]
+        }
+      },
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-tokens.json",
         "https://mcpblocks.dev/r/host.json",
@@ -551,6 +701,28 @@
       "type": "registry:component",
       "title": "Skeleton",
       "description": "Loading placeholders: RowsSkeleton (kit loading state), InlineCardSkeleton, CarouselSkeleton.",
+      "meta": {
+        "mcpblocks": {
+          "version": "0.1.1",
+          "changelog": [
+            {
+              "version": "0.1.1",
+              "date": "2026-11-27",
+              "changes": [
+                "Adjusted placeholders to fit narrow panels.",
+                "Adopted host app tokens for brand overrides."
+              ]
+            },
+            {
+              "version": "0.1.0",
+              "date": "2026-11-24",
+              "changes": [
+                "Initial registry release."
+              ]
+            }
+          ]
+        }
+      },
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-tokens.json"
       ],
@@ -566,6 +738,36 @@
       "type": "registry:component",
       "title": "Inline card",
       "description": "Compact card with up to 5 data points and 2 actions. Auto-fits its height.",
+      "meta": {
+        "mcpblocks": {
+          "version": "0.1.2",
+          "changelog": [
+            {
+              "version": "0.1.2",
+              "date": "2026-11-27",
+              "changes": [
+                "Composed the card, badge and fields from shared UI parts."
+              ],
+              "compatibility": "Public props are unchanged. Reinstall the block and its new registry dependencies together."
+            },
+            {
+              "version": "0.1.1",
+              "date": "2026-11-27",
+              "changes": [
+                "Made field columns and actions respond to container width.",
+                "Adopted host app tokens for brand overrides."
+              ]
+            },
+            {
+              "version": "0.1.0",
+              "date": "2026-11-24",
+              "changes": [
+                "Initial registry release."
+              ]
+            }
+          ]
+        }
+      },
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-button.json",
         "https://mcpblocks.dev/r/host.json",
@@ -585,6 +787,36 @@
       "type": "registry:component",
       "title": "Status update",
       "description": "Success, info, warning and error confirmations using semantic host tokens.",
+      "meta": {
+        "mcpblocks": {
+          "version": "0.1.2",
+          "changelog": [
+            {
+              "version": "0.1.2",
+              "date": "2026-11-27",
+              "changes": [
+                "Composed the status banner from the shared Surface."
+              ],
+              "compatibility": "Public props are unchanged. Reinstall the block and its new registry dependencies together."
+            },
+            {
+              "version": "0.1.1",
+              "date": "2026-11-27",
+              "changes": [
+                "Allowed the result text and action to wrap at narrow widths.",
+                "Adopted host app tokens for brand overrides."
+              ]
+            },
+            {
+              "version": "0.1.0",
+              "date": "2026-11-24",
+              "changes": [
+                "Initial registry release."
+              ]
+            }
+          ]
+        }
+      },
       "registryDependencies": [
         "https://mcpblocks.dev/r/host-button.json",
         "https://mcpblocks.dev/r/icons.json",

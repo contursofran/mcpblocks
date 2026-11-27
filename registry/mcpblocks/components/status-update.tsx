@@ -5,6 +5,7 @@ import { Surface } from "@/registry/mcpblocks/ui/surface"
 import { HostButton } from "@/registry/mcpblocks/ui/host-button"
 import { CheckCircleIcon, InfoIcon, ProhibitIcon, WarningIcon } from "@/registry/mcpblocks/ui/icons"
 
+// mcpblocks status-update@0.1.2
 export type StatusTone = "success" | "info" | "warning" | "danger"
 
 export type StatusUpdateProps = Omit<React.ComponentProps<"div">, "title"> & {

@@ -39,3 +39,16 @@ import { RowsSkeleton } from "@/components/skeleton"
 | `InlineCardSkeleton` | `{ fields?, actions? }` | Matches InlineCard. |
 | `CarouselSkeleton` | `{ count?, cardWidth? }` | Matches Carousel. |
 | `HostSkeleton` | `component` | A single pulsing block. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/skeleton.json --diff components/skeleton.tsx`. Adjust the path to match your installation.
+
+### 0.1.1 · 2026-11-27
+
+- Adjusted placeholders to fit narrow panels.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.

@@ -4,6 +4,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+// mcpblocks line-chart@0.1.1
 export type LineChartSeries = {
   name: string
   /** One value per label. */

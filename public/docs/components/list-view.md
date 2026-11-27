@@ -49,3 +49,16 @@ import { ListView } from "@/components/list-view"
 | `items` | `ListViewItem[]` | id, initials, avatarColor?, title, meta?, timestamp?, body?, onClick? |
 | `summary` | `string` | Footer text, e.g. "Showing 4 of 12 results". |
 | `viewAll` | `{ label, href?, onClick? }` | Footer link to the full list. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/list-view.json --diff components/list-view.tsx`. Adjust the path to match your installation.
+
+### 0.1.1 · 2026-11-27
+
+- Wrapped list metadata and actions at narrow widths.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.

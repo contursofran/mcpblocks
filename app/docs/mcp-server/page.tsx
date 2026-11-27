@@ -131,6 +131,10 @@ export default {
           </Link>{" "}
           for what the CLI adds.
         </p>
+        <p className="text-foreground/80">
+          Follow <Link className="underline underline-offset-2" href="/docs/ship-a-view">Ship a view</Link> for the starter,
+          content hashes, CSP, and a deployment smoke test.
+        </p>
       </Step>
 
       <Step n={4} title="Connect the view to the host">

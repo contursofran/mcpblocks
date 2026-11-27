@@ -154,6 +154,19 @@ import { ListView } from "@/components/list-view"
 | `summary` | `string` | Footer text, e.g. "Showing 4 of 12 results". |
 | `viewAll` | `{ label, href?, onClick? }` | Footer link to the full list. |
 
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/list-view.json --diff components/list-view.tsx`. Adjust the path to match your installation.
+
+### 0.1.1 · 2026-11-27
+
+- Wrapped list metadata and actions at narrow widths.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.
+
 ---
 
 # Confirm action — MCP Blocks UI
@@ -213,6 +226,28 @@ import { ConfirmAction } from "@/components/confirm-action"
 | `unknownTitle / unknownDescription` | `ReactNode` | Explain a write whose outcome could not be verified. |
 | `onCheckAgain` | `() => void` | Reconcile the original write in the unknown state. |
 
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/confirm-action.json --diff components/confirm-action.tsx`. Adjust the path to match your installation.
+
+### 0.1.2 · 2026-11-27
+
+- Composed the proposal and outcomes from shared UI parts and kept the controlled status API.
+
+Public props are unchanged. Reinstall the block and its new registry dependencies together.
+
+### 0.1.1 · 2026-11-27
+
+- Wrapped the confirm control and long status text at narrow widths.
+- Adopted host app tokens for brand overrides.
+- Added refused and unknown states for prepared writes.
+
+Apps with an uncertain write should display the unknown status and supply a receipt check.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.
+
 ---
 
 # Media player — MCP Blocks UI
@@ -263,6 +298,19 @@ import { MediaPlayer } from "@/components/media-player"
 | `peaks` | `number[]` | Waveform values 0–1. A stable placeholder is generated if omitted. |
 | `duration` | `number` | Seconds, shown before metadata loads. |
 | `onRegenerate / onDownload` | `() => void` | Show the matching icon buttons. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/media-player.json --diff components/media-player.tsx`. Adjust the path to match your installation.
+
+### 0.1.1 · 2026-11-27
+
+- Allowed playback and secondary actions to wrap at narrow widths.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.
 
 ---
 
@@ -317,6 +365,19 @@ import { LineChart } from "@/components/line-chart"
 | `ranges / range / onRangeChange` | `string[] / string / fn` | Optional range tabs. |
 | `formatValue` | `(v) => string` | Axis and tooltip formatting. |
 
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/line-chart.json --diff components/line-chart.tsx`. Adjust the path to match your installation.
+
+### 0.1.1 · 2026-11-27
+
+- Truncated long axis labels and kept tooltips within narrow charts.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.
+
 ---
 
 # Document card — MCP Blocks UI
@@ -369,6 +430,25 @@ import { DocumentCard } from "@/components/document-card"
 | `sections` | `DocumentSection[]` | "list" (editable text) or "tasks" (checkboxes). |
 | `editable` | `boolean` | Default true. |
 | `onChange` | `(sections) => void` | Fires after each edit. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/document-card.json --diff components/document-card.tsx`. Adjust the path to match your installation.
+
+### 0.1.2 · 2026-11-27
+
+- Composed the property list and tags from shared UI parts.
+
+Public props are unchanged. Reinstall the block and its new registry dependencies together.
+
+### 0.1.1 · 2026-11-27
+
+- Adjusted property rows and text wrapping for narrow panels.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.
 
 ---
 
@@ -425,6 +505,19 @@ import { Carousel } from "@/components/carousel"
 | `cardWidth / imageHeight` | `number` | Default 220 × 280, as in the kit. |
 | `label` | `string` | Accessible name for the scroll region. |
 
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/carousel.json --diff components/carousel.tsx`. Adjust the path to match your installation.
+
+### 0.1.1 · 2026-11-27
+
+- Adjusted card widths and controls for narrow panels.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.
+
 ---
 
 # Skeleton — MCP Blocks UI
@@ -468,6 +561,19 @@ import { RowsSkeleton } from "@/components/skeleton"
 | `InlineCardSkeleton` | `{ fields?, actions? }` | Matches InlineCard. |
 | `CarouselSkeleton` | `{ count?, cardWidth? }` | Matches Carousel. |
 | `HostSkeleton` | `component` | A single pulsing block. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/skeleton.json --diff components/skeleton.tsx`. Adjust the path to match your installation.
+
+### 0.1.1 · 2026-11-27
+
+- Adjusted placeholders to fit narrow panels.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.
 
 ---
 
@@ -530,6 +636,25 @@ export function DealSummary({ deal }) {
 | `actions` | `{ label, onClick?, variant? }[]` | Up to 2 buttons. First is primary. |
 | `columns` | `1 \| 2 \| 3 \| 4` | Field grid columns. 4 collapses to 2 on narrow widths. |
 
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json --diff components/inline-card.tsx`. Adjust the path to match your installation.
+
+### 0.1.2 · 2026-11-27
+
+- Composed the card, badge and fields from shared UI parts.
+
+Public props are unchanged. Reinstall the block and its new registry dependencies together.
+
+### 0.1.1 · 2026-11-27
+
+- Made field columns and actions respond to container width.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.
+
 ---
 
 # Status update — MCP Blocks UI
@@ -577,6 +702,25 @@ import { StatusUpdate } from "@/components/status-update"
 | `tone` | `success \| info \| warning \| danger` | Sets icon and colors. |
 | `title` | `ReactNode` | What happened. |
 | `action` | `{ label, onClick? }` | Optional follow-up, like Undo or View. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/status-update.json --diff components/status-update.tsx`. Adjust the path to match your installation.
+
+### 0.1.2 · 2026-11-27
+
+- Composed the status banner from the shared Surface.
+
+Public props are unchanged. Reinstall the block and its new registry dependencies together.
+
+### 0.1.1 · 2026-11-27
+
+- Allowed the result text and action to wrap at narrow widths.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.
 
 ---
 

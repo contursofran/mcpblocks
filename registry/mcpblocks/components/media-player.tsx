@@ -5,6 +5,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { DownloadIcon, PauseIcon, PlayIcon, ReloadIcon } from "@/registry/mcpblocks/ui/icons"
 
+// mcpblocks media-player@0.1.1
 export type MediaPlayerProps = {
   title: string
   subtitle?: string

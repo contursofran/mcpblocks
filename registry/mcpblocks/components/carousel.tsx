@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils"
 import { guideline } from "@/registry/mcpblocks/lib/host"
 import { CaretLeftIcon, CaretRightIcon, StarFilledIcon } from "@/registry/mcpblocks/ui/icons"
 
+// mcpblocks carousel@0.1.1
 export type CarouselItem = {
   id: string
   title: string

@@ -7,8 +7,10 @@ export const SITE_DESCRIPTION =
 export const docsPages = [
   { href: "/docs/installation", title: "Installation" },
   { href: "/docs/mcp-server", title: "Using with an MCP server" },
+  { href: "/docs/ship-a-view", title: "Ship a view" },
   { href: "/docs/prepared-writes", title: "Prepared writes" },
   { href: "/docs/protocol-hooks", title: "Protocol hooks" },
+  { href: "/docs/host-compatibility", title: "Host compatibility" },
   { href: "/docs/ui-parts", title: "Composable UI parts" },
   { href: "/docs/brand-your-blocks", title: "Brand your blocks" },
 ] as const
