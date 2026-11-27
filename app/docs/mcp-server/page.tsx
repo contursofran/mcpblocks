@@ -211,9 +211,10 @@ export function DealView() {
 
       <Step n={5} title="Test it in Claude">
         <p className="text-foreground/80">
-          Run the server and add its <Code>/mcp</Code> URL under Settings, Connectors, Add custom connector. To try ours
-          first, add <Code>https://mcpblocks.dev/mcp</Code> and ask Claude to show your open deals. Check light and dark,
-          fullscreen and a narrow window, and watch the console for <Code>[mcpblocks]</Code> guideline warnings.
+          Run the server and add its <Code>/mcp</Code> URL under Customize, Connectors, Add custom connector. To try ours
+          first, add <Code>https://mcpblocks.dev/mcp</Code>, choose <strong>No sign in</strong> under Authentication,
+          and ask Claude to show your open deals. Check light and dark, fullscreen and a narrow window, and watch the
+          console for <Code>[mcpblocks]</Code> guideline warnings.
         </p>
         <p className="text-sm text-muted-foreground">
           From the view, <Code>app.callServerTool</Code> runs another tool, <Code>app.sendMessage</Code> adds a chat

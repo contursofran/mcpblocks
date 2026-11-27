@@ -76,8 +76,9 @@ export default function BrandYourBlocksPage() {
           ))}
         </div>
         <p>
-          To see it in Claude, add the MCP Blocks connector at <Code>https://mcpblocks.dev/mcp</Code> and ask
-          it to show the <Code>branded-confirm-action</Code> block. Switch Claude between light and dark to
+          To see it in Claude, add the MCP Blocks connector at <Code>https://mcpblocks.dev/mcp</Code> with
+          {" "}<strong>No sign in</strong> selected and ask it to show the <Code>branded-confirm-action</Code> block.
+          Switch Claude between light and dark to
           see its host colors change around the brand accents.
         </p>
       </Step>

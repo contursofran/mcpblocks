@@ -1,7 +1,7 @@
 {
   // Static site (`pnpm build` writes it, incl. out/r/*.json) plus a Worker that serves the
-  // demo MCP server at https://mcpblocks.dev/mcp. Only /mcp hits the Worker; everything else
-  // is served straight from the static assets.
+  // demo MCP server at https://mcpblocks.dev/mcp. Serve /mcp with the Worker first.
+  // Other requests look for a static asset and fall back to the Worker's 404.
   "name": "mcpblocks",
   "main": "./examples/deal-app/worker/index.ts",
   "compatibility_date": "2025-01-01",

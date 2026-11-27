@@ -44,7 +44,7 @@ npm start            # http://localhost:3001/mcp
 
 ## Live demo (Cloudflare Worker)
 
-The site at mcpblocks.dev is a Worker with static assets. `/mcp` goes to `worker/index.ts`, everything else is served from `out/`. Add `https://mcpblocks.dev/mcp` as a custom connector to try it without running anything. The Worker bundles `dist/view.html`, so **commit `dist/view.html` after changing `src/`** (`npm run build`). State (deal stages) lives in memory per Worker instance, so it can reset at any time.
+The site at mcpblocks.dev is a Worker with static assets. `/mcp` goes to `worker/index.ts` and the site is served from `out/`. Add `https://mcpblocks.dev/mcp` as a custom connector with **No sign in** selected to try it without running anything. The Worker bundles `dist/view.html`, so **commit `dist/view.html` after changing `src/`** (`npm run build`). State (deal stages) lives in memory per Worker instance, so it can reset at any time.
 
 Local Worker: from the repo root, `pnpm worker:dev` serves it at `http://localhost:8787/mcp`.
 
@@ -57,7 +57,7 @@ Claude connects to remote servers over HTTPS, so expose your local port first.
    cloudflared tunnel --url http://localhost:3001
    ```
    (or `ngrok http 3001`). Copy the `https://….trycloudflare.com` URL. Your MCP endpoint is that URL plus `/mcp`.
-2. **Add the connector** in Claude: **Settings → Connectors → Add custom connector**. Name it "Deal app" and paste `https://<your-tunnel>/mcp`. On Team and Enterprise plans an owner may need to add it first.
+2. **Add the connector** in Claude under **Customize → Connectors → Add custom connector**. Name it "Deal app", paste `https://<your-tunnel>/mcp`, and select **No sign in** under **Authentication**. On Team and Enterprise plans an owner may need to add it first.
 3. **Enable it** for a chat from the **+** menu → **Connectors**.
 4. **Try it:**
    - "Show me my open deals."
@@ -99,6 +99,10 @@ With the MCP Blocks connector enabled, ask Claude: “Use MCP Blocks to show eve
 | `propose_stage_change` | Proposed transition, confirmation button, and a summary of what would change |
 | `pipeline_trend` | Two plotted series with axis labels and a legend |
 
-The four layouts fit the tested desktop width without visible clipping or overlap. The check ended at the confirmation screen. Light mode, mobile widths, and the remaining five registry blocks still need visual checks in Claude. [Full registry coverage (#13)](https://github.com/contursofran/mcpblocks/issues/13)
+The four layouts fit the tested desktop width without visible clipping or overlap. The check ended at the confirmation screen.
+
+### Claude chat registry check (2026-11-27)
+
+All nine registry blocks and the branded confirmation rendered through `show_block` in a regular Claude chat in light mode. In Claude Desktop’s Code mode, the same ten calls succeeded and the widget frames stayed empty. [Full registry coverage (#13)](https://github.com/contursofran/mcpblocks/issues/13)
 
 The demo bundles component source installed by `shadcn add`. Earlier install tests in a fresh Vite app and in this demo caught two issues: self-referencing CSS variables in the generated theme and a host helper that required Node types. Both installs built after the fixes. The Claude check used the deployed bundle. [Install test and fixes (#8)](https://github.com/contursofran/mcpblocks/pull/8)
