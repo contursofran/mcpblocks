@@ -54,8 +54,8 @@ export default function TokensPage() {
           <header className="flex max-w-2xl flex-col gap-3">
             <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Tokens</h1>
             <p className="text-base/7 text-[#3d3d3a]">
-              Every color, type size and radius from the MCP Apps for Claude kit, in light and dark. Inside Claude the
-              host injects these variables; outside it, these are the fallbacks your components use.
+              Every color, type size and radius from the MCP Apps for Claude kit, in light and dark. These are the
+              defaults for your components. <code>applyHostContext</code> applies the values the host sends.
             </p>
             <CodeBlock prompt code="npx shadcn@latest add https://mcpblocks.dev/r/host-tokens.json" />
           </header>

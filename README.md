@@ -23,7 +23,7 @@ The shadcn CLI copies the component source directly into your repo and installs 
 Inside your MCP App view (`@modelcontextprotocol/ext-apps` 2.x), apply host styles and context on connect and change:
 
 ```tsx
-import { useApp, useHostStyles } from "@modelcontextprotocol/ext-apps/react"
+import { useApp } from "@modelcontextprotocol/ext-apps/react"
 import { useEffect } from "react"
 
 import { applyHostContext } from "@/lib/host"
@@ -32,11 +32,10 @@ const { app } = useApp({
   appInfo: { name: "my-mcp-app", version: "1.0.0" },
   capabilities: {},
   onAppCreated: (app) => {
-    app.onhostcontextchanged = (ctx) => applyHostContext(ctx)
+    app.onhostcontextchanged = () => applyHostContext(app.getHostContext())
   },
 })
 
-useHostStyles(app, app?.getHostContext())
 useEffect(() => {
   if (app) applyHostContext(app.getHostContext())
 }, [app])
@@ -62,7 +61,7 @@ Full guides: **[Installation](https://mcpblocks.dev/docs/installation)** · **[U
 
 ### Building blocks
 
-- **`host-tokens`**: Full color (light/dark), typography scale, and radius token fallbacks for Claude's injected CSS variables, mapped to Tailwind utilities (`bg-host-bg`, `text-host-fg`, `text-host-heading-lg`, `rounded-host-md`, …).
+- **`host-tokens`**: Light and dark fallbacks for host colors, typography, and radii, mapped to Tailwind utilities (`bg-host-bg`, `text-host-fg`, `text-host-heading-lg`, `rounded-host-md`, …).
 - **`host`** (`lib/host.ts`): `applyHostContext()`, `applySafeAreaInsets()`, and dev-only `guideline()` warnings.
 - **`host-button`**: Button styled with host tokens and a 44px minimum tap target.
 - **`icons`**: 38 `currentColor` icons adapted from Anthropic's *MCP Apps for Claude* kit.

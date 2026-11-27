@@ -7,7 +7,7 @@
       "name": "host-tokens",
       "type": "registry:style",
       "title": "Host tokens",
-      "description": "All design tokens from the MCP Apps for Claude kit (colors light/dark, type scale, radii, border width) as fallbacks for the CSS variables the host injects, mapped to Tailwind utilities (bg-host-bg, text-host-fg, text-host-heading-lg, rounded-host-md…).",
+      "description": "All design tokens from the MCP Apps for Claude kit (colors light/dark, type scale, radii, border width) as fallbacks for the CSS variables the host sends, mapped to Tailwind utilities (bg-host-bg, text-host-fg, text-host-heading-lg, rounded-host-md…).",
       "files": [],
       "css": {
         "@theme inline": {
@@ -199,7 +199,7 @@
       "name": "host",
       "type": "registry:lib",
       "title": "Host helpers",
-      "description": "Apply hostContext (theme, display mode, safe-area insets) and dev-only guideline warnings.",
+      "description": "Apply host theme, CSS variables, fonts, display mode and safe-area insets, with dev-only guideline warnings.",
       "files": [
         {
           "path": "registry/mcpblocks/lib/host.ts",

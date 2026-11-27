@@ -16,7 +16,7 @@ export const homeFaqs = [
   {
     question: "How do components automatically match Claude's light and dark themes?",
     answer:
-      "Every component uses Tailwind `host-*` utilities mapped to the standard MCP Apps CSS variables (such as `--color-background-primary` and `--color-text-primary`). Inside Claude, `useHostStyles` applies the host's variables; outside Claude, `host-tokens` supplies matching light and dark fallbacks toggled by `applyHostContext`.",
+      "Every component uses Tailwind `host-*` utilities mapped to the standard MCP Apps CSS variables (such as `--color-background-primary` and `--color-text-primary`). `applyHostContext` applies the variables and font CSS the host sends. The `host-tokens` registry item supplies light and dark fallbacks for missing values.",
   },
   {
     question: "Do these components work in ChatGPT, VS Code, and Vercel AI SDK hosts?",

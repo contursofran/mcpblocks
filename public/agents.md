@@ -27,7 +27,7 @@ This file helps AI coding assistants (Claude Code, Cursor, Codex, Antigravity, e
 
 Follow these rules whenever generating or modifying MCP App views:
 
-1. **Use `host-*` Tailwind utilities only** (`bg-host-bg`, `bg-host-bg-secondary`, `text-host-fg`, `text-host-fg-tertiary`, `border-host-border-secondary`, `rounded-host-md`, etc.). Never hardcode hex/rgb colors — Claude injects host CSS variables at runtime for light and dark themes.
+1. **Use `host-*` Tailwind utilities only** (`bg-host-bg`, `bg-host-bg-secondary`, `text-host-fg`, `text-host-fg-tertiary`, `border-host-border-secondary`, `rounded-host-md`, etc.). Call `applyHostContext` to apply the CSS variables Claude sends for light and dark themes.
 2. **No floating UI layers:** Do not use dropdowns, popovers, context menus, native `<select>`, or Radix floating primitives. They clip at iframe boundaries and conflict with host z-index.
 3. **No nested vertical scrolling or viewport height units:** Inline widgets must auto-fit their content height (stay under ~520px). Never use `overflow-y-auto`, `overflow-auto`, `h-screen`, `vh`, or `dvh`.
 4. **Inline limits:** Keep inline cards to ≤5 fields and ≤2 actions at the bottom. Keep carousels to 3–8 items. Send edits back through chat via `app.sendMessage(...)` rather than building full forms inline.
@@ -39,7 +39,7 @@ Follow these rules whenever generating or modifying MCP App views:
 ## Standard View Wiring (`@modelcontextprotocol/ext-apps` 2.x)
 
 ```tsx
-import { useApp, useHostStyles } from "@modelcontextprotocol/ext-apps/react"
+import { useApp } from "@modelcontextprotocol/ext-apps/react"
 import { useEffect, useState } from "react"
 import { InlineCard } from "@/components/inline-card"
 import { RowsSkeleton } from "@/components/skeleton"
@@ -52,11 +52,10 @@ export function View() {
     capabilities: {},
     onAppCreated: (app) => {
       app.ontoolresult = (result) => setData(result.structuredContent)
-      app.onhostcontextchanged = (ctx) => applyHostContext(ctx)
+      app.onhostcontextchanged = () => applyHostContext(app.getHostContext())
     },
   })
 
-  useHostStyles(app, app?.getHostContext())
   useEffect(() => {
     if (app) applyHostContext(app.getHostContext())
   }, [app])
@@ -66,9 +65,11 @@ export function View() {
 }
 ```
 
+If the host font CSS references external URLs, include the origins in the resource content's `_meta.ui.csp.resourceDomains`.
+
 ## Server Pattern (`@modelcontextprotocol/ext-apps/server`)
 
-- Register tools with `registerAppTool` pointing `_meta: { ui: { resourceUri: "ui://my-app/view.html" } }`.
+- Register tools with `registerAppTool` pointing `_meta.ui.resourceUri` at the registered `ui://` resource. Include a content hash of the HTML in the URI so Claude can distinguish builds. Start a fresh chat to pick up an updated tool list.
 - Keep mutating confirmation tools hidden from the LLM using `visibility: ["app"]` so only the UI can invoke them via `app.callServerTool(...)`.
 - Always return useful text in `content` alongside `structuredContent` so text-only hosts still work.
 - Bundle the React view into a single HTML file (e.g. `vite-plugin-singlefile`) and serve it via `registerAppResource` with `mimeType: RESOURCE_MIME_TYPE` (`text/html;profile=mcp-app`).
