@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { guideline } from "@/lib/host"
 import { ArrowRightIcon } from "@/components/ui/icons"
 
+// mcpblocks list-view@0.1.1
 export type ListViewItem = {
   id: string
   /** Initials shown in the avatar, e.g. "SC". */

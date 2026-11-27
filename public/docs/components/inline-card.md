@@ -56,3 +56,22 @@ export function DealSummary({ deal }) {
 | `fields` | `{ label, value }[]` | Data points. Keep to 5 or fewer. |
 | `actions` | `{ label, onClick?, variant? }[]` | Up to 2 buttons. First is primary. |
 | `columns` | `1 \| 2 \| 3 \| 4` | Field grid columns. 4 collapses to 2 on narrow widths. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json --diff components/inline-card.tsx`. Adjust the path to match your installation.
+
+### 0.1.2 · 2026-11-27
+
+- Composed the card, badge and fields from shared UI parts.
+
+Public props are unchanged. Reinstall the block and its new registry dependencies together.
+
+### 0.1.1 · 2026-11-27
+
+- Made field columns and actions respond to container width.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.

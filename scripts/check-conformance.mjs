@@ -142,8 +142,20 @@ for (const item of registry.items) {
   }
 
   const built = JSON.parse(readFileSync(builtPath, "utf8"))
+  const release = item.meta?.mcpblocks
+  if (item.type === "registry:component") {
+    if (!release?.version || release.changelog?.[0]?.version !== release.version) {
+      fail("registry", `Item "${item.name}" must have a version and a matching current changelog entry`)
+    } else if (JSON.stringify(built.meta?.mcpblocks) !== JSON.stringify(release)) {
+      fail("registry", `public/r/${item.name}.json has stale changelog metadata`)
+    }
+  }
   for (const file of item.files ?? []) {
     const diskContent = readFileSync(join(root, file.path), "utf8")
+    if (item.type === "registry:component" && file.type === "registry:component" && release?.version &&
+      !diskContent.includes(`\n// mcpblocks ${item.name}@${release.version}\n`)) {
+      fail("registry", `${file.path} is missing the version stamp for ${release.version}`)
+    }
     const builtFile = (built.files ?? []).find((f) => f.path === file.path)
     if (!builtFile) {
       fail("registry", `public/r/${item.name}.json is missing file "${file.path}" (run pnpm registry:build)`)

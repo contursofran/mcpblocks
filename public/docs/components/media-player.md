@@ -46,3 +46,16 @@ import { MediaPlayer } from "@/components/media-player"
 | `peaks` | `number[]` | Waveform values 0–1. A stable placeholder is generated if omitted. |
 | `duration` | `number` | Seconds, shown before metadata loads. |
 | `onRegenerate / onDownload` | `() => void` | Show the matching icon buttons. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/media-player.json --diff components/media-player.tsx`. Adjust the path to match your installation.
+
+### 0.1.1 · 2026-11-27
+
+- Allowed playback and secondary actions to wrap at narrow widths.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.

@@ -18,8 +18,10 @@ npx shadcn@latest add https://mcpblocks.dev/r/inline-card.json
 
 - [Installation](https://mcpblocks.dev/docs/installation): shadcn setup for Tailwind v4, Tailwind 3.4 and standalone CSS.
 - [Using with an MCP server](https://mcpblocks.dev/docs/mcp-server): Register tools + `ui://` resources with `@modelcontextprotocol/ext-apps` and wire `useApp` / `applyHostContext`.
+- [Ship a view](https://mcpblocks.dev/docs/ship-a-view): Starter app, single-file bundle, CSP, content hashes, and Claude connector testing.
 - [Prepared writes](https://mcpblocks.dev/docs/prepared-writes): Review proposed changes, reconcile unconfirmed writes, and report committed changes to the model.
 - [Protocol hooks](https://mcpblocks.dev/docs/protocol-hooks): Connect React views to the host, handle tool results, and manage prepared writes.
+- [Host compatibility](https://mcpblocks.dev/docs/host-compatibility): Host capabilities, verification dates, and fallbacks.
 - [Composable UI parts](https://mcpblocks.dev/docs/ui-parts): Build custom layouts, proposal reviews, outcomes, forms, and responsive sheets.
 - [Brand your blocks](https://mcpblocks.dev/docs/brand-your-blocks): Override brand accents and other app tokens while retaining the host defaults.
 - [Design tokens](https://mcpblocks.dev/tokens): Complete Claude MCP Apps light/dark CSS variables and Tailwind `host-*` utilities.

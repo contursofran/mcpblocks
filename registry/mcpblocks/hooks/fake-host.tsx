@@ -1,5 +1,6 @@
 "use client"
 
+import type { CallToolResult } from "@modelcontextprotocol/client"
 import type { McpUiHostContext } from "@modelcontextprotocol/ext-apps/app-bridge"
 import { useEffect, useRef, useState, type ReactNode } from "react"
 
@@ -9,16 +10,20 @@ import { createFakeHost, type FakeHostOptions } from "@/registry/mcpblocks/lib/h
 type FakeHostProps = FakeHostOptions & {
   children: ReactNode
   className?: string
+  /** Send this sample once the view finishes the initialization handshake. */
+  initialToolResult?: CallToolResult
 }
 
 /** Run a React view in Storybook or another preview using a real MCP Apps bridge. */
-export function FakeHost({ children, className, context, capabilities, tools, onRequest }: FakeHostProps) {
+export function FakeHost({ children, className, context, capabilities, tools, onRequest, initialToolResult }: FakeHostProps) {
   const [target, setTarget] = useState<HTMLDivElement | null>(null)
   const [host, setHost] = useState<ReturnType<typeof createFakeHost>>()
   const requestCallback = useRef(onRequest)
   const latestContext = useRef<McpUiHostContext | undefined>(context)
+  const initialResult = useRef(initialToolResult)
 
   useEffect(() => { requestCallback.current = onRequest }, [onRequest])
+  useEffect(() => { initialResult.current = initialToolResult }, [initialToolResult])
   useEffect(() => {
     latestContext.current = context
     host?.setContext(context ?? {})
@@ -32,6 +37,9 @@ export function FakeHost({ children, className, context, capabilities, tools, on
       tools,
       onRequest: (event) => requestCallback.current?.(event),
     })
+    harness.bridge.oninitialized = () => {
+      if (initialResult.current) void harness.bridge.sendToolResult(initialResult.current).catch(() => {})
+    }
     void harness.ready.then(() => {
       if (active) setHost(harness)
     })

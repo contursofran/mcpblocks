@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 import { componentCategories, components, getComponent } from "@/lib/docs"
 import { componentJsonLd } from "@/lib/schema"
 import { docsPages, OG_IMAGE, SITE_URL } from "@/lib/site"
+import registry from "@/registry.json"
 
 export function generateStaticParams() {
   return components.map((c) => ({ name: c.slug }))
@@ -75,6 +76,7 @@ export default async function ComponentPage({
   const { name } = await params
   const doc = getComponent(name)
   if (!doc) notFound()
+  const release = registry.items.find((item) => item.name === doc.slug)?.meta?.mcpblocks
 
   return (
     <PageShell rails="docs">
@@ -243,6 +245,28 @@ export default async function ComponentPage({
                     </table>
                   </div>
                 </section>
+                {release ? (
+                  <section className="flex flex-col gap-4">
+                    <SectionHeading id="changelog">Changelog</SectionHeading>
+                    <p className="text-sm leading-relaxed text-[#3d3d3a]">
+                      Your copied source has a version stamp near the top. Use shadcn to preview
+                      changes against the registry, then merge them into your local copy. Adjust the
+                      path to match where you installed the block.
+                    </p>
+                    <CodeBlock code={`npx shadcn@latest add ${SITE_URL}/r/${doc.slug}.json --diff components/${doc.slug}.tsx`} />
+                    <ol className="divide-y divide-[#141413]/[0.08] border-y border-[#141413]/[0.08]">
+                      {release.changelog.map((entry) => (
+                        <li key={entry.version} className="space-y-2 py-4 text-sm leading-relaxed">
+                          <h3 className="font-semibold">{entry.version} <time className="ml-2 font-normal text-[#73726c]" dateTime={entry.date}>{entry.date}</time></h3>
+                          <ul className="list-disc space-y-1 pl-5">
+                            {entry.changes.map((change) => <li key={change}>{change}</li>)}
+                          </ul>
+                          {"compatibility" in entry && entry.compatibility ? <p>{entry.compatibility}</p> : null}
+                        </li>
+                      ))}
+                    </ol>
+                  </section>
+                ) : null}
               </div>
             </article>
           </div>
@@ -275,6 +299,11 @@ export default async function ComponentPage({
                       Component API
                     </a>
                   </li>
+                  {release ? (
+                    <li className="mt-4">
+                      <a href="#changelog" className="transition-colors hover:text-[#141413]">Changelog</a>
+                    </li>
+                  ) : null}
                 </ul>
               </nav>
 

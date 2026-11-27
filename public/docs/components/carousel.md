@@ -50,3 +50,16 @@ import { Carousel } from "@/components/carousel"
 | `items` | `CarouselItem[]` | id, title, subtitle?, image?, rating?, meta?, saved?, onSave?, onClick? |
 | `cardWidth / imageHeight` | `number` | Default 220 × 280, as in the kit. |
 | `label` | `string` | Accessible name for the scroll region. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/carousel.json --diff components/carousel.tsx`. Adjust the path to match your installation.
+
+### 0.1.1 · 2026-11-27
+
+- Adjusted card widths and controls for narrow panels.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.

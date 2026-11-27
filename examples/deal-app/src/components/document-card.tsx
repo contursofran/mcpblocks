@@ -7,6 +7,7 @@ import { DataList } from "@/components/ui/data-list"
 import { StatusPill } from "@/components/ui/status-pill"
 import { Surface } from "@/components/ui/surface"
 
+// mcpblocks document-card@0.1.2
 export type DocumentProperty = {
   label: string
   value: string

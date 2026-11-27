@@ -3,6 +3,7 @@ import { createRoot, type Root } from "react-dom/client"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
 import { createFakeHost, fakeHostCapabilities } from "@/registry/mcpblocks/lib/host-harness"
+import { FakeHost } from "@/registry/mcpblocks/hooks/fake-host"
 import { buildHostStyleVariables } from "@/lib/host-context"
 import { McpHostProvider, useHost } from "@/registry/mcpblocks/hooks/use-host"
 import { usePreparedWrite, type PreparedWrite } from "@/registry/mcpblocks/hooks/use-prepared-write"
@@ -50,6 +51,23 @@ async function mount<T>(host: ReturnType<typeof createFakeHost>, read: () => T, 
 }
 
 describe("useHost and useToolResult", () => {
+  it("delivers the fake host's initial tool result after the handshake", async () => {
+    function ResultView() {
+      const { result } = useToolResult()
+      return <p>{result?.content?.find((block) => block.type === "text")?.text}</p>
+    }
+    await act(async () => {
+      root.render(
+        <StrictMode>
+          <FakeHost initialToolResult={{ content: [{ type: "text", text: "Sample result" }] }}>
+            <ResultView />
+          </FakeHost>
+        </StrictMode>,
+      )
+    })
+    expect(container.textContent).toBe("Sample result")
+  })
+
   it("connects once and applies host styles, display mode, font CSS and live context", async () => {
     const host = createFakeHost({
       context: {

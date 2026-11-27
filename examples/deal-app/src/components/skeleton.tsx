@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+// mcpblocks skeleton@0.1.1
 /** A single skeleton block. Prefer skeletons over spinners for inline content. */
 export function HostSkeleton({ className, ...props }: React.ComponentProps<"div">) {
   return (

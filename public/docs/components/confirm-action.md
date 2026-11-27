@@ -54,3 +54,25 @@ import { ConfirmAction } from "@/components/confirm-action"
 | `refusedTitle / refusedDescription` | `ReactNode` | Explain why the server refused the proposal without a write. |
 | `unknownTitle / unknownDescription` | `ReactNode` | Explain a write whose outcome could not be verified. |
 | `onCheckAgain` | `() => void` | Reconcile the original write in the unknown state. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/confirm-action.json --diff components/confirm-action.tsx`. Adjust the path to match your installation.
+
+### 0.1.2 · 2026-11-27
+
+- Composed the proposal and outcomes from shared UI parts and kept the controlled status API.
+
+Public props are unchanged. Reinstall the block and its new registry dependencies together.
+
+### 0.1.1 · 2026-11-27
+
+- Wrapped the confirm control and long status text at narrow widths.
+- Adopted host app tokens for brand overrides.
+- Added refused and unknown states for prepared writes.
+
+Apps with an uncertain write should display the unknown status and supply a receipt check.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.

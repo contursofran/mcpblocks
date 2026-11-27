@@ -12,8 +12,38 @@
   "files": [
     {
       "path": "registry/mcpblocks/components/status-update.tsx",
-      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Surface } from \"@/registry/mcpblocks/ui/surface\"\nimport { HostButton } from \"@/registry/mcpblocks/ui/host-button\"\nimport { CheckCircleIcon, InfoIcon, ProhibitIcon, WarningIcon } from \"@/registry/mcpblocks/ui/icons\"\n\nexport type StatusTone = \"success\" | \"info\" | \"warning\" | \"danger\"\n\nexport type StatusUpdateProps = Omit<React.ComponentProps<\"div\">, \"title\"> & {\n  tone?: StatusTone\n  title: React.ReactNode\n  description?: React.ReactNode\n  /** One optional follow-up, e.g. \"Undo\" or \"View\". */\n  action?: { label: string; onClick?: () => void }\n}\n\nconst tones: Record<\n  StatusTone,\n  { icon: React.ElementType; chip: string; label: string }\n> = {\n  success: { icon: CheckCircleIcon, chip: \"bg-host-app-success-bg text-host-app-success-fg\", label: \"Success\" },\n  info: { icon: InfoIcon, chip: \"bg-host-app-info-bg text-host-app-info-fg\", label: \"Info\" },\n  warning: { icon: WarningIcon, chip: \"bg-host-app-warning-bg text-host-app-warning-fg\", label: \"Warning\" },\n  danger: { icon: ProhibitIcon, chip: \"bg-host-app-danger-border/15 text-host-app-danger-fg\", label: \"Error\" },\n}\n\n/** Confirms the result of an action, using the host's semantic colors. */\nexport function StatusUpdate({\n  tone = \"success\",\n  title,\n  description,\n  action,\n  className,\n  ...props\n}: StatusUpdateProps) {\n  const t = tones[tone]\n  const Icon = t.icon\n  return (\n    <Surface\n      role=\"status\"\n      data-slot=\"status-update\"\n      className={cn(\n        \"flex flex-wrap items-center gap-3 p-4\",\n        className\n      )}\n      {...props}\n    >\n      <span\n        className={cn(\"flex size-9 shrink-0 items-center justify-center rounded-full\", t.chip)}\n      >\n        <Icon className=\"size-[18px]\" aria-label={t.label} />\n      </span>\n      <div className=\"flex min-w-0 flex-1 basis-28 flex-col [overflow-wrap:anywhere]\">\n        <p className=\"text-sm font-semibold\">{title}</p>\n        {description ? (\n          <p className=\"text-sm text-host-app-fg-subtle\">{description}</p>\n        ) : null}\n      </div>\n      {action ? (\n        <HostButton variant=\"secondary\" className=\"max-w-full py-2 whitespace-normal [overflow-wrap:anywhere]\" onClick={action.onClick}>\n          {action.label}\n        </HostButton>\n      ) : null}\n    </Surface>\n  )\n}\n",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { Surface } from \"@/registry/mcpblocks/ui/surface\"\nimport { HostButton } from \"@/registry/mcpblocks/ui/host-button\"\nimport { CheckCircleIcon, InfoIcon, ProhibitIcon, WarningIcon } from \"@/registry/mcpblocks/ui/icons\"\n\n// mcpblocks status-update@0.1.2\nexport type StatusTone = \"success\" | \"info\" | \"warning\" | \"danger\"\n\nexport type StatusUpdateProps = Omit<React.ComponentProps<\"div\">, \"title\"> & {\n  tone?: StatusTone\n  title: React.ReactNode\n  description?: React.ReactNode\n  /** One optional follow-up, e.g. \"Undo\" or \"View\". */\n  action?: { label: string; onClick?: () => void }\n}\n\nconst tones: Record<\n  StatusTone,\n  { icon: React.ElementType; chip: string; label: string }\n> = {\n  success: { icon: CheckCircleIcon, chip: \"bg-host-app-success-bg text-host-app-success-fg\", label: \"Success\" },\n  info: { icon: InfoIcon, chip: \"bg-host-app-info-bg text-host-app-info-fg\", label: \"Info\" },\n  warning: { icon: WarningIcon, chip: \"bg-host-app-warning-bg text-host-app-warning-fg\", label: \"Warning\" },\n  danger: { icon: ProhibitIcon, chip: \"bg-host-app-danger-border/15 text-host-app-danger-fg\", label: \"Error\" },\n}\n\n/** Confirms the result of an action, using the host's semantic colors. */\nexport function StatusUpdate({\n  tone = \"success\",\n  title,\n  description,\n  action,\n  className,\n  ...props\n}: StatusUpdateProps) {\n  const t = tones[tone]\n  const Icon = t.icon\n  return (\n    <Surface\n      role=\"status\"\n      data-slot=\"status-update\"\n      className={cn(\n        \"flex flex-wrap items-center gap-3 p-4\",\n        className\n      )}\n      {...props}\n    >\n      <span\n        className={cn(\"flex size-9 shrink-0 items-center justify-center rounded-full\", t.chip)}\n      >\n        <Icon className=\"size-[18px]\" aria-label={t.label} />\n      </span>\n      <div className=\"flex min-w-0 flex-1 basis-28 flex-col [overflow-wrap:anywhere]\">\n        <p className=\"text-sm font-semibold\">{title}</p>\n        {description ? (\n          <p className=\"text-sm text-host-app-fg-subtle\">{description}</p>\n        ) : null}\n      </div>\n      {action ? (\n        <HostButton variant=\"secondary\" className=\"max-w-full py-2 whitespace-normal [overflow-wrap:anywhere]\" onClick={action.onClick}>\n          {action.label}\n        </HostButton>\n      ) : null}\n    </Surface>\n  )\n}\n",
       "type": "registry:component"
     }
-  ]
+  ],
+  "meta": {
+    "mcpblocks": {
+      "version": "0.1.2",
+      "changelog": [
+        {
+          "version": "0.1.2",
+          "date": "2026-11-27",
+          "changes": [
+            "Composed the status banner from the shared Surface."
+          ],
+          "compatibility": "Public props are unchanged. Reinstall the block and its new registry dependencies together."
+        },
+        {
+          "version": "0.1.1",
+          "date": "2026-11-27",
+          "changes": [
+            "Allowed the result text and action to wrap at narrow widths.",
+            "Adopted host app tokens for brand overrides."
+          ]
+        },
+        {
+          "version": "0.1.0",
+          "date": "2026-11-24",
+          "changes": [
+            "Initial registry release."
+          ]
+        }
+      ]
+    }
+  }
 }

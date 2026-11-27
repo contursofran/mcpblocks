@@ -14,8 +14,38 @@
   "files": [
     {
       "path": "registry/mcpblocks/components/inline-card.tsx",
-      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { guideline } from \"@/registry/mcpblocks/lib/host\"\nimport { DataList } from \"@/registry/mcpblocks/ui/data-list\"\nimport {\n  HostButton,\n  type HostButtonProps,\n} from \"@/registry/mcpblocks/ui/host-button\"\nimport { StatusPill, type StatusPillTone } from \"@/registry/mcpblocks/ui/status-pill\"\nimport { Surface } from \"@/registry/mcpblocks/ui/surface\"\n\nexport type InlineCardField = {\n  label: string\n  value: React.ReactNode\n}\n\nexport type InlineCardAction = {\n  label: string\n  onClick?: () => void\n  variant?: HostButtonProps[\"variant\"]\n  disabled?: boolean\n}\n\nexport type InlineCardTone = StatusPillTone\n\nexport type InlineCardProps = Omit<React.ComponentProps<\"section\">, \"title\"> & {\n  title: React.ReactNode\n  /** Short status label shown top-right. */\n  badge?: { label: string; tone?: InlineCardTone }\n  description?: React.ReactNode\n  /** Claude guidelines: at most 4–5 data points in an inline card. */\n  fields?: InlineCardField[]\n  /** Claude guidelines: at most 2 actions, at the bottom of the card. */\n  actions?: InlineCardAction[]\n  /** Number of columns for the field grid. */\n  columns?: 1 | 2 | 3 | 4\n}\n\nconst columnClass = {\n  1: \"grid-cols-1\",\n  2: \"grid-cols-2\",\n  3: \"grid-cols-2 @[20rem]:grid-cols-3\",\n  4: \"grid-cols-2 @md:grid-cols-4\",\n} as const\n\n/**\n * A compact card for the conversation: summary data plus up to two actions.\n * Height always fits its content (no inner scrolling).\n */\nexport function InlineCard({\n  title,\n  badge,\n  description,\n  fields = [],\n  actions = [],\n  columns = 2,\n  className,\n  children,\n  ...props\n}: InlineCardProps) {\n  guideline(fields.length > 5, \"InlineCard: more than 5 fields. Consider fullscreen.\")\n  guideline(actions.length > 2, \"InlineCard: more than 2 actions. Claude allows at most 2.\")\n\n  return (\n    <Surface as=\"section\"\n      data-slot=\"inline-card\"\n      className={cn(\n        \"@container flex flex-col gap-4 p-5\",\n        className\n      )}\n      {...props}\n    >\n      <header className=\"flex flex-wrap items-start justify-between gap-3\">\n        <div className=\"flex min-w-0 flex-col gap-1\">\n          <h3 className=\"text-base leading-snug font-host-app-display font-semibold [overflow-wrap:anywhere]\">{title}</h3>\n          {description ? (\n            <p className=\"text-sm text-host-app-fg-muted\">{description}</p>\n          ) : null}\n        </div>\n        {badge ? (\n          <StatusPill tone={badge.tone}>{badge.label}</StatusPill>\n        ) : null}\n      </header>\n\n      {fields.length > 0 ? <DataList className={columnClass[columns]} items={fields} /> : null}\n\n      {children}\n\n      {actions.length > 0 ? (\n        <footer className=\"grid gap-2 @[20rem]:auto-cols-fr @[20rem]:grid-flow-col\">\n          {actions.slice(0, 2).map((a, i) => (\n            <HostButton\n              key={a.label}\n              block\n              className=\"min-w-0 py-2 text-center whitespace-normal [overflow-wrap:anywhere]\"\n              variant={a.variant ?? (i === 0 ? \"primary\" : \"secondary\")}\n              onClick={a.onClick}\n              disabled={a.disabled}\n            >\n              {a.label}\n            </HostButton>\n          ))}\n        </footer>\n      ) : null}\n    </Surface>\n  )\n}\n",
+      "content": "import * as React from \"react\"\n\nimport { cn } from \"@/lib/utils\"\nimport { guideline } from \"@/registry/mcpblocks/lib/host\"\nimport { DataList } from \"@/registry/mcpblocks/ui/data-list\"\nimport {\n  HostButton,\n  type HostButtonProps,\n} from \"@/registry/mcpblocks/ui/host-button\"\nimport { StatusPill, type StatusPillTone } from \"@/registry/mcpblocks/ui/status-pill\"\nimport { Surface } from \"@/registry/mcpblocks/ui/surface\"\n\n// mcpblocks inline-card@0.1.2\nexport type InlineCardField = {\n  label: string\n  value: React.ReactNode\n}\n\nexport type InlineCardAction = {\n  label: string\n  onClick?: () => void\n  variant?: HostButtonProps[\"variant\"]\n  disabled?: boolean\n}\n\nexport type InlineCardTone = StatusPillTone\n\nexport type InlineCardProps = Omit<React.ComponentProps<\"section\">, \"title\"> & {\n  title: React.ReactNode\n  /** Short status label shown top-right. */\n  badge?: { label: string; tone?: InlineCardTone }\n  description?: React.ReactNode\n  /** Claude guidelines: at most 4–5 data points in an inline card. */\n  fields?: InlineCardField[]\n  /** Claude guidelines: at most 2 actions, at the bottom of the card. */\n  actions?: InlineCardAction[]\n  /** Number of columns for the field grid. */\n  columns?: 1 | 2 | 3 | 4\n}\n\nconst columnClass = {\n  1: \"grid-cols-1\",\n  2: \"grid-cols-2\",\n  3: \"grid-cols-2 @[20rem]:grid-cols-3\",\n  4: \"grid-cols-2 @md:grid-cols-4\",\n} as const\n\n/**\n * A compact card for the conversation: summary data plus up to two actions.\n * Height always fits its content (no inner scrolling).\n */\nexport function InlineCard({\n  title,\n  badge,\n  description,\n  fields = [],\n  actions = [],\n  columns = 2,\n  className,\n  children,\n  ...props\n}: InlineCardProps) {\n  guideline(fields.length > 5, \"InlineCard: more than 5 fields. Consider fullscreen.\")\n  guideline(actions.length > 2, \"InlineCard: more than 2 actions. Claude allows at most 2.\")\n\n  return (\n    <Surface as=\"section\"\n      data-slot=\"inline-card\"\n      className={cn(\n        \"@container flex flex-col gap-4 p-5\",\n        className\n      )}\n      {...props}\n    >\n      <header className=\"flex flex-wrap items-start justify-between gap-3\">\n        <div className=\"flex min-w-0 flex-col gap-1\">\n          <h3 className=\"text-base leading-snug font-host-app-display font-semibold [overflow-wrap:anywhere]\">{title}</h3>\n          {description ? (\n            <p className=\"text-sm text-host-app-fg-muted\">{description}</p>\n          ) : null}\n        </div>\n        {badge ? (\n          <StatusPill tone={badge.tone}>{badge.label}</StatusPill>\n        ) : null}\n      </header>\n\n      {fields.length > 0 ? <DataList className={columnClass[columns]} items={fields} /> : null}\n\n      {children}\n\n      {actions.length > 0 ? (\n        <footer className=\"grid gap-2 @[20rem]:auto-cols-fr @[20rem]:grid-flow-col\">\n          {actions.slice(0, 2).map((a, i) => (\n            <HostButton\n              key={a.label}\n              block\n              className=\"min-w-0 py-2 text-center whitespace-normal [overflow-wrap:anywhere]\"\n              variant={a.variant ?? (i === 0 ? \"primary\" : \"secondary\")}\n              onClick={a.onClick}\n              disabled={a.disabled}\n            >\n              {a.label}\n            </HostButton>\n          ))}\n        </footer>\n      ) : null}\n    </Surface>\n  )\n}\n",
       "type": "registry:component"
     }
-  ]
+  ],
+  "meta": {
+    "mcpblocks": {
+      "version": "0.1.2",
+      "changelog": [
+        {
+          "version": "0.1.2",
+          "date": "2026-11-27",
+          "changes": [
+            "Composed the card, badge and fields from shared UI parts."
+          ],
+          "compatibility": "Public props are unchanged. Reinstall the block and its new registry dependencies together."
+        },
+        {
+          "version": "0.1.1",
+          "date": "2026-11-27",
+          "changes": [
+            "Made field columns and actions respond to container width.",
+            "Adopted host app tokens for brand overrides."
+          ]
+        },
+        {
+          "version": "0.1.0",
+          "date": "2026-11-24",
+          "changes": [
+            "Initial registry release."
+          ]
+        }
+      ]
+    }
+  }
 }

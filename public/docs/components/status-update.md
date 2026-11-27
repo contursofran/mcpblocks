@@ -43,3 +43,22 @@ import { StatusUpdate } from "@/components/status-update"
 | `tone` | `success \| info \| warning \| danger` | Sets icon and colors. |
 | `title` | `ReactNode` | What happened. |
 | `action` | `{ label, onClick? }` | Optional follow-up, like Undo or View. |
+
+## Changelog
+
+See the version stamp near the top of your copied source. Compare your copy with `npx shadcn@latest add https://mcpblocks.dev/r/status-update.json --diff components/status-update.tsx`. Adjust the path to match your installation.
+
+### 0.1.2 · 2026-11-27
+
+- Composed the status banner from the shared Surface.
+
+Public props are unchanged. Reinstall the block and its new registry dependencies together.
+
+### 0.1.1 · 2026-11-27
+
+- Allowed the result text and action to wrap at narrow widths.
+- Adopted host app tokens for brand overrides.
+
+### 0.1.0 · 2026-11-24
+
+- Initial registry release.

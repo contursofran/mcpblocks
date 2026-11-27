@@ -8,6 +8,7 @@ import { Surface } from "@/components/ui/surface"
 import { HostButton } from "@/components/ui/host-button"
 import { CheckIcon } from "@/components/ui/icons"
 
+// mcpblocks confirm-action@0.1.2
 export type ConfirmActionStatus = "pending" | "working" | OutcomeCardStatus
 
 export type ConfirmActionProps = {

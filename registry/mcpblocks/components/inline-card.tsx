@@ -10,6 +10,7 @@ import {
 import { StatusPill, type StatusPillTone } from "@/registry/mcpblocks/ui/status-pill"
 import { Surface } from "@/registry/mcpblocks/ui/surface"
 
+// mcpblocks inline-card@0.1.2
 export type InlineCardField = {
   label: string
   value: React.ReactNode
